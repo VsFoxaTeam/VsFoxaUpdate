@@ -341,7 +341,6 @@ class PlayState extends MusicBeatState
 			for (sprite in uiHUD.storedSprites)
 				sprite.alpha = 0.8;
 		}
-
 		//
 
 		// create a hud over the hud camera for dialogue

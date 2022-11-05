@@ -438,6 +438,7 @@ class DialogueBox extends FlxSpriteGroup
 				var _scaleX = eventArray[4];
 				var _scaleY = eventArray[5];
 
+
 				eventImage = new FlxSprite(_x, _y);
 
 				if (Std.isOfType(_sprite, Array))

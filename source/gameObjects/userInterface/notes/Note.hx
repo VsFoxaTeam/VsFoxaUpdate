@@ -161,6 +161,7 @@ class Note extends FNFSprite
 		//
 		if (!isSustainNote)
 			newNote.animation.play(UIStaticArrow.getColorFromNumber(noteData) + 'Scroll');
+
 		if (isSustainNote && prevNote != null)
 		{
 			newNote.noteSpeed = prevNote.noteSpeed;

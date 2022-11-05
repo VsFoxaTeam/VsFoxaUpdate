@@ -168,7 +168,6 @@ class Character extends FNFSprite
 				playAnim('idle');
 			case 'spooky':
 				tex = Paths.getSparrowAtlas('spooky_kids_assets', 'characters/$curCharacter');
-				frames = tex;
 				animation.addByPrefix('singUP', 'spooky UP NOTE', 24, false);
 				animation.addByPrefix('singDOWN', 'spooky DOWN note', 24, false);
 				animation.addByPrefix('singLEFT', 'note sing left', 24, false);
@@ -344,6 +343,7 @@ class Character extends FNFSprite
 
 			case 'bf-christmas':
 				var tex = Paths.getSparrowAtlas('bfChristmas', 'characters/$curCharacter');
+
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -360,6 +360,7 @@ class Character extends FNFSprite
 
 				flipX = true;
 			case 'bf-car':
+
 				var tex = Paths.getSparrowAtlas('bfCar', 'characters/$curCharacter');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
@@ -378,6 +379,7 @@ class Character extends FNFSprite
 				flipX = true;
 			case 'bf-pixel':
 				frames = Paths.getSparrowAtlas('bfPixel', 'characters/$curCharacter');
+
 				animation.addByPrefix('idle', 'BF IDLE', 24, false);
 				animation.addByPrefix('singUP', 'BF UP NOTE', 24, false);
 				animation.addByPrefix('singLEFT', 'BF LEFT NOTE', 24, false);
@@ -492,7 +494,7 @@ class Character extends FNFSprite
 				{
 					var characterAnims:Array<String> = CoolUtil.coolTextFile(Paths.offsetTxt(fileNew));
 					var characterName:String = characterAnims[0].trim();
-					frames = Paths.getSparrowAtlas('$characterName/$characterName', 'characters/$curCharacter');
+					frames = Paths.getSparrowAtlas('$characterName', 'characters/$curCharacter');
 					for (i in 1...characterAnims.length)
 					{
 						var getterArray:Array<Array<String>> = CoolUtil.getAnimsFromTxt(Paths.offsetTxt(fileNew));

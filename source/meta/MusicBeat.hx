@@ -76,7 +76,6 @@ class MusicBeatState extends FNFUIState
 		}
 		if (skippedSteps.length > 0)
 			skippedSteps = [];
-
 		curStep = trueStep;
 
 		//

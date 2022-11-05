@@ -153,6 +153,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				add(skyBG);
 
 				var bgLimo:FNFSprite = new FNFSprite(-200, 480);
+
 				bgLimo.frames = Paths.getSparrowAtlas('bgLimo', 'stages/$curStage');
 				bgLimo.animation.addByPrefix('drive', "background limo pink", 24);
 				bgLimo.animation.play('drive');
@@ -188,7 +189,6 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				limo.antialiasing = true;
 
 				fastCar = new FNFSprite(-300, 160).loadGraphic(Paths.image('fastCarLol', 'stages/$curStage'));
-			// loadArray.add(limo);
 			case 'mall':
 				curStage = 'mall';
 				PlayState.defaultCamZoom = 0.80;
@@ -244,6 +244,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				add(santa);
 			case 'mallEvil':
 				curStage = 'mallEvil';
+
 				var bg:FNFSprite = new FNFSprite(-400, -500).loadGraphic(Paths.image('mall/evilBG', 'stages/$curStage'));
 				bg.antialiasing = true;
 				bg.scrollFactor.set(0.2, 0.2);
@@ -262,8 +263,6 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				add(evilSnow);
 			case 'school':
 				curStage = 'school';
-
-				// defaultCamZoom = 0.9;
 
 				var bgSky = new FNFSprite().loadGraphic(Paths.image('weebSky', 'stages/$curStage'));
 				bgSky.scrollFactor.set(0.1, 0.1);
@@ -326,6 +325,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			case 'schoolEvil':
 				var posX = 400;
 				var posY = 200;
+
 				var bg:FNFSprite = new FNFSprite(posX, posY);
 				bg.frames = Paths.getSparrowAtlas('animatedEvilSchool', 'stages/$curStage');
 				bg.animation.addByPrefix('idle', 'background 2', 24);
@@ -337,6 +337,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			default:
 				PlayState.defaultCamZoom = 0.9;
 				curStage = 'stage';
+
 				var bg:FNFSprite = new FNFSprite(-600, -200).loadGraphic(Paths.image('stageback', 'stages/$curStage'));
 				bg.antialiasing = true;
 				bg.scrollFactor.set(0.9, 0.9);
