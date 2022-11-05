@@ -3,7 +3,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="FNF: Forever Engine Ghost" file="FE-Ghost" packageName="com.beastlyghost.fe-ghost" package="com.beastlyghost.fe-ghost" main="Main" version="0.3.1" company="BeastlyGhost" />
+	<app title="FNF: Forever Engine Ghost" file="Forever Engine Ghost" packageName="com.beastlyghost.foreverengineghost" package="com.beastlyghost.foreverengineghost" main="Main" version="0.3.1" company="BeastlyGhost" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -37,8 +37,8 @@
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 
-	<set name="BUILD_DIR" value="export/debug-x86"  if="HXCPP_M32 debug" />
-	<set name="BUILD_DIR" value="export/release-x86"  if="HXCPP_M32 release" />
+	<set name="BUILD_DIR" value="export/debug-x86" if="HXCPP_M32 debug" />
+	<set name="BUILD_DIR" value="export/release-x86" if="HXCPP_M32 release" />
 
 	<source path="source" />
 	<assets path="assets" />

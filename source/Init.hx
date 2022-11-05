@@ -94,12 +94,7 @@ class Init extends FlxState
 			NOT_FORCED,
 			['UI', 'Notes']
 		],
-		'Opaque User Interface' => [
-			false,
-			Checkmark,
-			'Makes the UI (Healthbar, Icons, etc) opaque.',
-			NOT_FORCED
-		],
+		'Opaque User Interface' => [false, Checkmark, 'Makes the UI (Healthbar, Icons, etc) opaque.', NOT_FORCED],
 		'Counter' => [
 			'None',
 			Selector,

@@ -360,7 +360,6 @@ class Character extends FNFSprite
 
 				flipX = true;
 			case 'bf-car':
-
 				var tex = Paths.getSparrowAtlas('bfCar', 'characters/$curCharacter');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);

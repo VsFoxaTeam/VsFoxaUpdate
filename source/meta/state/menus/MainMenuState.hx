@@ -131,8 +131,7 @@ class MainMenuState extends MusicBeatState
 		// from the base game lol
 
 		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0,
-			"Forever Engine Legacy v" + Main.gameVersion
-			+ " [Ghost Build v" + Main.ghostVersion + "]", 12);
+			"Forever Engine Legacy v" + Main.gameVersion + " [Ghost Build v" + Main.ghostVersion + "]", 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
