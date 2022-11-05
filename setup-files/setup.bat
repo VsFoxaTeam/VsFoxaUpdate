@@ -1,109 +1,92 @@
 @echo off
-title Forever Engine Legacy Setup - Start
-echo Welcome to the Forever Engine Legacy Automatic Setup!
-TIMEOUT 3 >nul
-echo This will automatically install all of the needed libraries and dependencies for compiling.
-TIMEOUT 2 >nul
-pause
-cls
-
-title Forever Engine Legacy Setup - Installing Haxe
-echo Time to install Haxe - the open-source toolkit.
-TIMEOUT 2 >nul
-echo Make sure you download the latest version!
-TIMEOUT 2 >nul
-echo Redirecting to the Haxe download page...
-TIMEOUT 2 >nul
-start https://haxe.org/download/
-TIMEOUT 4 >nul
-echo Press any key to continue once you have finished installing Haxe.
+title FNF Setup - Start
+echo Make sure Haxe 4.1.5 and HaxeFlixel is installed (4.1.5 is important)!
+echo Press any key to install required libraries.
 pause >nul
-cls
-
-title Forever Engine Legacy Setup - Installing HaxeFlixel
-echo It is time to install the engine that Funkin' uses - HaxeFlixel.
-TIMEOUT 2 >nul
-echo Installing Haxeflixel...
-haxelib install lime
+title FNF Setup - Installing libraries
+echo Installing haxelib libraries...
+haxelib install lime 7.8.0
 haxelib install openfl
-haxelib install flixel
-haxelib run lime setup flixel
+haxelib install flixel 4.8.1
+haxelib install flixel-addons
+haxelib install flixel-ui
+haxelib install hscript
+haxelib install newgrounds
 haxelib run lime setup
 haxelib install flixel-tools
+title FNF Setup - User action required
+cls
 haxelib run flixel-tools setup
-TIMEOUT 4 >nul
-echo Press any key to continue once you have finished installing HaxeFlixel.
-pause >nul
 cls
-
-title Forever Engine Legacy Setup - Install Git
-echo Now, we have to install Git - software for distributed version control.
-TIMEOUT 2 >nul
-echo Make sure you download the latest version!
-TIMEOUT 2 >nul
-echo Redirecting to the Git download page...
-TIMEOUT 2 >nul
-start https://git-scm.com/downloads/
-TIMEOUT 4 >nul
-echo Press any key to contiue once you have finished installing Git.
-pause >nul
-cls
-
-title Forever Engine Legacy Setup - Installing Additional Libraries
-echo After installing Haxe, HaxeFlixel and Git, it is time to install the additional libraries needed for compiling.
-TIMEOUT 2 >nul
+echo Make sure you have git installed. You can download it here: https://git-scm.com/downloads
 echo Press any key to install polymod.
 pause >nul
-haxelib git polymod https://github.com/larsiusprime/polymod.git
-echo Press any key to install discord-rpc.
-pause >nul
+title FNF Setup - Installing libraries
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-echo Press any key to install hxcpp-debug-server.
-pause >nul
-haxelib install hxcpp-debug-server
-TIMEOUT 4 >nul
-echo Press any key to continue with the installation of VSCommunity and its dependencies.
-pause >nul
+haxelib git SScript https://github.com/BeastlyGhost/SScript-Ghost
 cls
+goto UserActions1
 
-title Forever Engine Legacy Setup - Installing Windows Dependencies
-echo Moving on from apps and libraries, it is time to install VSCommunity and the dependencies needed for compiling.
-TIMEOUT 2 >nul
-set /p menu="Would you like to install Visual Studio Community and components? [Y/N]"
-       if %menu%==Y goto ProceedWithVSCommunityInstall
-       if %menu%==y goto ProceedWithVSCommunityInstall
+:UserActions1
+title FNF Setup - User action required
+set /p menu="Would you like to fix the transition bug? [Y/N]"
+       if %menu%==Y goto FixTransitionBug
+       if %menu%==y goto FixTransitionBug
+       if %menu%==N goto UserActions2
+       if %menu%==n goto UserActions2
+       cls
+
+:UserActions2
+cls
+title FNF Setup - User action required
+set /p menu2="Would you like to automatically make the APIStuff file? [Y/N]"
+       if %menu2%==Y goto APIStuffYes
+       if %menu2%==y goto APIStuffYes
+       if %menu2%==N goto APIStuffNo
+       if %menu2%==n goto APIStuffNo
+       cls
+       
+:APIStuffYes
+rem Stores the APIStuff.hx contents automatically
+cd source
+(
+echo package;
+echo class APIStuff
+echo {
+echo         public static var API:String = "";
+echo         public static var EncKey:String = "";
+echo }
+)>APIStuff.hx
+cd ..
+goto APIStuffNo
+
+
+:APIStuffNo
+cls
+title FNF Setup - User action required
+set /p menu="Would you like to install Visual Studio Community and components? (Necessary to compile/ 5.5GB) [Y/N]"
+       if %menu%==Y goto InstallVSCommunity
+       if %menu%==y goto InstallVSCommunity
        if %menu%==N goto SkipVSCommunity
        if %menu%==n goto SkipVSCommunity
        cls
 
-:ProceedWithVSCommunityInstall
-title Forever Engine Legacy Setup - Installing Windows Dependencies
-set /p menu2="For which version of Windows would you like to install Visual Studio Community and components? [10/11]"
-        if %menu2%==10 goto InstallVSCommunityWin10
-        if %menu2%==11 goto InstallVSCommunityWin11
-        cls
-
-:InstallVSCommunityWin10
-title Forever Engine Legacy - Installing Visual Studio Community and Components (Windows 10)
-curl -# -O https://download.visualstudio.microsoft.com/download/pr/5c9aef4f-a79b-4b72-b379-14273860b285/58398a76f32a0149d38fba79bbf71b6084ccd4200ea665bf2bcd954cdc498c7f/vs_Community.exe
-vs_Community.exe --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK.20348
-del vs_Community.exe
-echo Press any key to complete the setup.
-pause >nul
-goto SkipVSCommunity
-
-:InstallVSCommunityWin11
-title Forever Engine Legacy - Instaling Visual Studio Community and Components (Windows 11)
-curl -# -O https://download.visualstudio.microsoft.com/download/pr/5c9aef4f-a79b-4b72-b379-14273860b285/58398a76f32a0149d38fba79bbf71b6084ccd4200ea665bf2bcd954cdc498c7f/vs_Community.exe
-vs_Community.exe --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.22621
-del vs_Community.exe
-echo Press any key to complete the setup.
-pause >nul
-goto SkipVSCommunity
 
 :SkipVSCommunity
 cls
-title Forever Engine Legacy Setup - Success
+title FNF Setup - Success
 echo Setup successful. Press any key to exit.
 pause >nul
 exit
+
+:FixTransitionBug
+title FNF Setup - Installing libraries
+haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
+goto UserActions2
+
+:InstallVSCommunity
+title FNF Setup - Installing Visual Studio Community
+curl -# -O https://download.visualstudio.microsoft.com/download/pr/3105fcfe-e771-41d6-9a1c-fc971e7d03a7/8eb13958dc429a6e6f7e0d6704d43a55f18d02a253608351b6bf6723ffdaf24e/vs_Community.exe
+vs_Community.exe --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK.19041 -p
+del vs_Community.exe
+goto SkipVSCommunity
