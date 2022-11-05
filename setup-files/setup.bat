@@ -1,5 +1,5 @@
 @echo off
-title Forever Engine Legacy Ghost - Start
+title Forever Engine Ghost - Start
 echo Welcome to the Forever Engine Ghost Automatic Setup!
 TIMEOUT 3 >nul
 echo This will automatically install all of the needed libraries and dependencies for compiling.
@@ -7,7 +7,7 @@ TIMEOUT 2 >nul
 pause
 cls
 
-title Forever Engine Legacy Setup - Installing Haxe
+title Forever Engine Ghost Setup - Installing Haxe
 echo Time to install Haxe - the open-source toolkit.
 TIMEOUT 2 >nul
 echo Make sure you download the latest version!
@@ -20,7 +20,7 @@ echo Press any key to continue once you have finished installing Haxe.
 pause >nul
 cls
 
-title Forever Engine Legacy Setup - Installing HaxeFlixel
+title Forever Engine Ghost Setup - Installing HaxeFlixel
 echo It is time to install the engine that Funkin' uses - HaxeFlixel.
 TIMEOUT 2 >nul
 echo Installing Haxeflixel...
@@ -36,7 +36,7 @@ echo Press any key to continue once you have finished installing HaxeFlixel.
 pause >nul
 cls
 
-title Forever Engine Legacy Setup - Install Git
+title Forever Engine Ghost Setup - Install Git
 echo Now, we have to install Git - software for distributed version control.
 TIMEOUT 2 >nul
 echo Make sure you download the latest version!
@@ -49,7 +49,7 @@ echo Press any key to contiue once you have finished installing Git.
 pause >nul
 cls
 
-title Forever Engine Legacy Setup - Installing Additional Libraries
+title Forever Engine Ghost Setup - Installing Additional Libraries
 echo After installing Haxe, HaxeFlixel and Git, it is time to install the additional libraries needed for compiling.
 TIMEOUT 2 >nul
 echo Press any key to install hxcpp-debug-server.
