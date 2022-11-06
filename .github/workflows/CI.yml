@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.5.0
+      - uses: actions/checkout@v3.1.0
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.2.5
@@ -21,13 +21,13 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null
           haxelib install lime
           haxelib install openfl
           haxelib install flixel
-          haxelib run lime setup flixel
-          haxelib run lime setup
-          haxelib run flixel-tools setup
-          haxelib install hxcpp-debug-server
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hscript
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git SScript https://github.com/BeastlyGhost/SScript-Ghost
@@ -53,13 +53,13 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup C:\haxelib
+          haxelib install hxcpp > /dev/null
           haxelib install lime
           haxelib install openfl
           haxelib install flixel
-          haxelib run lime setup flixel
-          haxelib run lime setup
-          haxelib run flixel-tools setup
-          haxelib install hxcpp-debug-server
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hscript
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git SScript https://github.com/BeastlyGhost/SScript-Ghost
@@ -86,17 +86,16 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null
           haxelib install lime
           haxelib install openfl
           haxelib install flixel
-          haxelib run lime setup flixel
-          haxelib run lime setup
-          haxelib run flixel-tools setup
-          haxelib install hxcpp-debug-server
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hscript
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git SScript https://github.com/BeastlyGhost/SScript-Ghost
-
       - name: Compile
         run: haxelib run lime build mac -release
 
