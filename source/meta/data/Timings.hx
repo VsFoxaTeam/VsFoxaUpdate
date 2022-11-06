@@ -109,9 +109,8 @@ class Timings
 		comboDisplay = "";
 		if (judgementsMap.get(smallestRating)[4] != null)
 			comboDisplay = judgementsMap.get(smallestRating)[4];
-		else
-			if (misses < 10)
-				comboDisplay = 'SDCB';
+		else if (misses < 10)
+			comboDisplay = 'SDCB';
 
 		// this updates the most so uh
 		PlayState.uiHUD.updateScoreText();
@@ -137,6 +136,7 @@ class Timings
 			accuracyFinal = '${Math.floor(trueAccuracy * 100) / 100}';
 		return accuracyFinal;
 	}
+
 	public static function returnScoreRating()
 	{
 		return ratingFinal;
