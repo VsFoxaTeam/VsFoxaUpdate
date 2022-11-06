@@ -96,6 +96,7 @@ jobs:
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git SScript https://github.com/BeastlyGhost/SScript-Ghost
+
       - name: Compile
         run: haxelib run lime build mac -release
 
