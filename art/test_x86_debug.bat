@@ -1,6 +1,6 @@
 @echo off
 color 0a
-title FNF: Forever Engine - Running Game (DEBUG MODE)
+title FNF: Forever Engine Feather - Running Game (DEBUG MODE)
 cd ..
 echo BUILDING...
 echo IF IT CRASHES AFTER THE TITLESCREEN OR WHEN GOING TO PLAYSTATE
