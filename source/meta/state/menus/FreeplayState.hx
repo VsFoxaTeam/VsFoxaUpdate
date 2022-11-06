@@ -16,7 +16,7 @@ import gameObjects.userInterface.HealthIcon;
 import lime.utils.Assets;
 import meta.MusicBeat.MusicBeatState;
 import meta.data.*;
-import meta.data.Song.SwagSong;
+import meta.data.SongInfo.SwagSong;
 import meta.data.dependency.Discord;
 import meta.data.font.Alphabet;
 import openfl.media.Sound;
@@ -32,7 +32,7 @@ class FreeplayState extends MusicBeatState
 	var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
-	var curSelected:Int = 0;
+	static var curSelected:Int = 0;
 	var curSongPlaying:Int = -1;
 	var curDifficulty:Int = 1;
 

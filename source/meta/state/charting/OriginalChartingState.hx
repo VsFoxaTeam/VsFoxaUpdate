@@ -29,8 +29,8 @@ import lime.utils.Assets;
 import meta.MusicBeat.MusicBeatState;
 import meta.data.*;
 import meta.data.Conductor.BPMChangeEvent;
-import meta.data.Section.SwagSection;
-import meta.data.Song.SwagSong;
+import meta.data.SongInfo.SwagSection;
+import meta.data.SongInfo.SwagSong;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
@@ -1126,7 +1126,7 @@ class OriginalChartingState extends MusicBeatState
 
 	function loadAutosave():Void
 	{
-		PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
+		PlayState.SONG = Song.parseSong(FlxG.save.data.autosave, null);
 		FlxG.resetState();
 	}
 

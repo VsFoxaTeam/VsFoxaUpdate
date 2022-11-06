@@ -29,7 +29,7 @@ class GameOverSubstate extends MusicBeatSubState
 			case 'bf-og':
 				daBf = daBoyfriendType;
 			case 'bf-pixel':
-				daBf = 'bf-pixel-dead';
+				daBf = 'bf-dead-pixel';
 				stageSuffix = '-pixel';
 			default:
 				daBf = 'bf-dead';

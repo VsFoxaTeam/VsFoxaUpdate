@@ -1,6 +1,6 @@
 package meta.data;
 
-import meta.data.Song.SwagSong;
+import meta.data.SongInfo.SwagSong;
 
 /*
 	Stuff like this is why this is a mod engine and not a rewrite.

@@ -28,14 +28,14 @@ import flixel.util.FlxGradient;
 import gameObjects.*;
 import gameObjects.userInterface.*;
 import gameObjects.userInterface.notes.*;
-import gameObjects.userInterface.notes.Strumline.UIStaticArrow;
+import gameObjects.userInterface.notes.Strumline.Receptor;
 import haxe.Json;
 import haxe.io.Bytes;
 import lime.media.AudioBuffer;
 import meta.MusicBeat.MusicBeatState;
 import meta.data.*;
-import meta.data.Section.SwagSection;
-import meta.data.Song.SwagSong;
+import meta.data.SongInfo.SwagSection;
+import meta.data.SongInfo.SwagSong;
 import meta.data.dependency.Discord;
 import meta.subState.charting.*;
 import openfl.events.Event;
@@ -81,7 +81,7 @@ class ChartingState extends MusicBeatState
 	private var curRenderedSustains:FlxTypedGroup<Note>;
 	private var curRenderedSections:FlxTypedGroup<FlxBasic>;
 
-	private var arrowGroup:FlxTypedSpriteGroup<UIStaticArrow>;
+	private var arrowGroup:FlxTypedSpriteGroup<Receptor>;
 
 	override public function create()
 	{
@@ -124,15 +124,15 @@ class ChartingState extends MusicBeatState
 		add(dummyArrow);
 
 		// and now the epic note thingies
-		arrowGroup = new FlxTypedSpriteGroup<UIStaticArrow>(0, 0);
+		arrowGroup = new FlxTypedSpriteGroup<Receptor>(0, 0);
 		for (i in 0...keysTotal)
 		{
 			var typeReal:Int = i;
 			if (typeReal > 3)
 				typeReal -= 4;
 
-			var newArrow:UIStaticArrow = ForeverAssets.generateUIArrows(((FlxG.width / 2) - ((keysTotal / 2) * gridSize)) + ((i - 1) * gridSize), -76,
-				typeReal, 'chart editor');
+			var newArrow:Receptor = ForeverAssets.generateUIArrows(((FlxG.width / 2) - ((keysTotal / 2) * gridSize)) + ((i - 1) * gridSize), -76, typeReal,
+				'note_array', 'chart editor');
 
 			newArrow.ID = i;
 			newArrow.setGraphicSize(gridSize);

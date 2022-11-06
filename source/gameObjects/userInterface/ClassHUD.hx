@@ -40,13 +40,11 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
 
-	public var stupidHealth:Float = 0;
-
 	public var timingsMap:Map<String, FlxText> = [];
 
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = CoolUtil.difficultyFromNumber(PlayState.storyDifficulty);
-	public var engineDisplay:String = "F.E. GHOST v" + Main.ghostVersion;
+	public var engineDisplay:String = "F.E. FEATHER v" + Main.ghostVersion;
 
 	public var storedSprites:Array<FlxSprite> = [];
 	public var storedTexts:Array<FlxText> = [];
@@ -123,6 +121,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 				textAsset.scrollFactor.set();
 				timingsMap.set(judgementNameArray[i], textAsset);
 				add(textAsset);
+				storedTexts.push(textAsset);
 			}
 		}
 		updateScoreText();
@@ -157,20 +156,26 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		iconP2.updateAnim(100 - healthBar.percent);
 	}
 
-	private final divider:String = " • ";
+	private var divider:String = " • ";
 
 	public function updateScoreText()
 	{
-		scoreBar.text = 'Score: ' + PlayState.songScore;
+		scoreDisplay = 'Score: ' + PlayState.songScore;
+
 		// testing purposes
 		var displayAccuracy:Bool = Init.trueSettings.get('Display Accuracy');
 		if (displayAccuracy)
 		{
-			scoreBar.text += divider + 'Accuracy: ' + Std.string(Math.floor(Timings.getAccuracy() * 100) / 100) + '%' + Timings.comboDisplay;
-			scoreBar.text += divider + 'Combo Breaks: ' + PlayState.misses;
-			scoreBar.text += divider + 'Rank: ' + Std.string(Timings.returnScoreRating().toUpperCase());
+			scoreDisplay += divider + 'Accuracy: ' + Std.string(Math.floor(Timings.getAccuracy() * 100) / 100) + '%' + Timings.comboDisplay;
+			scoreDisplay += divider + 'Combo Breaks: ' + PlayState.misses;
+			scoreDisplay += divider + 'Rank: ' + Std.string(Timings.returnScoreRating().toUpperCase());
 		}
-		scoreBar.text += '\n';
+		scoreDisplay += '\n';
+
+		// safety measure ig;
+		if (scoreBar.text != scoreDisplay)
+			scoreBar.text = scoreDisplay;
+
 		scoreBar.x = Math.floor((FlxG.width / 2) - (scoreBar.width / 2));
 
 		// update counter

@@ -15,6 +15,8 @@ import meta.MusicBeat.MusicBeatSubState;
 import meta.data.font.Alphabet;
 import meta.state.*;
 import meta.state.menus.*;
+import sys.thread.Mutex;
+import sys.thread.Thread;
 
 class PauseSubState extends MusicBeatSubState
 {
@@ -25,15 +27,22 @@ class PauseSubState extends MusicBeatSubState
 
 	var pauseMusic:FlxSound;
 
+	var mutex:Mutex;
+
 	public function new(x:Float, y:Float)
 	{
 		super();
 
-		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
-		pauseMusic.volume = 0;
-		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
-
-		FlxG.sound.list.add(pauseMusic);
+		mutex = new Mutex();
+		Thread.create(function()
+		{
+			mutex.acquire();
+			pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+			pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
+			FlxG.sound.list.add(pauseMusic);
+			pauseMusic.volume = 0;
+			mutex.release();
+		});
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
@@ -128,13 +137,17 @@ class PauseSubState extends MusicBeatSubState
 			}
 		}
 
-		if (pauseMusic.volume < 0.5)
-			pauseMusic.volume += 0.01 * elapsed;
+		if (pauseMusic != null && pauseMusic.playing)
+		{
+			if (pauseMusic.volume < 0.5)
+				pauseMusic.volume += 0.01 * elapsed;
+		}
 	}
 
 	override function destroy()
 	{
-		pauseMusic.destroy();
+		if (pauseMusic != null)
+			pauseMusic.destroy();
 
 		super.destroy();
 	}

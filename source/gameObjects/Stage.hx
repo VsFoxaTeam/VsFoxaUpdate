@@ -48,47 +48,45 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 	public var curStage:String;
 
-	var daPixelZoom = PlayState.daPixelZoom;
+	public var spawnGirlfriend:Bool = true;
 
 	public var foreground:FlxTypedGroup<FlxBasic>;
+	public var layers:FlxTypedGroup<FlxBasic>;
 
 	public function new(curStage)
 	{
 		super();
+
 		this.curStage = curStage;
-
-		/// get hardcoded stage type if chart is fnf style
-		if (PlayState.determinedChartType == "FNF")
-		{
-			// this is because I want to avoid editing the fnf chart type
-			// custom stage stuffs will come with forever charts
-			switch (CoolUtil.spaceToDash(PlayState.SONG.song.toLowerCase()))
-			{
-				case 'spookeez' | 'south' | 'monster':
-					curStage = 'spooky';
-				case 'pico' | 'blammed' | 'philly-nice':
-					curStage = 'philly';
-				case 'milf' | 'satin-panties' | 'high':
-					curStage = 'highway';
-				case 'cocoa' | 'eggnog':
-					curStage = 'mall';
-				case 'winter-horrorland':
-					curStage = 'mallEvil';
-				case 'senpai' | 'roses':
-					curStage = 'school';
-				case 'thorns':
-					curStage = 'schoolEvil';
-				default:
-					curStage = 'stage';
-			}
-
-			PlayState.curStage = curStage;
-		}
 
 		// to apply to foreground use foreground.add(); instead of add();
 		foreground = new FlxTypedGroup<FlxBasic>();
 
-		//
+		// to add above girlfriend, use layers.add(); instead of add();
+		layers = new FlxTypedGroup<FlxBasic>();
+
+		switch (CoolUtil.spaceToDash(PlayState.SONG.song.toLowerCase()))
+		{
+			case 'spookeez' | 'south' | 'monster':
+				curStage = 'spooky';
+			case 'pico' | 'blammed' | 'philly-nice':
+				curStage = 'philly';
+			case 'milf' | 'satin-panties' | 'high':
+				curStage = 'highway';
+			case 'cocoa' | 'eggnog':
+				curStage = 'mall';
+			case 'winter-horrorland':
+				curStage = 'mallEvil';
+			case 'senpai' | 'roses':
+				curStage = 'school';
+			case 'thorns':
+				curStage = 'schoolEvil';
+			default:
+				curStage = 'stage';
+		}
+
+		PlayState.curStage = curStage;
+
 		switch (curStage)
 		{
 			case 'spooky':
@@ -134,13 +132,11 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				var streetBehind:FNFSprite = new FNFSprite(-40, 50).loadGraphic(Paths.image('behindTrain', 'stages/$curStage'));
 				add(streetBehind);
 
-				phillyTrain = new FNFSprite(2000, 360).loadGraphic(Paths.image('train'));
+				phillyTrain = new FNFSprite(2000, 360).loadGraphic(Paths.image('train', 'stages/$curStage'));
 				add(phillyTrain);
 
 				trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
 				FlxG.sound.list.add(trainSound);
-
-				// var cityLights:FNFSprite = new FNFSprite().loadGraphic(AssetPaths.win0.png);
 
 				var street:FNFSprite = new FNFSprite(-40, streetBehind.y).loadGraphic(Paths.image('street', 'stages/$curStage'));
 				add(street);
@@ -187,6 +183,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				limo.animation.addByPrefix('drive', "Limo stage", 24);
 				limo.animation.play('drive');
 				limo.antialiasing = true;
+				layers.add(limo);
 
 				fastCar = new FNFSprite(-300, 160).loadGraphic(Paths.image('fastCarLol', 'stages/$curStage'));
 			case 'mall':
@@ -224,7 +221,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				add(tree);
 
 				bottomBoppers = new FNFSprite(-300, 140);
-				bottomBoppers.frames = Paths.getSparrowAtlas('bottomBop');
+				bottomBoppers.frames = Paths.getSparrowAtlas('bottomBop', 'stages/$curStage');
 				bottomBoppers.animation.addByPrefix('bop', 'Bottom Level Boppers', 24, false);
 				bottomBoppers.antialiasing = true;
 				bottomBoppers.scrollFactor.set(0.9, 0.9);
@@ -245,7 +242,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			case 'mallEvil':
 				curStage = 'mallEvil';
 
-				var bg:FNFSprite = new FNFSprite(-400, -500).loadGraphic(Paths.image('mall/evilBG', 'stages/$curStage'));
+				var bg:FNFSprite = new FNFSprite(-400, -500).loadGraphic(Paths.image('evilBG', 'stages/mall'));
 				bg.antialiasing = true;
 				bg.scrollFactor.set(0.2, 0.2);
 				bg.active = false;
@@ -253,12 +250,12 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				bg.updateHitbox();
 				add(bg);
 
-				var evilTree:FNFSprite = new FNFSprite(300, -300).loadGraphic(Paths.image('mall/evilTree', 'stages/$curStage'));
+				var evilTree:FNFSprite = new FNFSprite(300, -300).loadGraphic(Paths.image('evilTree', 'stages/mall'));
 				evilTree.antialiasing = true;
 				evilTree.scrollFactor.set(0.2, 0.2);
 				add(evilTree);
 
-				var evilSnow:FNFSprite = new FNFSprite(-200, 700).loadGraphic(Paths.image("mall/evilSnow", 'stages/$curStage'));
+				var evilSnow:FNFSprite = new FNFSprite(-200, 700).loadGraphic(Paths.image("evilSnow", 'stages/mall'));
 				evilSnow.antialiasing = true;
 				add(evilSnow);
 			case 'school':
@@ -319,7 +316,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				if (PlayState.SONG.song.toLowerCase() == 'roses')
 					bgGirls.getScared();
 
-				bgGirls.setGraphicSize(Std.int(bgGirls.width * daPixelZoom));
+				bgGirls.setGraphicSize(Std.int(bgGirls.width * PlayState.daPixelZoom));
 				bgGirls.updateHitbox();
 				add(bgGirls);
 			case 'schoolEvil':

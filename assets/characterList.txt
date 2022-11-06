@@ -1,4 +1,5 @@
 bf
+bf-psych
 dad
 gf
 spooky
@@ -18,4 +19,4 @@ spirit
 tankman
 pico-speaker
 bf-holding-gf
-shubs
+placeholder

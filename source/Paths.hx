@@ -9,6 +9,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import lime.utils.Assets;
 import meta.CoolUtil;
 import openfl.display.BitmapData;
+import gameObjects.Character;
 import openfl.display3D.textures.Texture;
 import openfl.media.Sound;
 import openfl.system.System;
@@ -25,6 +26,8 @@ class Paths
 
 	// level we're loading
 	static var currentLevel:String;
+
+	public static var scriptExts:Array<String> = ['hx', 'hxs', 'hscript', 'hxc'];
 
 	// set the current level top the condition of this function if called
 	static public function setCurrentLevel(name:String)
@@ -160,7 +163,7 @@ class Paths
 	}
 
 	//
-	inline public static function getPath(file:String, type:AssetType, ?library:Null<String>)
+	inline public static function getPath(file:String, ?type:AssetType, ?library:Null<String>)
 	{
 		/*
 				Okay so, from what I understand, this loads in the current path based on the level
@@ -194,22 +197,6 @@ class Paths
 		return getPreloadPath(file);
 	}
 
-	// files!
-	// this is how I'm gonna do it, considering it's much cleaner in my opinion
-
-	/*
-		inline static public function returnFileType(fileName:String, ?library:String, fileExtension:String)
-		{
-			// I don't really use haxe so bare with me
-			var returnFile:String = "$" + fileName + "." + fileExtension;
-			return getPath()
-	}//*/
-	/*  
-		actually I could just combine all of these main functions into one and really call it a day
-		it's similar and would use one function with a switch case
-		for now I'm more focused on getting this to run than anything and I'll clean out the code later as I do want to organise
-		everything later 
-	 */
 	static public function getLibraryPath(file:String, library = "preload")
 	{
 		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
@@ -245,7 +232,7 @@ class Paths
 
 	inline static public function offsetTxt(key:String, ?library:String)
 	{
-		return getPath('characters/$key.txt', TEXT, library);
+		return getPath('characters/$key/$key.txt', TEXT, library);
 	}
 
 	inline static public function json(key:String, ?library:String)
@@ -307,5 +294,37 @@ class Paths
 	inline static public function getPackerAtlas(key:String, folder:String = 'images', ?library:String)
 	{
 		return (FlxAtlasFrames.fromSpriteSheetPacker(image(key, folder, library), file('$folder/$key.txt', library)));
+	}
+
+	inline static public function characterModule(folder:String, character:String, ?type:CharacterOrigin, ?library:String)
+	{
+		var extension:String = '';
+
+		if (folder == null)
+			folder = 'placeholder';
+
+		if (character == null)
+			character = 'placeholder';
+
+		switch (type)
+		{
+			case PSYCH_ENGINE:
+				extension = '.json';
+			case UNDERSCORE | FOREVER_GHOST:
+				// this is diabolic;
+				for (j in scriptExts)
+				{
+					if (FileSystem.exists(getPath('characters/$folder/$character.$j', TEXT, library)))
+						extension = '.$j';
+					else
+						extension = '.hxs';
+				}
+				extension = '.hxs';
+			case FUNKIN_COCOA:
+				extension = '.char';
+			default:
+				extension = '';
+		}
+		return getPath('characters/$folder/$character' + '$extension', TEXT, library);
 	}
 }

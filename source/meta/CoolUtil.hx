@@ -100,4 +100,38 @@ class CoolUtil
 		}
 		return dumbArray;
 	}
+
+	/**
+		Returns an array with the files of the specified directory.
+		Example usage:
+		var fileArray:Array<String> = CoolUtil.absoluteDirectory('scripts');
+		trace(fileArray); -> ['mods/scripts/modchart.hx', 'assets/scripts/script.hx']
+	**/
+	public static function absoluteDirectory(file:String):Array<String>
+	{
+		if (!file.endsWith('/'))
+			file = '$file/';
+
+		var path:String = Paths.getPath(file);
+
+		var absolutePath:String = FileSystem.absolutePath(path);
+		var directory:Array<String> = FileSystem.readDirectory(absolutePath);
+
+		if (directory != null)
+		{
+			var dirCopy:Array<String> = directory.copy();
+
+			for (i in dirCopy)
+			{
+				var index:Int = dirCopy.indexOf(i);
+				var file:String = '$path$i';
+				dirCopy.remove(i);
+				dirCopy.insert(index, file);
+			}
+
+			directory = dirCopy;
+		}
+
+		return if (directory != null) directory else [];
+	}
 }

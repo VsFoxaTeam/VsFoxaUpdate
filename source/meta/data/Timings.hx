@@ -45,6 +45,8 @@ class Timings
 	public static var gottenJudgements:Map<String, Int> = [];
 	public static var smallestRating:String;
 
+	public static var perfectCombo:Bool = false;
+
 	public static function callAccuracy()
 	{
 		// reset the accuracy to 0%
@@ -66,6 +68,7 @@ class Timings
 
 		notesHit = 0;
 		segmentsHit = 0;
+		perfectCombo = true;
 
 		ratingFinal = "N/A";
 

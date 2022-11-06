@@ -16,15 +16,7 @@ import meta.state.PlayState;
 
 using StringTools;
 
-/*
-	import flixel.FlxG;
-
-	import flixel.animation.FlxBaseAnimation;
-	import flixel.graphics.frames.FlxAtlasFrames;
-	import flixel.tweens.FlxEase;
-	import flixel.tweens.FlxTween; 
- */
-class UIStaticArrow extends FlxSprite
+class Receptor extends FlxSprite
 {
 	/*  Oh hey, just gonna port this code from the previous Skater engine 
 		(depending on the release of this you might not have it cus I might rewrite skater to use this engine instead)
@@ -34,7 +26,7 @@ class UIStaticArrow extends FlxSprite
 		uh hey you're cute ;)
 	 */
 	public var animOffsets:Map<String, Array<Dynamic>>;
-	public var babyArrowType:Int = 0;
+	public var strumData:Int = 0;
 	public var canFinishAnimation:Bool = true;
 
 	public var initialX:Int;
@@ -46,13 +38,13 @@ class UIStaticArrow extends FlxSprite
 
 	public var setAlpha:Float = (Init.trueSettings.get('Opaque Arrows')) ? 1 : 0.8;
 
-	public function new(x:Float, y:Float, ?babyArrowType:Int = 0)
+	public function new(x:Float, y:Float, ?strumData:Int = 0)
 	{
 		// this extension is just going to rely a lot on preexisting code as I wanna try to write an extension before I do options and stuff
 		super(x, y);
 		animOffsets = new Map<String, Array<Dynamic>>();
 
-		this.babyArrowType = babyArrowType;
+		this.strumData = strumData;
 
 		updateHitbox();
 		scrollFactor.set();
@@ -124,23 +116,30 @@ class UIStaticArrow extends FlxSprite
 class Strumline extends FlxTypedGroup<FlxBasic>
 {
 	//
-	public var receptors:FlxTypedGroup<UIStaticArrow>;
+	public var receptors:FlxTypedGroup<Receptor>;
 	public var splashNotes:FlxTypedGroup<NoteSplash>;
 	public var notesGroup:FlxTypedGroup<Note>;
 	public var holdsGroup:FlxTypedGroup<Note>;
 	public var allNotes:FlxTypedGroup<Note>;
 
-	public var autoplay:Bool = true;
-	public var character:Character;
-	public var playState:PlayState;
-	public var displayJudgements:Bool = false;
+	public var characters:Array<Character>;
 
-	public function new(x:Float = 0, playState:PlayState, ?character:Character, ?displayJudgements:Bool = true, ?autoplay:Bool = true,
-			?noteSplashes:Bool = false, ?keyAmount:Int = 4, ?downscroll:Bool = false, ?parent:Strumline)
+	public var doTween:Bool = true;
+	public var autoplay:Bool = true;
+	public var displayJudges:Bool = false;
+
+	public var keyAmount:Int = 4;
+	public var xPos:Float = 0;
+	public var yPos:Float = 0;
+
+	public var receptorFrames:String = 'NOTE_assets';
+
+	public function new(xPos:Float = 0, yPos:Float = 0, receptorFrames:String = 'NOTE_assets', characters:Array<Character>, ?downscroll:Bool = false,
+			?displayJudges:Bool = true, ?autoplay:Bool = true, ?doTween:Bool = true, ?keyAmount:Int = 4)
 	{
 		super();
 
-		receptors = new FlxTypedGroup<UIStaticArrow>();
+		receptors = new FlxTypedGroup<Receptor>();
 		splashNotes = new FlxTypedGroup<NoteSplash>();
 		notesGroup = new FlxTypedGroup<Note>();
 		holdsGroup = new FlxTypedGroup<Note>();
@@ -148,29 +147,63 @@ class Strumline extends FlxTypedGroup<FlxBasic>
 		allNotes = new FlxTypedGroup<Note>();
 
 		this.autoplay = autoplay;
-		this.character = character;
-		this.playState = playState;
-		this.displayJudgements = displayJudgements;
+		this.characters = characters;
+		this.doTween = doTween;
+
+		this.displayJudges = displayJudges;
+		this.receptorFrames = receptorFrames;
+
+		this.xPos = xPos;
+		this.keyAmount = keyAmount;
+		this.yPos = yPos;
+
+		reloadReceptors();
+	}
+
+	public function reloadReceptors(?xNew:Float, ?yNew:Float, skipTween:Bool = false)
+	{
+		receptors.forEachAlive(function(receptor:Receptor)
+		{
+			receptor.destroy();
+		});
+		receptors.clear();
+
+		splashNotes.forEachAlive(function(noteSplash:NoteSplash)
+		{
+			noteSplash.destroy();
+		});
+		splashNotes.clear();
+
+		doTween = !skipTween;
 
 		for (i in 0...keyAmount)
 		{
-			var staticArrow:UIStaticArrow = ForeverAssets.generateUIArrows(-25 + x, 25 + (downscroll ? FlxG.height - 200 : 0), i, PlayState.assetModifier);
-			staticArrow.ID = i;
+			var receptor:Receptor = ForeverAssets.generateUIArrows(-20 + (xNew == null ? xPos : xNew), 25 + (yNew == null ? yPos : yNew), i, receptorFrames,
+				PlayState.assetModifier);
+			receptor.ID = i;
 
-			staticArrow.x -= ((keyAmount / 2) * Note.swagWidth);
-			staticArrow.x += (Note.swagWidth * i);
-			receptors.add(staticArrow);
+			receptor.x -= ((keyAmount / 2) * Note.swagWidth);
+			receptor.x += (Note.swagWidth * i);
+			receptors.add(receptor);
 
-			staticArrow.initialX = Math.floor(staticArrow.x);
-			staticArrow.initialY = Math.floor(staticArrow.y);
-			staticArrow.angleTo = 0;
-			staticArrow.y -= 10;
-			staticArrow.playAnim('static');
+			receptor.initialX = Math.floor(receptor.x);
+			receptor.initialY = Math.floor(receptor.y);
+			receptor.angleTo = 0;
+			receptor.y -= 10;
+			receptor.playAnim('static');
 
-			staticArrow.alpha = 0;
-			FlxTween.tween(staticArrow, {y: staticArrow.initialY, alpha: staticArrow.setAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+			if (doTween)
+			{
+				receptor.alpha = 0;
+				FlxTween.tween(receptor, {y: receptor.initialY, alpha: receptor.setAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+			}
+			else
+			{
+				receptor.y = receptor.initialY;
+				receptor.alpha = receptor.setAlpha;
+			}
 
-			if (noteSplashes)
+			if (displayJudges)
 			{
 				var noteSplash:NoteSplash = ForeverAssets.generateNoteSplashes('noteSplashes', PlayState.assetModifier, PlayState.changeableSkin, 'UI', i);
 				splashNotes.add(noteSplash);
