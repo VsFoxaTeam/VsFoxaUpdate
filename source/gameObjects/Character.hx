@@ -78,7 +78,7 @@ class Character extends FNFSprite
 		var tex:FlxAtlasFrames;
 
 		characterData = {
-			flipX: false,
+			flipX: isPlayer,
 			flipY: false,
 			offsetY: 0,
 			offsetX: 0,
