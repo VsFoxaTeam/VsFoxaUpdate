@@ -7,6 +7,7 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import gameObjects.userInterface.notes.*;
+import gameObjects.Character;
 import meta.data.SongInfo.TimedEvent;
 import meta.data.SongInfo.SwagSection;
 import meta.data.SongInfo.SwagSong;
@@ -36,6 +37,8 @@ class ChartParser
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 				// define the note's animation (in accordance to the original game)!
 				var daNoteAlt:Float = 0;
+				var daNoteType:String = 'default';
+				var daNoteSkin:String = 'NOTE_assets';
 
 				// very stupid but I'm lazy
 				if (songNotes.length > 2)
@@ -48,6 +51,10 @@ class ChartParser
 				if (songNotes[1] > 3)
 					gottaHitNote = !section.mustHitSection;
 
+				var char:Character = (gottaHitNote ? PlayState.boyfriend : PlayState.opponent);
+				if (char != null)
+					daNoteSkin = char.characterData.noteSkin;
+
 				// define the note that comes before (previous note)
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
@@ -56,20 +63,20 @@ class ChartParser
 					oldNote = null;
 
 				// create the new note
-				var swagNote:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteData, 0, daNoteAlt);
+				var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, PlayState.assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
 
+				swagNote.noteType = daNoteType;
 				swagNote.noteSpeed = songData.speed;
 				swagNote.mustPress = gottaHitNote;
+
+				if (swagNote.noteData > -1) // don't push notes if they are an event??
+					unspawnNotes.push(swagNote);
 
 				// set the note's length (sustain note)
 				swagNote.sustainLength = songNotes[2];
 				if (swagNote.sustainLength > 0)
 					swagNote.sustainLength = Math.round(swagNote.sustainLength / Conductor.stepCrochet) * Conductor.stepCrochet;
 				swagNote.scrollFactor.set(0, 0);
-				var susLength:Float = swagNote.sustainLength;
-
-				if (swagNote.noteData > -1) // don't push notes if they are an event??
-					unspawnNotes.push(swagNote);
 
 				if (swagNote.sustainLength > 0)
 				{
@@ -82,8 +89,8 @@ class ChartParser
 						{
 							oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-							var sustainNote:Note = ForeverAssets.generateArrow(PlayState.assetModifier,
-								daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, 0, daNoteAlt, true, oldNote);
+							var sustainNote:Note = ForeverAssets.generateArrow(daNoteSkin, PlayState.assetModifier,
+								daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteAlt, daNoteType, true, oldNote);
 							sustainNote.mustPress = gottaHitNote;
 							sustainNote.scrollFactor.set();
 

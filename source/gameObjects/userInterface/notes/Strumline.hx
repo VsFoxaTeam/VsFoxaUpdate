@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.tweens.FlxEase;
@@ -37,6 +38,9 @@ class Receptor extends FlxSprite
 	public var angleTo:Float;
 
 	public var setAlpha:Float = (Init.trueSettings.get('Opaque Arrows')) ? 1 : 0.8;
+
+	public static var actions:Array<String> = ['left', 'down', 'up', 'right'];
+	public static var colors:Array<String> = ['purple', 'blue', 'green', 'red'];
 
 	public function new(x:Float, y:Float, ?strumData:Int = 0)
 	{
@@ -73,54 +77,15 @@ class Receptor extends FlxSprite
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 		animOffsets[name] = [x, y];
-
-	public static function getArrowFromNumber(numb:Int)
-	{
-		// yeah no I'm not writing the same shit 4 times over
-		// take it or leave it my guy
-		var stringSect:String = '';
-		switch (numb)
-		{
-			case(0):
-				stringSect = 'left';
-			case(1):
-				stringSect = 'down';
-			case(2):
-				stringSect = 'up';
-			case(3):
-				stringSect = 'right';
-		}
-		return stringSect;
-		//
-	}
-
-	// that last function was so useful I gave it a sequel
-	public static function getColorFromNumber(numb:Int)
-	{
-		var stringSect:String = '';
-		switch (numb)
-		{
-			case(0):
-				stringSect = 'purple';
-			case(1):
-				stringSect = 'blue';
-			case(2):
-				stringSect = 'green';
-			case(3):
-				stringSect = 'red';
-		}
-		return stringSect;
-		//
-	}
 }
 
-class Strumline extends FlxTypedGroup<FlxBasic>
+class Strumline extends FlxSpriteGroup
 {
 	//
-	public var receptors:FlxTypedGroup<Receptor>;
-	public var splashNotes:FlxTypedGroup<NoteSplash>;
-	public var notesGroup:FlxTypedGroup<Note>;
-	public var holdsGroup:FlxTypedGroup<Note>;
+	public var receptors:FlxTypedSpriteGroup<Receptor>;
+	public var splashNotes:FlxTypedSpriteGroup<NoteSplash>;
+	public var notesGroup:FlxTypedSpriteGroup<Note>;
+	public var holdsGroup:FlxTypedSpriteGroup<Note>;
 	public var allNotes:FlxTypedGroup<Note>;
 
 	public var characters:Array<Character>;
@@ -140,10 +105,10 @@ class Strumline extends FlxTypedGroup<FlxBasic>
 	{
 		super();
 
-		receptors = new FlxTypedGroup<Receptor>();
-		splashNotes = new FlxTypedGroup<NoteSplash>();
-		notesGroup = new FlxTypedGroup<Note>();
-		holdsGroup = new FlxTypedGroup<Note>();
+		receptors = new FlxTypedSpriteGroup<Receptor>();
+		splashNotes = new FlxTypedSpriteGroup<NoteSplash>();
+		notesGroup = new FlxTypedSpriteGroup<Note>();
+		holdsGroup = new FlxTypedSpriteGroup<Note>();
 
 		allNotes = new FlxTypedGroup<Note>();
 
@@ -196,7 +161,8 @@ class Strumline extends FlxTypedGroup<FlxBasic>
 			if (doTween)
 			{
 				receptor.alpha = 0;
-				FlxTween.tween(receptor, {y: receptor.initialY, alpha: receptor.setAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				FlxTween.tween(receptor, {y: receptor.initialY, alpha: receptor.setAlpha}, (Conductor.crochet * 4) / 1000,
+					{ease: FlxEase.circOut, startDelay: (Conductor.crochet / 1000) + ((Conductor.stepCrochet / 1000) * i)});
 			}
 			else
 			{
@@ -206,7 +172,12 @@ class Strumline extends FlxTypedGroup<FlxBasic>
 
 			if (displayJudges)
 			{
-				var noteSplash:NoteSplash = ForeverAssets.generateNoteSplashes('noteSplashes', PlayState.assetModifier, PlayState.changeableSkin, 'UI', i);
+				var noteSplash:NoteSplash = null;
+				for (character in this.characters)
+				{
+					var splashSkin:String = character.characterData.splashSkin;
+					noteSplash = ForeverAssets.generateNoteSplashes(splashSkin, splashNotes, PlayState.assetModifier, PlayState.changeableSkin, 'UI', i);
+				}
 				splashNotes.add(noteSplash);
 			}
 		}

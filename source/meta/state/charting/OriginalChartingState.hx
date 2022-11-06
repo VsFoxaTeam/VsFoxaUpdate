@@ -267,11 +267,12 @@ class OriginalChartingState extends MusicBeatState
 		});
 		player2DropDown.selectedLabel = _song.player2;
 
-		var gfVersionDropDown = new FlxUIDropDownMenu(10, player2DropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
-		{
-			_song.gfVersion = characters[Std.parseInt(character)];
-			updateHeads();
-		});
+		var gfVersionDropDown = new FlxUIDropDownMenu(10, player2DropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true),
+			function(character:String)
+			{
+				_song.gfVersion = characters[Std.parseInt(character)];
+				updateHeads();
+			});
 		gfVersionDropDown.selectedLabel = _song.gfVersion;
 
 		var assetModifiers:Array<String> = CoolUtil.returnAssetsLibrary('UI/default');
@@ -956,12 +957,12 @@ class OriginalChartingState extends MusicBeatState
 			var daNoteInfo = i[1];
 			var daStrumTime = i[0];
 			var daSus = i[2];
-			var daNoteType = 0;
+			var daNoteType:String = 'default';
 
 			if (i.length > 2)
 				daNoteType = i[3];
 
-			var note:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteInfo % 4, daNoteType, 0);
+			var note:Note = ForeverAssets.generateArrow('NOTE_assets', PlayState.assetModifier, daStrumTime, daNoteInfo % 4, 0, daNoteType);
 			note.sustainLength = daSus;
 			note.noteType = daNoteType;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);

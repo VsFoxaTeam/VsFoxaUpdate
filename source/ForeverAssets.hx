@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 import gameObjects.userInterface.*;
 import gameObjects.userInterface.menu.*;
@@ -113,11 +114,18 @@ class ForeverAssets
 		return rating;
 	}
 
-	public static function generateNoteSplashes(asset:String, assetModifier:String = 'base', changeableSkin:String = 'default', baseLibrary:String,
-			noteData:Int):NoteSplash
+	public static function generateNoteSplashes(asset:String, group:FlxTypedSpriteGroup<NoteSplash>, assetModifier:String = 'base',
+			changeableSkin:String = 'default', baseLibrary:String, noteType:String = 'default', noteData:Int):NoteSplash
 	{
 		//
-		var tempSplash:NoteSplash = new NoteSplash(noteData);
+		var tempSplash:NoteSplash = group.recycle(NoteSplash, function()
+		{
+			var noteSplash:NoteSplash = new NoteSplash(noteData);
+			return noteSplash;
+		});
+
+		var noteScript:meta.data.ScriptHandler = Note.getNoteScript(noteType);
+
 		switch (assetModifier)
 		{
 			case 'pixel':
@@ -130,25 +138,34 @@ class ForeverAssets
 				tempSplash.setGraphicSize(Std.int(tempSplash.width * PlayState.daPixelZoom));
 
 			default:
-				// 'UI/$assetModifier/notes/noteSplashes'
-				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('noteSplashes', assetModifier, changeableSkin, baseLibrary)), true, 210, 210);
-				tempSplash.animation.add('anim1', [
-					(noteData * 2 + 1),
-					8 + (noteData * 2 + 1),
-					16 + (noteData * 2 + 1),
-					24 + (noteData * 2 + 1),
-					32 + (noteData * 2 + 1)
-				], 24, false);
-				tempSplash.animation.add('anim2', [
-					(noteData * 2),
-					8 + (noteData * 2),
-					16 + (noteData * 2),
-					24 + (noteData * 2),
-					32 + (noteData * 2)
-				], 24, false);
-				tempSplash.animation.play('anim1');
-				tempSplash.addOffset('anim1', -20, -10);
-				tempSplash.addOffset('anim2', -20, -10);
+				if (noteScript != null)
+				{
+					noteScript.call('generateSplash', [tempSplash, noteData]);
+					noteScript.set('changeableSkin', changeableSkin);
+					noteScript.set('assetModifier', assetModifier);
+				}
+				else
+				{
+					// trace('[SPLASH ERROR] Script: $noteType is null');
+					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)), true, 210, 210);
+					tempSplash.animation.add('anim1', [
+						(noteData * 2 + 1),
+						8 + (noteData * 2 + 1),
+						16 + (noteData * 2 + 1),
+						24 + (noteData * 2 + 1),
+						32 + (noteData * 2 + 1)
+					], 24, false);
+					tempSplash.animation.add('anim2', [
+						(noteData * 2),
+						8 + (noteData * 2),
+						16 + (noteData * 2),
+						24 + (noteData * 2),
+						32 + (noteData * 2)
+					], 24, false);
+					tempSplash.animation.play('anim1');
+					tempSplash.addOffset('anim1', -20, -10);
+					tempSplash.addOffset('anim2', -20, -10);
+				}
 		}
 
 		return tempSplash;
@@ -192,7 +209,7 @@ class ForeverAssets
 				// probably gonna revise this and make it possible to add other arrow types but for now it's just pixel and normal
 				var stringSect:String = '';
 				// call arrow type I think
-				stringSect = Receptor.getArrowFromNumber(receptorData);
+				stringSect = Receptor.actions[receptorData];
 
 				uiReceptor.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('$framesArg', assetModifier, Init.trueSettings.get("Note Skin"),
 					'noteskins/notes'));
@@ -232,15 +249,68 @@ class ForeverAssets
 	/**
 		Notes!
 	**/
-	public static function generateArrow(assetModifier, strumTime, noteData, noteType, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
+	public static function generateArrow(framesArg, assetModifier, strumTime, noteData, noteAlt, noteType, ?isSustainNote:Bool = false,
+			?prevNote:Note = null):Note
 	{
-		var newNote:Note;
+		if (framesArg == null || framesArg.length < 1)
+			framesArg = 'NOTE_assets';
 		var changeableSkin:String = Init.trueSettings.get("Note Skin");
+
+		var newNote:Note;
+
 		// gonna improve the system eventually
 		if (changeableSkin.startsWith('quant'))
-			newNote = Note.returnQuantNote(assetModifier, strumTime, noteData, noteType, noteAlt, isSustainNote, prevNote);
+			newNote = Note.returnQuantNote(assetModifier, strumTime, noteData, noteAlt, noteType, isSustainNote, prevNote);
 		else
-			newNote = Note.returnDefaultNote(assetModifier, strumTime, noteData, noteType, noteAlt, isSustainNote, prevNote);
+		{
+			newNote = new Note(strumTime, noteData, noteAlt, noteType, prevNote, isSustainNote);
+
+			// newNote.holdHeight = 0.72;
+
+			// frames originally go here
+			switch (assetModifier)
+			{
+				case 'pixel': // pixel arrows default
+					switch (noteType)
+					{
+						default:
+							if (isSustainNote)
+								Note.resetNote('arrowEnds', changeableSkin, assetModifier, newNote);
+							else
+								Note.resetNote('arrows-pixels', changeableSkin, assetModifier, newNote);
+							newNote.antialiasing = false;
+							newNote.setGraphicSize(Std.int(newNote.width * PlayState.daPixelZoom));
+							newNote.updateHitbox();
+					}
+				default: // base game arrows for no reason whatsoever
+					switch (noteType)
+					{
+						default:
+							Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
+
+							newNote.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+							newNote.setGraphicSize(Std.int(newNote.width * 0.7));
+							newNote.updateHitbox();
+					}
+			}
+
+			if (!isSustainNote)
+				newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
+
+			if (isSustainNote && prevNote != null)
+			{
+				newNote.noteSpeed = prevNote.noteSpeed;
+				newNote.alpha = (Init.trueSettings.get('Opaque Holds')) ? 1 : 0.6;
+				newNote.animation.play(Receptor.colors[noteData] + 'holdend');
+				newNote.updateHitbox();
+				if (prevNote.isSustainNote)
+				{
+					prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
+					prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
+					prevNote.updateHitbox();
+				}
+			}
+		}
 
 		// hold note shit
 		if (isSustainNote && prevNote != null)

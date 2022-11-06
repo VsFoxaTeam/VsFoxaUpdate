@@ -23,7 +23,7 @@ import meta.state.PlayState;
 
 using StringTools;
 
-class ClassHUD extends FlxTypedGroup<FlxBasic>
+class ClassHUD extends FlxSpriteGroup
 {
 	// set up variables and stuff here
 	public var scoreBar:FlxText;
@@ -49,9 +49,6 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 	public var diffDisplay:String = CoolUtil.difficultyFromNumber(PlayState.storyDifficulty);
 	public var engineDisplay:String = "F.E. FEATHER v" + Main.featherVersion;
 
-	public var storedSprites:Array<FlxSprite> = [];
-	public var storedTexts:Array<FlxText> = [];
-
 	// eep
 	public function new()
 	{
@@ -71,8 +68,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8));
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
-		// healthBar
+		reloadHealthBar();
 		add(healthBar);
 
 		iconP1 = new HealthIcon(PlayState.SONG.player1, true);
@@ -121,7 +117,6 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 				textAsset.scrollFactor.set();
 				timingsMap.set(judgementNameArray[i], textAsset);
 				add(textAsset);
-				storedTexts.push(textAsset);
 			}
 		}
 
@@ -143,14 +138,6 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		add(autoplayMark);
 
 		updateScoreText();
-
-		storedTexts.push(scoreBar);
-		storedSprites.push(healthBar);
-		storedSprites.push(healthBarBG);
-		storedSprites.push(iconP1);
-		storedSprites.push(iconP2);
-		storedTexts.push(cornerMark);
-		storedTexts.push(centerMark);
 	}
 
 	var counterTextSize:Int = 18;
@@ -180,19 +167,22 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		}
 	}
 
-	private var divider:String = " • ";
+	public static var divider:String = " • ";
 
 	public function updateScoreText()
 	{
-		scoreDisplay = 'Score: ' + PlayState.songScore;
+		scoreDisplay = 'Score: ' + Timings.score;
+
+		var isRated = (Timings.comboDisplay != null && Timings.comboDisplay != '' && Timings.notesHit > 0);
+		var rank:String = (Timings.returnScoreRating() != null && Timings.returnScoreRating() != '' ? ' [${Timings.returnScoreRating()}]' : '');
 
 		// testing purposes
 		var displayAccuracy:Bool = Init.trueSettings.get('Display Accuracy');
 		if (displayAccuracy)
 		{
-			scoreDisplay += divider + 'Accuracy: ' + Std.string(Math.floor(Timings.getAccuracy() * 100) / 100) + '%' + Timings.comboDisplay;
-			scoreDisplay += divider + 'Combo Breaks: ' + PlayState.misses;
-			scoreDisplay += divider + 'Rank: ' + Std.string(Timings.returnScoreRating().toUpperCase());
+			scoreDisplay += divider + 'Accuracy: ${Timings.returnAccuracy()}%';
+			scoreDisplay += isRated ? ' [' + Timings.comboDisplay + divider + Timings.returnScoreRating() + ']' : rank;
+			scoreDisplay += divider + 'Combo Breaks: ${Timings.misses}';
 		}
 		scoreDisplay += '\n';
 
@@ -200,7 +190,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		if (scoreBar.text != scoreDisplay)
 			scoreBar.text = scoreDisplay;
 
-		scoreBar.x = Math.floor((FlxG.width / 2) - (scoreBar.width / 2));
+		scoreBar.screenCenter(X);
 
 		// update counter
 		if (Init.trueSettings.get('Counter') != 'None')
@@ -217,6 +207,18 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		PlayState.updateRPC(false);
 	}
 
+	public function reloadHealthBar()
+	{
+		var colorOpponent = PlayState.opponent.characterData.healthColor;
+		var colorPlayer = PlayState.boyfriend.characterData.healthColor;
+
+		if (!Init.trueSettings.get('Colored Health Bar'))
+			healthBar.createFilledBar(0xFFFF0048, 0xFF33FF5F - 0xFFFF0048);
+		else
+			healthBar.createFilledBar(FlxColor.fromRGB(Std.int(colorOpponent[0]), Std.int(colorOpponent[1]), Std.int(colorOpponent[2])),
+				FlxColor.fromRGB(Std.int(colorPlayer[0]), Std.int(colorPlayer[1]), Std.int(colorPlayer[2])));
+	}
+
 	public function beatHit(curBeat:Int)
 	{
 		if (!Init.trueSettings.get('Reduced Movements'))
@@ -226,7 +228,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		}
 	}
 
-	override function add(Object:FlxBasic):FlxBasic
+	override function add(Object:FlxSprite):FlxSprite
 	{
 		if (Init.trueSettings.get('Disable Antialiasing'))
 		{

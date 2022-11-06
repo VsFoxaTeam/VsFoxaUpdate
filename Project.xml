@@ -60,6 +60,9 @@
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
+	<haxedef name="hscriptPos" />
+	<haxeflag name="-dce no" />
+
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
 

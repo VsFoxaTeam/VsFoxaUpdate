@@ -94,6 +94,12 @@ class Init extends FlxState
 			NOT_FORCED,
 			['UI', 'Notes']
 		],
+		'Colored Health Bar' => [
+			false,
+			Checkmark,
+			'Whether the Health Bar should be colored after the Icons',
+			NOT_FORCED,
+		],
 		'Opaque User Interface' => [false, Checkmark, 'Makes the UI (Healthbar, Icons, etc) opaque.', NOT_FORCED],
 		'Counter' => [
 			'None',
@@ -154,7 +160,7 @@ class Init extends FlxState
 		],
 		"Opaque Holds" => [false, Checkmark, "Huh, why isnt the trail cut off?", NOT_FORCED],
 		'Ghost Tapping' => [
-			false,
+			true,
 			Checkmark,
 			"Enables Ghost Tapping, allowing you to press inputs without missing.",
 			NOT_FORCED

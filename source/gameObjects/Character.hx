@@ -43,6 +43,7 @@ typedef CharacterData =
 	var healthColor:Array<Float>;
 	var antialiasing:Bool;
 	var noteSkin:String;
+	var splashSkin:String;
 	var icon:String;
 }
 
@@ -89,6 +90,7 @@ class Character extends FNFSprite
 			healthColor: [255, 255, 255],
 			antialiasing: !character.endsWith('-pixel'),
 			noteSkin: "NOTE_assets",
+			splashSkin: 'noteSplashes',
 			icon: null,
 			quickDancer: false
 		};
@@ -363,7 +365,7 @@ class Character extends FNFSprite
 			var script:ScriptHandler = new ScriptHandler(Paths.characterModule(char, 'config', UNDERSCORE));
 
 			if (script.interp == null)
-				trace("Something terrible occured! Skipping.");	
+				trace("Something terrible occured! Skipping.");
 
 			characterScripts.push(script);
 			pushedChars.push(char);
@@ -466,16 +468,16 @@ class Character extends FNFSprite
 		});
 
 		/*
-		setVar('setDeathChar',
-			function(char:String = 'bf-dead', lossSfx:String = 'fnf_loss_sfx', song:String = 'gameOver', confirmSound:String = 'gameOverEnd', bpm:Int)
-			{
-				GameOverSubstate.character = char;
-				GameOverSubstate.deathSound = lossSfx;
-				GameOverSubstate.deathMusic = song;
-				GameOverSubstate.deathConfirm = confirmSound;
-				GameOverSubstate.deathBPM = bpm;
-			});
-		*/
+			setVar('setDeathChar',
+				function(char:String = 'bf-dead', lossSfx:String = 'fnf_loss_sfx', song:String = 'gameOver', confirmSound:String = 'gameOverEnd', bpm:Int)
+				{
+					GameOverSubstate.character = char;
+					GameOverSubstate.deathSound = lossSfx;
+					GameOverSubstate.deathMusic = song;
+					GameOverSubstate.deathConfirm = confirmSound;
+					GameOverSubstate.deathBPM = bpm;
+				});
+		 */
 
 		setVar('get', function(variable:String)
 		{

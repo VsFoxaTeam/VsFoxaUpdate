@@ -9,16 +9,21 @@ import meta.state.PlayState;
 class Timings
 {
 	//
+	public static var score:Int = 0;
+	public static var combo:Int = 0;
+	public static var misses:Int = 0;
+
 	public static var accuracy:Float;
 	public static var trueAccuracy:Float;
+
 	public static var judgementRates:Array<Float>;
 
 	// from left to right
 	// max milliseconds, score from it and percentage
 	public static var judgementsMap:Map<String, Array<Dynamic>> = [
-		"sick" => [0, 45, 350, 100, ' [SFC]'],
-		"good" => [1, 90, 150, 75, ' [GFC]'],
-		"bad" => [2, 135, 0, 25, ' [FC]'],
+		"sick" => [0, 45, 350, 100, 'SFC'],
+		"good" => [1, 90, 150, 75, 'GFC'],
+		"bad" => [2, 135, 0, 25, ' FC'],
 		"shit" => [3, 157.5, -50, -150],
 		"miss" => [4, 180, -100, -175],
 	];
@@ -30,24 +35,25 @@ class Timings
 		"S+" => 100,
 		"S" => 95,
 		"A" => 90,
-		"b" => 85,
-		"c" => 80,
-		"d" => 75,
-		"e" => 70,
-		"f" => 65,
+		"B" => 85,
+		"C" => 80,
+		"D" => 75,
+		"E" => 70,
+		"F" => 65,
 	];
 
-	public static var ratingFinal:String = "N/A";
 	public static var notesHit:Int = 0;
 	public static var segmentsHit:Int = 0;
-	public static var comboDisplay:String = '';
+
+	public static var ratingFinal:String = "";
+	public static var comboDisplay:String = "";
 
 	public static var gottenJudgements:Map<String, Int> = [];
 	public static var smallestRating:String;
 
 	public static var perfectCombo:Bool = false;
 
-	public static function callAccuracy()
+	public static function resetAccuracy()
 	{
 		// reset the accuracy to 0%
 		accuracy = 0.001;
@@ -70,9 +76,14 @@ class Timings
 		segmentsHit = 0;
 		perfectCombo = true;
 
-		ratingFinal = "N/A";
+		// reset score;
+		score = 0;
+		combo = 0;
+		misses = 0;
 
-		comboDisplay = '';
+		ratingFinal = "";
+		comboDisplay = "";
+		updateScoreRating();
 	}
 
 	public static function updateAccuracy(judgement:Int, ?isSustain:Bool = false, ?segmentCount:Int = 1)
@@ -95,22 +106,15 @@ class Timings
 	public static function updateFCDisplay()
 	{
 		// update combo display
-		comboDisplay = '';
+		comboDisplay = "";
 		if (judgementsMap.get(smallestRating)[4] != null)
 			comboDisplay = judgementsMap.get(smallestRating)[4];
 		else
-		{
-			if (PlayState.misses < 10)
-				comboDisplay = ' [SDCB]';
-		}
+			if (misses < 10)
+				comboDisplay = 'SDCB';
 
 		// this updates the most so uh
 		PlayState.uiHUD.updateScoreText();
-	}
-
-	public static function getAccuracy()
-	{
-		return trueAccuracy;
 	}
 
 	public static function updateScoreRating()
@@ -126,6 +130,13 @@ class Timings
 		}
 	}
 
+	public static function returnAccuracy()
+	{
+		var accuracyFinal:String = 'N/A';
+		if (notesHit > 0)
+			accuracyFinal = '${Math.floor(trueAccuracy * 100) / 100}';
+		return accuracyFinal;
+	}
 	public static function returnScoreRating()
 	{
 		return ratingFinal;

@@ -76,7 +76,9 @@ class HealthIcon extends FlxSprite
 
 		antialiasing = (iconPath.endsWith('-pixel'));
 		var iconGraphic:FlxGraphic = Paths.image('$iconPath/icon$suffix', 'characters');
-		loadGraphic(iconGraphic, true, Std.int(iconGraphic.width / 2), iconGraphic.height);
+
+		loadGraphic(iconGraphic); // get file size;
+		loadGraphic(iconGraphic, true, Std.int(iconGraphic.width / 2), iconGraphic.height); // then load it;
 
 		initialWidth = width;
 		initialHeight = height;

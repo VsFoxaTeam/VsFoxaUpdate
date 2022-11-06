@@ -23,7 +23,7 @@ class Note extends FNFSprite
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
 	public var noteAlt:Float = 0;
-	public var noteType:Float = 0;
+	public var noteType:String = null;
 	public var noteString:String = "";
 
 	public var canBeHit:Bool = false;
@@ -52,12 +52,20 @@ class Note extends FNFSprite
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
 
-	public function new(strumTime:Float, noteData:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false)
+	public static var storedModules:Array<ScriptHandler>;
+	private static var pushedNotes:Array<String> = [];
+
+	public static var noteScript:ScriptHandler;
+
+	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
 		super(x, y);
 
 		if (prevNote == null)
 			prevNote = this;
+
+		if (noteType == null)
+			noteType = 'default';
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
@@ -81,6 +89,42 @@ class Note extends FNFSprite
 			parentNote = null;
 
 		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+
+		// generateNote(noteType);
+	}
+
+	function getNoteColor(noteData)
+		return Receptor.colors[noteData];
+
+	function getNoteAction(noteData)
+		return Receptor.actions[noteData];
+
+	public function generateNote(noteType:String)
+	{
+		// heavily based on forever 1.0;
+		if (this.noteType != noteType)
+		{
+			this.noteType == noteType;
+
+			noteScript = getNoteScript(noteType);
+			noteScript.set('getNoteColor', getNoteColor);
+			noteScript.set('getNoteAction', getNoteAction);
+			noteScript.set('noteSkin', Init.trueSettings.get('Note Skin'));
+
+			var noteFunc:String = isSustainNote ? 'generateSustain' : 'generateNote';
+
+			try
+			{
+				noteScript.call(noteFunc, [this]);
+				trace('new note module loaded: ' + noteType);
+			}
+			catch (e)
+			{
+				trace('[NOTE ERROR] Script: $noteType is null');
+				this.destroy();
+				return;
+			}
+		}
 	}
 
 	override function update(elapsed:Float)
@@ -99,6 +143,9 @@ class Note extends FNFSprite
 
 		if (tooLate || (parentNote != null && parentNote.tooLate))
 			alpha = 0.3;
+
+		if (noteScript != null)
+			noteScript.call('update', [elapsed]);
 	}
 
 	public static function resetNote(framesArg:String, changeable:String = '', assetModifier:String, newNote:Note)
@@ -122,11 +169,9 @@ class Note extends FNFSprite
 		{
 			newNote.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, 'noteskins/notes'));
 
-			newNote.animation.addByPrefix(Receptor.getColorFromNumber(newNote.noteData) + 'Scroll', Receptor.getColorFromNumber(newNote.noteData) + '0');
-			newNote.animation.addByPrefix(Receptor.getColorFromNumber(newNote.noteData) + 'holdend',
-				Receptor.getColorFromNumber(newNote.noteData) + ' hold end');
-			newNote.animation.addByPrefix(Receptor.getColorFromNumber(newNote.noteData) + 'hold',
-				Receptor.getColorFromNumber(newNote.noteData) + ' hold piece');
+			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'Scroll', Receptor.colors[newNote.noteData] + '0');
+			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'holdend', Receptor.colors[newNote.noteData] + ' hold end');
+			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'hold', Receptor.colors[newNote.noteData] + ' hold piece');
 
 			newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // PA god dammit.
 		}
@@ -135,78 +180,20 @@ class Note extends FNFSprite
 			if (newNote.isSustainNote)
 			{
 				newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, 'noteskins/notes')), true, 7, 6);
-				newNote.animation.add(Receptor.getColorFromNumber(newNote.noteData) + 'holdend', [pixelData[newNote.noteData]]);
-				newNote.animation.add(Receptor.getColorFromNumber(newNote.noteData) + 'hold', [pixelData[newNote.noteData] - 4]);
+				newNote.animation.add(Receptor.colors[newNote.noteData] + 'holdend', [pixelData[newNote.noteData]]);
+				newNote.animation.add(Receptor.colors[newNote.noteData] + 'hold', [pixelData[newNote.noteData] - 4]);
 			}
 			else
 			{
 				newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, 'noteskins/notes')), true, 17, 17);
-				newNote.animation.add(Receptor.getColorFromNumber(newNote.noteData) + 'Scroll', [pixelData[newNote.noteData]], 12);
+				newNote.animation.add(Receptor.colors[newNote.noteData] + 'Scroll', [pixelData[newNote.noteData]], 12);
 			}
 		}
 	}
 
-	/**
-		Note creation scripts
-
-		these are for all your custom note needs
-	**/
-	public static function returnDefaultNote(assetModifier, strumTime, noteData, noteType, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
+	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, noteType, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
-		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
-		// newNote.holdHeight = 0.72;
-
-		var changeableSkin = Init.trueSettings.get("Note Skin");
-
-		// frames originally go here
-		switch (assetModifier)
-		{
-			case 'pixel': // pixel arrows default
-				switch (noteType)
-				{
-					default:
-						if (isSustainNote)
-							Note.resetNote('arrowEnds', changeableSkin, assetModifier, newNote);
-						else
-							Note.resetNote('arrows-pixels', changeableSkin, assetModifier, newNote);
-						newNote.antialiasing = false;
-						newNote.setGraphicSize(Std.int(newNote.width * PlayState.daPixelZoom));
-						newNote.updateHitbox();
-				}
-			default: // base game arrows for no reason whatsoever
-				switch (noteType)
-				{
-					default:
-						Note.resetNote('NOTE_assets', changeableSkin, assetModifier, newNote);
-
-						newNote.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
-						newNote.setGraphicSize(Std.int(newNote.width * 0.7));
-						newNote.updateHitbox();
-				}
-		}
-
-		if (!isSustainNote)
-			newNote.animation.play(Receptor.getColorFromNumber(noteData) + 'Scroll');
-
-		if (isSustainNote && prevNote != null)
-		{
-			newNote.noteSpeed = prevNote.noteSpeed;
-			newNote.alpha = (Init.trueSettings.get('Opaque Holds')) ? 1 : 0.6;
-			newNote.animation.play(Receptor.getColorFromNumber(noteData) + 'holdend');
-			newNote.updateHitbox();
-			if (prevNote.isSustainNote)
-			{
-				prevNote.animation.play(Receptor.getColorFromNumber(prevNote.noteData) + 'hold');
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
-				prevNote.updateHitbox();
-			}
-		}
-		return newNote;
-	}
-
-	public static function returnQuantNote(assetModifier, strumTime, noteData, noteType, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
-	{
-		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
+		var newNote:Note = new Note(strumTime, noteData, noteAlt, noteType, prevNote, isSustainNote);
 
 		// actually determine the quant of the note
 		if (newNote.noteQuant == -1)
@@ -299,7 +286,7 @@ class Note extends FNFSprite
 
 		//
 		if (!isSustainNote)
-			newNote.animation.play(Receptor.getArrowFromNumber(noteData) + 'Scroll');
+			newNote.animation.play(Receptor.actions[noteData] + 'Scroll');
 
 		if (isSustainNote && prevNote != null)
 		{
@@ -319,5 +306,37 @@ class Note extends FNFSprite
 		}
 
 		return newNote;
+	}
+
+	public function noteHit()
+		noteScript.call('onHit', [this]);
+
+	public function noteMiss()
+		noteScript.call('onMiss', [this]);
+
+	public function stepHit()
+		noteScript.call('stepHit', [this]);
+
+	public function beatHit()
+		noteScript.call('beatHit', [this]);
+
+	public static function getNoteScript(noteType:String):ScriptHandler
+	{
+		if (noteType == null)
+			noteType = 'default';
+
+		if (!pushedNotes.contains(noteType))
+		{
+			var module:String = Paths.module('$noteType', 'notetypes/$noteType');
+
+			if (sys.FileSystem.exists(module))
+				noteScript = new ScriptHandler(module);
+
+			if (noteScript != null)
+				pushedNotes.push(noteType);
+
+			return noteScript;
+		}
+		return null;
 	}
 }

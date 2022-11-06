@@ -296,6 +296,20 @@ class Paths
 		return (FlxAtlasFrames.fromSpriteSheetPacker(image(key, folder, library), file('$folder/$key.txt', library)));
 	}
 
+	inline static public function module(key:String, folder:String = 'scripts', ?library:String)
+	{
+		var extension = '.hxs';
+
+		for (j in scriptExts)
+		{
+			if (FileSystem.exists(getPath('$folder/$key.$j', TEXT, library)))
+				extension = '.$j';
+			else
+				extension = '.hxs';
+		}
+		return getPath('$folder/$key' + extension);
+	}
+
 	inline static public function characterModule(folder:String, character:String, ?type:CharacterOrigin, ?library:String)
 	{
 		var extension:String = '';
@@ -325,6 +339,6 @@ class Paths
 			default:
 				extension = '';
 		}
-		return getPath('characters/$folder/$character' + '$extension', TEXT, library);
+		return getPath('characters/$folder/$character' + extension, TEXT, library);
 	}
 }
