@@ -34,6 +34,9 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 	public var cornerMark:FlxText; // engine mark at the upper right corner
 	public var centerMark:FlxText; // song display name and difficulty at the center
 
+	public var autoplayMark:FlxText;
+	public var autoplaySine:Float = 0;
+
 	public var healthBarBG:FlxSprite;
 	public var healthBar:FlxBar;
 
@@ -83,7 +86,6 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		scoreBar = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, scoreDisplay);
 		scoreBar.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
 		scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
-		scoreBar.antialiasing = true;
 		updateScoreText();
 		add(scoreBar);
 
@@ -91,13 +93,11 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		cornerMark.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
 		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		cornerMark.setPosition(FlxG.width - (cornerMark.width + 5), 5);
-		cornerMark.antialiasing = true;
 		add(cornerMark);
 
 		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 40 : 10), 0, '- ${infoDisplay + " [" + diffDisplay}] -');
 		centerMark.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE);
 		centerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-		centerMark.antialiasing = true;
 		centerMark.screenCenter(X);
 		add(centerMark);
 
@@ -124,6 +124,24 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 				storedTexts.push(textAsset);
 			}
 		}
+
+		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? centerMark.y - 60 : centerMark.y + 60), FlxG.width - 800, 'AUTOPLAY\n', 32);
+		autoplayMark.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		autoplayMark.screenCenter(X);
+		autoplayMark.visible = PlayState.bfStrums.autoplay;
+
+		// repositioning for it to not be covered by the receptors
+		if (Init.trueSettings.get('Centered Notefield'))
+		{
+			if (Init.trueSettings.get('Downscroll'))
+				autoplayMark.y = autoplayMark.y - 125;
+			else
+				autoplayMark.y = autoplayMark.y + 125;
+		}
+
+		add(autoplayMark);
+
 		updateScoreText();
 
 		storedTexts.push(scoreBar);
@@ -154,6 +172,12 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
+
+		if (autoplayMark.visible)
+		{
+			autoplaySine += 180 * (elapsed / 4);
+			autoplayMark.alpha = 1 - Math.sin((Math.PI * autoplaySine) / 80);
+		}
 	}
 
 	private var divider:String = " • ";
@@ -200,5 +224,17 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 			iconP1.bop(60 / Conductor.bpm);
 			iconP2.bop(60 / Conductor.bpm);
 		}
+	}
+
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		if (Init.trueSettings.get('Disable Antialiasing'))
+		{
+			if (Std.isOfType(Object, FlxText))
+				cast(Object, FlxText).antialiasing = false;
+			if (Std.isOfType(Object, FlxText))
+				cast(Object, FlxSprite).antialiasing = false;
+		}
+		return super.add(Object);
 	}
 }

@@ -79,6 +79,8 @@ class Note extends FNFSprite
 		}
 		else if (!isSustainNote)
 			parentNote = null;
+
+		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 	}
 
 	override function update(elapsed:Float)
@@ -197,7 +199,6 @@ class Note extends FNFSprite
 				prevNote.animation.play(Receptor.getColorFromNumber(prevNote.noteData) + 'hold');
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
 				prevNote.updateHitbox();
-				// prevNote.setGraphicSize();
 			}
 		}
 		return newNote;

@@ -133,8 +133,8 @@ class PlayState extends MusicBeatState
 	public var stageBuild:Stage;
 
 	// strumlines
-	public var dadStrums:Strumline;
-	public var bfStrums:Strumline;
+	public static var dadStrums:Strumline;
+	public static var bfStrums:Strumline;
 
 	public static var strumLines:FlxTypedGroup<Strumline>;
 	public static var strumHUD:Array<FlxCamera> = [];
@@ -617,6 +617,7 @@ class PlayState extends MusicBeatState
 				{
 					preventScoring = true;
 					bfStrums.autoplay = !bfStrums.autoplay;
+					uiHUD.autoplayMark.visible = bfStrums.autoplay;
 				}
 			}
 

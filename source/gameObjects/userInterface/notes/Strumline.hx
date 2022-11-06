@@ -48,6 +48,7 @@ class Receptor extends FlxSprite
 
 		updateHitbox();
 		scrollFactor.set();
+		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 	}
 
 	// literally just character code

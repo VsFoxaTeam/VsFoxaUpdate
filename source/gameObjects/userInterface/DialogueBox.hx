@@ -457,7 +457,6 @@ class DialogueBox extends FlxSpriteGroup
 
 			case "sound":
 				var _sound = eventArray[1] + "." + Paths.SOUND_EXT;
-
 				FlxG.sound.play(Paths.file(_sound));
 		}
 	}
@@ -518,5 +517,17 @@ class DialogueBox extends FlxSpriteGroup
 			bgFade.alpha = 0.6;
 
 		super.update(elapsed);
+	}
+
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		if (Init.trueSettings.get('Disable Antialiasing'))
+		{
+			if (Std.isOfType(Object, FlxText))
+				cast(Object, FlxText).antialiasing = false;
+			if (Std.isOfType(Object, FlxText))
+				cast(Object, FlxSprite).antialiasing = false;
+		}
+		return super.add(Object);
 	}
 }
