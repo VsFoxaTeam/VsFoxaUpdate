@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: windowsBuild
-          path: "export/release/windows/bin"
+          path: export/release/windows/bin
 
   buildMac:
     runs-on: macos-latest
