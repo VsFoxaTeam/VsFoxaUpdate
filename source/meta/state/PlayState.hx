@@ -235,17 +235,13 @@ class PlayState extends MusicBeatState
 		stageBuild = new Stage(curStage);
 		add(stageBuild);
 
-		var gfCharacter:String = 'gf';
-
 		if (SONG.gfVersion == null || SONG.gfVersion.length < 1)
-			gfCharacter = stageBuild.returnGFtype(curStage);
-		else
-			gfCharacter = SONG.gfVersion;
+			SONG.gfVersion = stageBuild.returnGFtype(curStage);
 
 		// set up characters here too
 		gf = new Character();
 		gf.adjustPos = false;
-		gf.setCharacter(300, 100, gfCharacter);
+		gf.setCharacter(300, 100, SONG.gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 
 		opponent = new Character().setCharacter(50, 850, SONG.player2);

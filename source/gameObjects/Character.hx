@@ -24,7 +24,7 @@ using StringTools;
 enum abstract CharacterOrigin(String) to String
 {
 	var UNDERSCORE;
-	var FOREVER_GHOST; // need to come up with a format for this, maybe.
+	var FOREVER_FEATHER; // need to come up with a format for this, maybe.
 	var PSYCH_ENGINE;
 	var FUNKIN_COCOA;
 }

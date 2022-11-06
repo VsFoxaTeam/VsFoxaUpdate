@@ -267,6 +267,13 @@ class OriginalChartingState extends MusicBeatState
 		});
 		player2DropDown.selectedLabel = _song.player2;
 
+		var gfVersionDropDown = new FlxUIDropDownMenu(10, player2DropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
+		{
+			_song.gfVersion = characters[Std.parseInt(character)];
+			updateHeads();
+		});
+		gfVersionDropDown.selectedLabel = _song.gfVersion;
+
 		var assetModifiers:Array<String> = CoolUtil.returnAssetsLibrary('UI/default');
 
 		var assetModifierDropDown = new FlxUIDropDownMenu(player2DropDown.x, player2DropDown.y + 40,
@@ -289,17 +296,18 @@ class OriginalChartingState extends MusicBeatState
 		tab_group_song.add(check_voices);
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(check_mute_vocals);
+		tab_group_song.add(stepperBPM);
+		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(reloadSong);
 		tab_group_song.add(reloadSongJson);
 		tab_group_song.add(loadAutosaveBtn);
-		tab_group_song.add(stepperBPM);
-		tab_group_song.add(stepperSpeed);
-		tab_group_song.add(player1DropDown);
-		tab_group_song.add(player2DropDown);
 		tab_group_song.add(playTicksBf);
 		tab_group_song.add(playTicksDad);
+		tab_group_song.add(gfVersionDropDown);
 		tab_group_song.add(assetModifierDropDown);
+		tab_group_song.add(player1DropDown);
+		tab_group_song.add(player2DropDown);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();
@@ -545,29 +553,6 @@ class OriginalChartingState extends MusicBeatState
 		Conductor.songPosition = songMusic.time;
 		_song.song = typingShit.text;
 
-		// real thanks for the help with this ShadowMario, you are the best -Ghost
-		var playedSound:Array<Bool> = [];
-		for (i in 0...8)
-		{
-			playedSound.push(false);
-		}
-		curRenderedNotes.forEachAlive(function(note:Note)
-		{
-			if (note.strumTime < songMusic.time)
-			{
-				var data:Int = note.noteData % 4;
-
-				if (songMusic.playing && !playedSound[data] && note.noteData > -1 && note.strumTime >= lastSongPos)
-				{
-					if ((playTicksBf.checked) && (note.mustPress) || (playTicksDad.checked) && (!note.mustPress))
-					{
-						FlxG.sound.play(Paths.sound('soundNoteTick'));
-						playedSound[data] = true;
-					}
-				}
-			}
-		});
-
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps));
 
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
@@ -760,6 +745,29 @@ class OriginalChartingState extends MusicBeatState
 			+ "\nStep: "
 			+ curStep;
 		super.update(elapsed);
+
+		// real thanks for the help with this ShadowMario, you are the best -Ghost
+		var playedSound:Array<Bool> = [];
+		for (i in 0...8)
+		{
+			playedSound.push(false);
+		}
+		curRenderedNotes.forEachAlive(function(note:Note)
+		{
+			if (note.strumTime < songMusic.time)
+			{
+				var data:Int = note.noteData % 4;
+
+				if (songMusic.playing && !playedSound[data] && note.noteData > -1 && note.strumTime >= lastSongPos)
+				{
+					if ((playTicksBf.checked) && (note.mustPress) || (playTicksDad.checked) && (!note.mustPress))
+					{
+						FlxG.sound.play(Paths.sound('soundNoteTick'));
+						playedSound[data] = true;
+					}
+				}
+			}
+		});
 
 		lastSongPos = Conductor.songPosition;
 	}

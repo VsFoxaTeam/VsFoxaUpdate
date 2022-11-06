@@ -44,7 +44,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = CoolUtil.difficultyFromNumber(PlayState.storyDifficulty);
-	public var engineDisplay:String = "F.E. FEATHER v" + Main.ghostVersion;
+	public var engineDisplay:String = "F.E. FEATHER v" + Main.featherVersion;
 
 	public var storedSprites:Array<FlxSprite> = [];
 	public var storedTexts:Array<FlxText> = [];

@@ -39,7 +39,7 @@ class Main extends Sprite
 	public static var framerate:Int = 120; // How many frames per second the game should run at.
 
 	public static var gameVersion:String = '0.3.1';
-	public static var ghostVersion:String = '0.1';
+	public static var featherVersion:String = '0.1';
 
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
@@ -227,7 +227,7 @@ class Main extends Sprite
 			}
 		}
 
-		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/BeastlyGhost/Forever-Engine-Ghost";
+		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/BeastlyGhost/Forever-Engine-Feather";
 
 		if (!FileSystem.exists("crash/"))
 			FileSystem.createDirectory("crash/");
