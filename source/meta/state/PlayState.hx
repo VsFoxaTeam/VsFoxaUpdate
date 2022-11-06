@@ -1025,6 +1025,9 @@ class PlayState extends MusicBeatState
 
 	function missNoteCheck(?includeAnimation:Bool = false, direction:Int = 0, strumline:Strumline, popMiss:Bool = false, lockMiss:Bool = false)
 	{
+		if (strumline.autoplay)
+			return;
+
 		if (includeAnimation)
 		{
 			var stringDirection:String = Receptor.getArrowFromNumber(direction);
@@ -1214,7 +1217,10 @@ class PlayState extends MusicBeatState
 			if (Timings.perfectCombo)
 				Timings.perfectCombo = false;
 
-		displayRating(baseRating, timing);
+		if (strumline.autoplay)
+			displayRating('sick', timing);
+		else
+			displayRating(baseRating, timing);
 		Timings.updateAccuracy(Timings.judgementsMap.get(baseRating)[3]);
 
 		ratingScore = Std.int(Timings.judgementsMap.get(baseRating)[2]);
