@@ -26,6 +26,7 @@ class ScriptHandler extends SScript
 		set('FlxEase', flixel.tweens.FlxEase);
 
 		// CLASSES (FUNKIN);
+		set('Alphabet', meta.data.font.Alphabet);
 		set('Boyfriend', gameObjects.Boyfriend);
 		set('Character', gameObjects.Character);
 		set('Conductor', meta.data.Conductor);
