@@ -151,6 +151,21 @@ class Paths
 		return null;
 	}
 
+	public static function getTextFile(key:String, type:AssetType = TEXT, ?library:Null<String>):String
+	{
+		if (FileSystem.exists(getPath(key, type, library)))
+			return File.getContent(getPath(key, type, library));
+
+		if (currentLevel != null)
+		{
+			var levelPath:String = '';
+			levelPath = getLibraryPathForce(key, '');
+			if (FileSystem.exists(levelPath))
+				return File.getContent(levelPath);
+		}
+		return Assets.getText(getPath(key, type, library));
+	}
+
 	public static function returnSound(path:String, key:String, ?library:String)
 	{
 		// I hate this so god damn much

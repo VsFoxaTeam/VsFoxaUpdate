@@ -30,7 +30,7 @@ class MusicBeatState extends FNFUIState
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
 
-	private var controls(get, never):Controls;
+	public var controls(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;

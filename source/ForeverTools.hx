@@ -5,6 +5,8 @@ import flixel.FlxG;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxTween.FlxTweenType;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
@@ -240,6 +242,20 @@ class ForeverTools
 		}
 		return FlxAxes.XY;
 	}
+
+	public static function createTypedGroup(?variable)
+	{
+		variable = new FlxTypedGroup<Dynamic>();
+		return variable;
+	}
+
+	public static function createSpriteGroup(?variable)
+	{
+  		variable = new FlxSpriteGroup();
+  		return variable;
+	}
+
+	// FLXCOLOR;
 
 	public static function fromHSB(hue:Float, sat:Float, brt:Float, alpha:Float):FlxColor
 	{

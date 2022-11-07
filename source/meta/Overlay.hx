@@ -171,7 +171,7 @@ class Console extends TextField
 	private #if !flash override #end function __enterFrame(deltaTime:Float):Void
 	{
 		#if (!SHOW_CONSOLE)
-		return
+		return;
 		#end
 		if (FlxG.keys != null && FlxG.keys.justPressed.F10 && FlxG.save.data != null)
 		{
