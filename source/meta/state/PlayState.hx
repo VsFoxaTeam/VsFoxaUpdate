@@ -58,6 +58,7 @@ class PlayState extends MusicBeatState
 
 	// Notes;
 	public var unspawnNotes:Array<Note> = [];
+
 	public static var timedEvents:Array<TimedEvent> = [];
 
 	// Song;

@@ -27,7 +27,7 @@ class Events
 			{
 				event = event.substring(0, event.indexOf('.', 0));
 				loadedEvents.set(event, new ScriptHandler(Paths.module('$event', 'events')));
-				//trace('new event module loaded: ' + event);
+				// trace('new event module loaded: ' + event);
 				myEvents.push(event);
 			}
 		}

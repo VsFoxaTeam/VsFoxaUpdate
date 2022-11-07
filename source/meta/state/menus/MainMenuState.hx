@@ -166,7 +166,7 @@ class MainMenuState extends MusicBeatState
 							curSelected--;
 						else if (i == 3)
 							curSelected++;
-						
+
 						if (curSelected < 0)
 							curSelected = optionShit.length - 1;
 						else if (curSelected >= optionShit.length)
@@ -175,31 +175,31 @@ class MainMenuState extends MusicBeatState
 						FlxG.sound.play(Paths.sound('scrollMenu'));
 					}
 					/*
-					else
-					{
-						// up == 0 - down == 1
-						var directionInteger:Int = (i == 0 ? -1 : 0) + (i == 1 ? 1 : 0);
-
-						if (Math.abs(directionInteger) > 0)
-						{
-							if (counterControl <= 0)
-								counterControl += FlxG.updateFramerate / 4;
-							else
-								counterControl--;
-						}
 						else
-							counterControl = 0;
+						{
+							// up == 0 - down == 1
+							var directionInteger:Int = (i == 0 ? -1 : 0) + (i == 1 ? 1 : 0);
 
-						//						
-						if (counterControl >= 30) // bitch?
-							curSelected += directionInteger;
+							if (Math.abs(directionInteger) > 0)
+							{
+								if (counterControl <= 0)
+									counterControl += FlxG.updateFramerate / 4;
+								else
+									counterControl--;
+							}
+							else
+								counterControl = 0;
 
-						if (curSelected < 0)
-							curSelected = optionShit.length - 1;
-						else if (curSelected >= optionShit.length)
-							curSelected = 0;
-					}
-					*/
+							//						
+							if (counterControl >= 30) // bitch?
+								curSelected += directionInteger;
+
+							if (curSelected < 0)
+								curSelected = optionShit.length - 1;
+							else if (curSelected >= optionShit.length)
+								curSelected = 0;
+						}
+					 */
 				}
 				//
 			}
