@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.1] - 11/5/2022
+- Initial launch of Forever Engine Feather.
+
+--------------------------
+11/05/22
 - Added Script Support;
 - Softcoded Characters with HScript;
 - Psych Character Support;
@@ -14,4 +18,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pausing should not lag anymore;
 - Icons are now stored inside the Character's *Folder*;
 - Characters now have fake miss animations (if real ones couldn't be found on offsets);
-- Initial launch of Forever Engine Feather.
+
+--------------------------
+11/05/22
+
+- Receptors can now be manipulated (position, size, etc);
+- started working on notetypes (wip);
+- enabled hscriptPos for error handling on scripts;
+- ghost tapping is now enabled by default;
+- splashes are now recycled sprites;
+- moved score related stuffs to Timings;
+- added Character-specific Health Bar Colors;
+- added Character-specific Noteskins and Note Splashes
+- simplified countdown code;
+- UI Class is now a sprite group, meaning it can be manipulated (as in alpha, position, etc) similar to receptors;
+
+--------------------------
+11/06/22
+
+- updated default health bar for it to match Forever 1.0's;
+- Custom Game Over Variables for characters
+- Softcoded Event Notes (with hardcoding still being possible)
+- Psych Engine Chart Support (for newer versions)
+- Chart Editor Shortcut on Freeplay
+- Stages per Chart, rather than Hardcoded
+- on-screen error log (by superpowers04)
+- Week 6 fixes

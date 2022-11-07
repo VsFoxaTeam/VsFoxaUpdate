@@ -31,6 +31,7 @@ import meta.*;
 import meta.MusicBeat.MusicBeatState;
 import meta.data.*;
 import meta.data.SongInfo.SwagSong;
+import meta.data.SongInfo.TimedEvent;
 import meta.state.charting.*;
 import meta.state.menus.*;
 import meta.subState.*;
@@ -57,8 +58,8 @@ class PlayState extends MusicBeatState
 
 	// Notes;
 	private var unspawnNotes:Array<Note> = [];
+	private var timedEvents:Array<TimedEvent> = [];
 
-	// private var timedEvents:Array<TimedEvent> = [];
 	// Song;
 	public static var SONG:SwagSong;
 	public static var songMusic:FlxSound;
@@ -85,6 +86,8 @@ class PlayState extends MusicBeatState
 	public static var opponent:Character;
 	public static var gf:Character;
 	public static var boyfriend:Boyfriend;
+
+	public static var characterGroup:FlxSpriteGroup;
 
 	// Custom;
 	public static var assetModifier:String = 'base';
@@ -149,6 +152,7 @@ class PlayState extends MusicBeatState
 	function resetStatics()
 	{
 		Timings.resetAccuracy();
+		GameOverSubstate.resetDeathVariables();
 
 		deaths = 0;
 		health = 1;
@@ -219,7 +223,7 @@ class PlayState extends MusicBeatState
 		}
 		catch (e)
 		{
-			trace('Script Calling Error: $e');
+			logTrace('Script Calling Error: $e', 3, camHUD);
 		}
 
 		// cache shit
@@ -235,7 +239,6 @@ class PlayState extends MusicBeatState
 
 		// set up characters here too
 		gf = new Character();
-		gf.adjustPos = false;
 		gf.setCharacter(300, 100, SONG.gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 
@@ -250,10 +253,11 @@ class PlayState extends MusicBeatState
 
 		if (SONG.assetModifier != null && SONG.assetModifier.length > 1)
 			assetModifier = SONG.assetModifier;
-
 		changeableSkin = Init.trueSettings.get("UI Skin");
-		if ((curStage.startsWith("school")))
-			assetModifier = 'pixel';
+
+		characterGroup = new FlxSpriteGroup();
+		characterGroup.alpha = 0.000001;
+		add(characterGroup);
 
 		// add characters
 		if (stageBuild.spawnGirlfriend)
@@ -680,28 +684,9 @@ class PlayState extends MusicBeatState
 
 			// RESET = Quick Game Over Screen
 			if (controls.RESET && !startingSong && !isStoryMode)
-			{
 				health = 0;
-			}
 
-			if (health <= 0 && startedCountdown)
-			{
-				paused = true;
-				persistentUpdate = false;
-				persistentDraw = false;
-
-				resetMusic();
-
-				deaths += 1;
-
-				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-
-				FlxG.sound.play(Paths.sound('fnf_loss_sfx' + GameOverSubstate.stageSuffix));
-
-				#if DISCORD_RPC
-				Discord.changePresence("Game Over - " + songDetails, detailsSub, iconRPC);
-				#end
-			}
+			deathCheck();
 
 			// spawn in the notes from the array
 			if ((unspawnNotes[0] != null) && ((unspawnNotes[0].strumTime - Conductor.songPosition) < 3500))
@@ -721,8 +706,36 @@ class PlayState extends MusicBeatState
 			if (Init.trueSettings.get('Controller Mode'))
 				controllerInput();
 
+			eventCheck();
 			callFunc('postUpdate', [elapsed]);
 		}
+	}
+
+	var isDead:Bool = false;
+
+	function deathCheck():Bool
+	{
+		if (health <= 0 && startedCountdown && !isDead)
+		{
+			paused = true;
+			persistentUpdate = false;
+			persistentDraw = false;
+
+			resetMusic();
+
+			deaths += 1;
+
+			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+
+			FlxG.sound.play(Paths.sound(GameOverSubstate.deathNoise));
+
+			#if DISCORD_RPC
+			Discord.changePresence("Game Over - " + songDetails, detailsSub, iconRPC);
+			#end
+			isDead = true;
+			return true;
+		}
+		return false;
 	}
 
 	// maybe theres a better place to put this, idk -saw
@@ -1447,15 +1460,13 @@ class PlayState extends MusicBeatState
 
 		// generate the chart
 		unspawnNotes = ChartParser.parseBaseChart(SONG);
-		// timedEvents = ChartParser.parseEvents(SONG.events);
+		timedEvents = ChartParser.parseEvents(SONG.events);
 
-		/*
-			for (i in timedEvents)
-			{
-				if (timedEvents.length > 0)
-					pushedEvent(i);
-			}
-		 */
+		for (i in timedEvents)
+		{
+			if (timedEvents.length > 0)
+				pushedEvent(i);
+		}
 
 		// give the game the heads up to be able to start
 		generatedMusic = true;
@@ -1463,206 +1474,80 @@ class PlayState extends MusicBeatState
 		callFunc('generateSong', []);
 	}
 
-	/*
-		function eventCheck()
+	function eventCheck()
+	{
+		while (timedEvents.length > 0)
 		{
-			while (timedEvents.length > 0)
+			var line:TimedEvent = timedEvents[0];
+			if (line != null)
 			{
-				var line:TimedEvent = timedEvents[0];
-				if (line != null)
+				if (Conductor.songPosition < line.strumTime)
+					break;
+
+				eventNoteHit(line.event, line.val1, line.val2, line.val3);
+				timedEvents.shift();
+			}
+		}
+	}
+
+	function pushedEvent(event:TimedEvent)
+	{
+		// trace('Event Name: ${event.event}, Event V1: ${event.val1}, Event V2: ${event.val2}, Event V3: ${event.val3}');
+
+		switch (event.event)
+		{
+			case 'Change Character':
+				var char:Character = new Character(false);
+				char.setCharacter(0, 0, event.val2);
+				characterGroup.add(char);
+			default:
+				if (Events.loadedEvents.get(event.event) != null)
 				{
-					if (Conductor.songPosition < line.strumTime)
-						break;
-
-					eventNoteHit(line.event, line.val1, line.val2, line.val3);
-					timedEvents.shift();
+					var eventModule:ScriptHandler = Events.loadedEvents.get(event.event);
+					eventModule.call('eventPreload', [event.val1, event.val2, event.val3]);
 				}
-			}
 		}
+	}
 
-		function pushedEvent(event:TimedEvent)
+	public var songSpeedTween:FlxTween;
+
+	public function eventNoteHit(event:String, value1:String, value2:String, ?value3:String)
+	{
+		switch (event)
 		{
-			// trace('Event Name: ${event.event}, Event V1: ${event.val1}, Event V2: ${event.val2}, Event V3: ${event.val3}');
-
-			switch (event.event)
-			{
-				case 'Change Character':
-					var char:Character = new Character(false);
-					char.setCharacter(0, 0, event.val2);
-					charGroup.add(char);
-				case 'Change Stage':
-					var newStage:Stage = new Stage(event.val1);
-					stageGroup.add(newStage);
-					new FlxTimer().start(0.005, function(tmr:FlxTimer)
-					{
-						newStage.visible = false;
-					});
-			}
-		}
-
-		public var songSpeedTween:FlxTween;
-
-		public function eventNoteHit(event:String, value1:String, value2:String, ?value3:String)
-		{
-			// TODO: unhardcode this later;
-			switch (event)
-			{
-				case 'Set GF Speed':
-					var speed:Int = Std.parseInt(value1);
-					if (Math.isNaN(speed) || speed <= 0)
-						speed = 1;
-					gfSpeed = speed;
-				case 'Change Character':
-					var changeTimer:FlxTimer;
-					var timer:Float = Std.parseFloat(value3);
-					if (Math.isNaN(timer))
-						timer = 0;
-					if (value1 == null || value1.length < 1)
-						value1 == 'dad';
-
-					changeTimer = new FlxTimer().start(timer, function(tmr:FlxTimer)
-					{
-						switch (value1.toLowerCase().trim())
-						{
-							case 'bf' | 'boyfriend' | 'player' | '0':
-								boyfriend.setCharacter(770, 450, value2);
-								uiHUD.iconP1.updateIcon(value2, true);
-							case 'gf' | 'girlfriend' | 'spectator' | '2':
-								gf.setCharacter(300, 100, value2);
-							case 'dad' | 'dadOpponent' | 'opponent' | '1':
-								dad.setCharacter(100, 100, value2);
-								uiHUD.iconP2.updateIcon(value2, false);
-						}
-						uiHUD.reloadHealthBar();
-					});
-				case 'Change Stage':
-					var changeTimer:FlxTimer;
-					var timer:Float = Std.parseFloat(value2);
-					if (Math.isNaN(timer))
-						timer = 0;
-
-					changeTimer = new FlxTimer().start(timer, function(tmr:FlxTimer)
-					{
-						remove(stageBuild.layers);
-						remove(stageBuild.foreground);
-
-						stageGroup.forEach(function(stage:Stage)
-						{
-							if (stage.curStage != value1)
-								stageGroup.remove(stageBuild);
-						});
-
-						stageBuild = new Stage(value1);
-						stageGroup.add(stageBuild);
-
-						curStage = value1;
-
-						regenerateCharacters();
-						loadUIDarken();
-					});
-				case 'Camera Flash':
-					var timer:Float = Std.parseFloat(value2);
-					if (Math.isNaN(timer) || timer <= 0)
-						timer = 0.6;
-					if (value1 == null)
-						value1 = 'white';
-					FlxG.camera.flash(ForeverTools.returnColor('$value1'), timer);
-				case 'Hey!':
-					var timer:Float = Std.parseFloat(value2);
-					if (Math.isNaN(timer) || timer <= 0)
-						timer = 0.6;
-					if (value1 == null || value1.length < 1)
-						value1 == 'bf';
-
+			case 'Change Character':
+				var changeTimer:FlxTimer;
+				var timer:Float = Std.parseFloat(value3);
+				if (Math.isNaN(timer))
+					timer = 0;
+				if (value1 == null || value1.length < 1)
+					value1 == 'dad';
+				changeTimer = new FlxTimer().start(timer, function(tmr:FlxTimer)
+				{
 					switch (value1.toLowerCase().trim())
 					{
 						case 'bf' | 'boyfriend' | 'player' | '0':
-							if (boyfriend.animOffsets.exists('hey'))
-							{
-								boyfriend.playAnim('hey', true);
-								boyfriend.specialAnim = true;
-								boyfriend.heyTimer = timer;
-							}
+							boyfriend.setCharacter(770, 450, value2);
+							uiHUD.iconP1.updateIcon(value2, true);
 						case 'gf' | 'girlfriend' | 'spectator' | '2':
-							if (gf.animOffsets.exists('hey'))
-								gf.playAnim('hey', true);
-							else if (gf.animOffsets.exists('cheer'))
-								gf.playAnim('cheer', true);
-							gf.specialAnim = true;
-							gf.heyTimer = timer;
+							gf.setCharacter(300, 100, value2);
 						case 'dad' | 'dadOpponent' | 'opponent' | '1':
-							if (dad.animOffsets.exists('hey'))
-							{
-								dad.playAnim('hey', true);
-								dad.specialAnim = true;
-								dad.heyTimer = timer;
-							}
+							opponent.setCharacter(100, 100, value2);
+							uiHUD.iconP2.updateIcon(value2, false);
 					}
-				case 'Play Animation':
-					var timer:Float = Std.parseFloat(value3);
-					if (Math.isNaN(timer) || timer <= 0)
-						timer = 0.6;
-					if (value1 == null || value1.length < 1)
-						value1 == 'dad';
-
-					switch (value2.toLowerCase().trim())
-					{
-						case 'bf' | 'boyfriend' | 'player' | '0':
-							if (boyfriend.animOffsets.exists(value1))
-							{
-								boyfriend.playAnim(value1, true);
-								boyfriend.specialAnim = true;
-								boyfriend.heyTimer = timer;
-							}
-						case 'gf' | 'girlfriend' | 'spectator' | '2':
-							if (gf.animOffsets.exists(value1))
-							{
-								gf.playAnim(value1, true);
-								gf.specialAnim = true;
-								gf.heyTimer = timer;
-							}
-						case 'dad' | 'dadOpponent' | 'opponent' | '1':
-							if (dad.animOffsets.exists(value1))
-							{
-								dad.playAnim(value1, true);
-								dad.specialAnim = true;
-								dad.heyTimer = timer;
-							}
-					}
-				case 'Multiply Scroll Speed':
-					if (Init.getSetting('Use Custom Note Speed'))
-						return;
-
-					var mult:Float = Std.parseFloat(value1);
-					var timer:Float = Std.parseFloat(value2);
-					if (Math.isNaN(mult))
-						mult = 1;
-					if (Math.isNaN(timer))
-						timer = 0;
-
-					var speed = SONG.speed * mult;
-
-					if (mult <= 0)
-					{
-						songSpeed = speed;
-					}
-					else
-					{
-						if (songSpeedTween != null)
-							songSpeedTween.cancel();
-						songSpeedTween = FlxTween.tween(this, {songSpeed: speed}, timer / Conductor.playbackRate, {
-							ease: ForeverTools.returnTweenEase(value3),
-							onComplete: function(twn:FlxTween)
-							{
-								songSpeedTween = null;
-							}
-						});
-					}
-			}
-
-			callFunc('eventNoteHit', [event, value1, value2, value3]);
+					uiHUD.reloadHealthBar();
+				});
+			default:
+				if (Events.loadedEvents.get(event) != null)
+				{
+					var eventModule:ScriptHandler = Events.loadedEvents.get(event);
+					eventModule.call('eventNoteHit', [value1, value2, value3]);
+				}
 		}
-	 */
+
+		callFunc('eventNoteHit', [event, value1, value2, value3]);
+	}
+
 	function resyncVocals():Void
 	{
 		songMusic.pause();
@@ -2072,10 +1957,13 @@ class PlayState extends MusicBeatState
 		return false;
 	}
 
+	var swagCounter:Int = 0;
+
 	private function startCountdown():Void
 	{
 		inCutscene = false;
 		Conductor.songPosition = -(Conductor.crochet * 5);
+		swagCounter = 0;
 
 		callFunc('startCountdown', []);
 
@@ -2110,8 +1998,6 @@ class PlayState extends MusicBeatState
 		{
 			if (!skipCountdown)
 			{
-				var swagCounter:Int = 0;
-
 				switch (swagCounter)
 				{
 					case 0:
@@ -2250,6 +2136,11 @@ class PlayState extends MusicBeatState
 		setVar('add', add);
 		setVar('remove', remove);
 		setVar('openSubState', openSubState);
+
+		setVar('logTrace', function(text:String, time:Float, onConsole:Bool = false)
+		{
+			logTrace(text, time, onConsole, dialogueHUD);
+		});
 
 		// CHARACTERS
 		setVar('songName', PlayState.SONG.song.toLowerCase());

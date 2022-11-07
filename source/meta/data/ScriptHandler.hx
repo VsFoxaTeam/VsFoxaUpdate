@@ -21,6 +21,7 @@ class ScriptHandler extends SScript
 		set('FlxBasic', flixel.FlxBasic);
 		set('FlxObject', flixel.FlxObject);
 		set('FlxSprite', flixel.FlxSprite);
+		set('FlxTimer', flixel.util.FlxTimer);
 		set('FlxTween', flixel.tweens.FlxTween);
 		set('FlxEase', flixel.tweens.FlxEase);
 
@@ -29,6 +30,7 @@ class ScriptHandler extends SScript
 		set('Character', gameObjects.Character);
 		set('Conductor', meta.data.Conductor);
 		set('HealthIcon', gameObjects.userInterface.HealthIcon);
+		set('PlayState', meta.state.PlayState);
 		set('Paths', Paths);
 
 		// CLASSES (FOREVER);

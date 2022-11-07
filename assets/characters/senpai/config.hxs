@@ -5,13 +5,19 @@ function loadAnimations()
 	else
 		setupAnims();
 
+	addOffset('idle', 0, 0);
+	addOffset('singUP', 5, 37);
+	addOffset('singRIGHT', 0, 0);
+	addOffset('singLEFT', 40, 0);
+	addOffset('singDOWN', 14, 0);
+
 	setGraphicSize(get('width') * 6);
 	characterData.antialiasing = false;
 
 	playAnim('idle');
 
-	setOffsets(-30, 200);
-	setCamOffsets(-150, -590);
+	setOffsets(230, 500);
+	setCamOffsets(-210, -300);
 	setBarColor([255, 170, 111]);
 	quickDancer(false);
 }
@@ -23,12 +29,6 @@ function setupAnims()
 	addByPrefix('singLEFT', 'Left', 24, false);
 	addByPrefix('singRIGHT', 'Right', 24, false);
 	addByPrefix('singDOWN', 'Down', 24, false);
-
-	addOffset('idle', 110, 280);
-	addOffset('singUP', 115, 282);
-	addOffset('singRIGHT', 110, 280);
-	addOffset('singLEFT', 150, 280);
-	addOffset('singDOWN', 124, 280);
 }
 
 function getMad() // cope;
@@ -38,10 +38,4 @@ function getMad() // cope;
 	addByPrefix('singLEFT', 'Angry Left', 24, false);
 	addByPrefix('singRIGHT', 'Angry Right', 24, false);
 	addByPrefix('singDOWN', 'Angry Down', 24, false);
-
-	addOffset('idle', 110, 280);
-	addOffset('singUP', 115, 282);
-	addOffset('singRIGHT', 110, 280);
-	addOffset('singLEFT', 150, 280);
-	addOffset('singDOWN', 124, 280);
 }

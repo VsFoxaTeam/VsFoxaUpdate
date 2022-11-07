@@ -65,11 +65,9 @@ class Song
 			};
 		};
 
-		/*
-			oldSong.events = parseEvent(rawEvent).copy();
-			if (oldSong.events == null)
-				oldSong.events = [];
-		 */
+		oldSong.events = parseEvent(rawEvent).copy();
+		if (oldSong.events == null)
+			oldSong.events = [];
 
 		return oldSong;
 	}

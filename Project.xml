@@ -30,6 +30,7 @@
 
 	<define name="DISCORD_RPC" if="desktop" unless="web || neko" />
 	<define name="VIDEO_PLUGIN" if="windows" unless="32bits || HXCPP_M32 || neko" />
+	<define name="SHOW_CONSOLE" if="debug" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 

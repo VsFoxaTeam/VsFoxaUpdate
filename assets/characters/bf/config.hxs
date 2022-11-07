@@ -25,8 +25,8 @@ function loadAnimations()
 
 	playAnim('idle');
 
-	set('antialiasing', true);
-	set('flipX', true);
+	characterData.antialiasing = true;
+	characterData.flipX = true;
 
 	setBarColor([49, 176, 209]);
 	setCamOffsets(0, -50);

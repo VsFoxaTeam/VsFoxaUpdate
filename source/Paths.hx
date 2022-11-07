@@ -335,7 +335,7 @@ class Paths
 				}
 				extension = '.hxs';
 			case FUNKIN_COCOA:
-				extension = '.char';
+				extension = '.yaml';
 			default:
 				extension = '';
 		}

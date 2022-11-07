@@ -34,42 +34,42 @@ class ForeverAssets
 			width = 10;
 			height = 12;
 		}
-		var newSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)),
+		var comboNumbers:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)),
 			true, width, height);
 		switch (assetModifier)
 		{
 			default:
-				newSprite.alpha = 1;
-				newSprite.screenCenter();
-				newSprite.x += (43 * scoreInt) + 20;
-				newSprite.y += 60;
+				comboNumbers.alpha = 1;
+				comboNumbers.screenCenter();
+				comboNumbers.x += (43 * scoreInt) + 20;
+				comboNumbers.y += 60;
 
-				newSprite.color = FlxColor.WHITE;
+				comboNumbers.color = FlxColor.WHITE;
 				if (negative)
-					newSprite.color = createdColor;
+					comboNumbers.color = createdColor;
 
-				newSprite.animation.add('base', [
+				comboNumbers.animation.add('base', [
 					(Std.parseInt(number) != null ? Std.parseInt(number) + 1 : 0) + (!allSicks ? 0 : 11)
 				], 0, false);
-				newSprite.animation.play('base');
+				comboNumbers.animation.play('base');
 		}
 
 		if (assetModifier == 'pixel')
-			newSprite.setGraphicSize(Std.int(newSprite.width * PlayState.daPixelZoom));
+			comboNumbers.setGraphicSize(Std.int(comboNumbers.width * PlayState.daPixelZoom));
 		else
 		{
-			newSprite.antialiasing = true;
-			newSprite.setGraphicSize(Std.int(newSprite.width * 0.5));
+			comboNumbers.antialiasing = true;
+			comboNumbers.setGraphicSize(Std.int(comboNumbers.width * 0.5));
 		}
-		newSprite.updateHitbox();
+		comboNumbers.updateHitbox();
 		if (!Init.trueSettings.get('Simply Judgements'))
 		{
-			newSprite.acceleration.y = FlxG.random.int(200, 300);
-			newSprite.velocity.y = -FlxG.random.int(140, 160);
-			newSprite.velocity.x = FlxG.random.float(-5, 5);
+			comboNumbers.acceleration.y = FlxG.random.int(200, 300);
+			comboNumbers.velocity.y = -FlxG.random.int(140, 160);
+			comboNumbers.velocity.x = FlxG.random.float(-5, 5);
 		}
 
-		return newSprite;
+		return comboNumbers;
 	}
 
 	public static function generateRating(asset:String, perfectSick:Bool, timing:String, assetModifier:String = 'base', changeableSkin:String = 'default',
@@ -82,36 +82,36 @@ class ForeverAssets
 			width = 72;
 			height = 32;
 		}
-		var rating:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin,
+		var judgement:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin,
 			baseLibrary)), true, width, height);
 		switch (assetModifier)
 		{
 			default:
-				rating.alpha = 1;
-				rating.screenCenter();
-				rating.x = (FlxG.width * 0.55) - 40;
-				rating.y -= 60;
+				judgement.alpha = 1;
+				judgement.screenCenter();
+				judgement.x = (FlxG.width * 0.55) - 40;
+				judgement.y -= 60;
 				if (!Init.trueSettings.get('Simply Judgements'))
 				{
-					rating.acceleration.y = 550;
-					rating.velocity.y = -FlxG.random.int(140, 175);
-					rating.velocity.x = -FlxG.random.int(0, 10);
+					judgement.acceleration.y = 550;
+					judgement.velocity.y = -FlxG.random.int(140, 175);
+					judgement.velocity.x = -FlxG.random.int(0, 10);
 				}
-				rating.animation.add('base', [
+				judgement.animation.add('base', [
 					Std.int((Timings.judgementsMap.get(asset)[0] * 2) + (perfectSick ? 0 : 2) + (timing == 'late' ? 1 : 0))
 				], 24, false);
-				rating.animation.play('base');
+				judgement.animation.play('base');
 		}
 
 		if (assetModifier == 'pixel')
-			rating.setGraphicSize(Std.int(rating.width * PlayState.daPixelZoom * 0.7));
+			judgement.setGraphicSize(Std.int(judgement.width * PlayState.daPixelZoom * 0.7));
 		else
 		{
-			rating.antialiasing = true;
-			rating.setGraphicSize(Std.int(rating.width * 0.7));
+			judgement.antialiasing = true;
+			judgement.setGraphicSize(Std.int(judgement.width * 0.7));
 		}
 
-		return rating;
+		return judgement;
 	}
 
 	public static function generateNoteSplashes(asset:String, group:FlxTypedSpriteGroup<NoteSplash>, assetModifier:String = 'base',
@@ -141,7 +141,7 @@ class ForeverAssets
 				if (noteScript != null)
 				{
 					noteScript.call('generateSplash', [tempSplash, noteData]);
-					noteScript.set('changeableSkin', changeableSkin);
+					noteScript.set('splashSkin', changeableSkin);
 					noteScript.set('assetModifier', assetModifier);
 				}
 				else

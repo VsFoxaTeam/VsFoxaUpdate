@@ -65,27 +65,30 @@ class Stage extends FlxTypedGroup<FlxBasic>
 		// to add above girlfriend, use layers.add(); instead of add();
 		layers = new FlxTypedGroup<FlxBasic>();
 
-		switch (CoolUtil.spaceToDash(PlayState.SONG.song.toLowerCase()))
+		if (PlayState.SONG.stage == null || PlayState.SONG.stage.length < 1)
 		{
-			case 'spookeez' | 'south' | 'monster':
-				curStage = 'spooky';
-			case 'pico' | 'blammed' | 'philly-nice':
-				curStage = 'philly';
-			case 'milf' | 'satin-panties' | 'high':
-				curStage = 'highway';
-			case 'cocoa' | 'eggnog':
-				curStage = 'mall';
-			case 'winter-horrorland':
-				curStage = 'mallEvil';
-			case 'senpai' | 'roses':
-				curStage = 'school';
-			case 'thorns':
-				curStage = 'schoolEvil';
-			default:
-				curStage = 'stage';
+			switch (CoolUtil.spaceToDash(PlayState.SONG.song.toLowerCase()))
+			{
+				case 'spookeez' | 'south' | 'monster':
+					curStage = 'spooky';
+				case 'pico' | 'blammed' | 'philly-nice':
+					curStage = 'philly';
+				case 'milf' | 'satin-panties' | 'high':
+					curStage = 'highway';
+				case 'cocoa' | 'eggnog':
+					curStage = 'mall';
+				case 'winter-horrorland':
+					curStage = 'mallEvil';
+				case 'senpai' | 'roses':
+					curStage = 'school';
+				case 'thorns':
+					curStage = 'schoolEvil';
+				default:
+					curStage = 'stage';
+			}
 		}
-
-		PlayState.curStage = curStage;
+		else
+			curStage = PlayState.SONG.stage;
 
 		switch (curStage)
 		{
@@ -376,9 +379,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				gfVersion = 'gf-car';
 			case 'mall' | 'mallEvil':
 				gfVersion = 'gf-christmas';
-			case 'school':
-				gfVersion = 'gf-pixel';
-			case 'schoolEvil':
+			case 'school' | 'schoolEvil':
 				gfVersion = 'gf-pixel';
 		}
 

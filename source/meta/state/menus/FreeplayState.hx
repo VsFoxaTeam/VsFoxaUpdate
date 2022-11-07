@@ -232,9 +232,9 @@ class FreeplayState extends MusicBeatState
 				CoolUtil.difficultyArray.indexOf(existingDifficulties[curSelected][curDifficulty]));
 
 			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
-
 			PlayState.storyWeek = songs[curSelected].week;
 
 			if (FlxG.sound.music != null)
@@ -242,7 +242,13 @@ class FreeplayState extends MusicBeatState
 
 			threadActive = false;
 
-			Main.switchState(this, new PlayState());
+			if (FlxG.keys.pressed.SHIFT)
+			{
+				PlayState.preventScoring = true;
+				Main.switchState(this, new meta.state.charting.OriginalChartingState());
+			}
+			else
+				Main.switchState(this, new PlayState());
 		}
 
 		// Adhere the position of all the things (I'm sorry it was just so ugly before I had to fix it Shubs)

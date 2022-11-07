@@ -26,6 +26,7 @@ function loadAnimations()
 	playAnim('idle');
 
 	characterData.antialiasing = true;
+	characterData.flipX = true;
 
 	setBarColor([49, 176, 209]);
 	if (isPlayer)

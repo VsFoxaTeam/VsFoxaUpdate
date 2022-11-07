@@ -142,6 +142,9 @@ class OptionsMenuState extends MusicBeatState
 
 	function loadSubgroup(subgroupName:String)
 	{
+		if (subgroupName == 'main' || subgroupName == 'appearance')
+			Init.reloadUISkins();
+
 		// unlock the movement
 		lockedMovement = false;
 

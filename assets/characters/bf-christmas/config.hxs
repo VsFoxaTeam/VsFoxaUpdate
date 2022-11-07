@@ -26,8 +26,8 @@ function loadAnimations()
 
 	playAnim('idle');
 
-	set('antialiasing', true);
-	set('flipX', true);
+	characterData.antialiasing = true;
+	characterData.flipX = true;
 
 	var charX:Float = 0;
 	var opponentX:Float = 250;

@@ -42,6 +42,7 @@ typedef CharacterData =
 	var headBopSpeed:Int;
 	var healthColor:Array<Float>;
 	var antialiasing:Bool;
+	var adjustPos:Bool;
 	var noteSkin:String;
 	var splashSkin:String;
 	var icon:String;
@@ -55,8 +56,10 @@ class Character extends FNFSprite
 	public var curCharacter:String = 'bf';
 
 	public var holdTimer:Float = 0;
+	public var heyTimer:Float = 0.6;
 
-	public var adjustPos:Bool = true;
+	public var specialAnim:Bool = false;
+
 	public var hasMissAnims:Bool = false;
 	public var danceIdle:Bool = false;
 
@@ -88,7 +91,8 @@ class Character extends FNFSprite
 			singDuration: 4,
 			headBopSpeed: 2,
 			healthColor: [255, 255, 255],
-			antialiasing: !character.endsWith('-pixel'),
+			antialiasing: true,
+			adjustPos: !character.startsWith('gf'),
 			noteSkin: "NOTE_assets",
 			splashSkin: 'noteSplashes',
 			icon: null,
@@ -97,10 +101,6 @@ class Character extends FNFSprite
 
 		if (characterData.icon == null)
 			characterData.icon = character;
-		antialiasing = characterData.antialiasing;
-
-		flipX = characterData.flipX;
-		flipY = characterData.flipY;
 
 		if (animation.getByName('danceRight') != null)
 			danceIdle = true;
@@ -171,6 +171,11 @@ class Character extends FNFSprite
 		recalcDance();
 		dance();
 
+		antialiasing = characterData.antialiasing;
+
+		flipX = characterData.flipX;
+		flipY = characterData.flipY;
+
 		if (isPlayer) // fuck you ninjamuffin lmao
 		{
 			// do a cool fip
@@ -184,7 +189,7 @@ class Character extends FNFSprite
 		else if (curCharacter.startsWith('bf'))
 			flipLeftRight();
 
-		if (adjustPos)
+		if (characterData.adjustPos)
 		{
 			x += characterData.offsetX;
 			y += (characterData.offsetY - (frameHeight * scale.y));
@@ -219,35 +224,57 @@ class Character extends FNFSprite
 
 	override function update(elapsed:Float)
 	{
-		if (!isPlayer)
+		if (!debugMode && animation.curAnim != null)
 		{
-			if (animation.curAnim.name.startsWith('sing'))
-				holdTimer += elapsed;
-
-			if (holdTimer >= Conductor.stepCrochet * characterData.singDuration * 0.001)
+			if (heyTimer > 0)
 			{
-				dance();
-				holdTimer = 0;
+				heyTimer -= elapsed;
+				if (heyTimer <= 0)
+				{
+					if (specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer')
+					{
+						specialAnim = false;
+						dance();
+					}
+					heyTimer = 0;
+				}
 			}
-		}
+			else if (specialAnim && animation.curAnim.finished)
+			{
+				specialAnim = false;
+				dance();
+			}
 
-		var curCharSimplified:String = simplifyCharacter();
-		switch (curCharSimplified)
-		{
-			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
-				if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
-					playAnim('danceLeft');
-		}
+			if (!isPlayer && !specialAnim)
+			{
+				if (animation.curAnim.name.startsWith('sing'))
+					holdTimer += elapsed;
 
-		// Post idle animation (think Week 4 and how the player and mom's hair continues to sway after their idle animations are done!)
-		if (animation.curAnim.finished && animation.curAnim.name == 'idle')
-		{
-			// We look for an animation called 'idlePost' to switch to
-			if (animation.getByName('idlePost') != null)
-				// (( WE DON'T USE 'PLAYANIM' BECAUSE WE WANT TO FEED OFF OF THE IDLE OFFSETS! ))
-				animation.play('idlePost', true, false, 0);
+				if (holdTimer >= Conductor.stepCrochet * characterData.singDuration * 0.001)
+				{
+					dance();
+					holdTimer = 0;
+				}
+			}
+
+			var curCharSimplified:String = simplifyCharacter();
+			switch (curCharSimplified)
+			{
+				case 'gf':
+					if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+						playAnim('danceRight');
+					if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
+						playAnim('danceLeft');
+			}
+
+			// Post idle animation (think Week 4 and how the player and mom's hair continues to sway after their idle animations are done!)
+			if (animation.curAnim.finished && animation.curAnim.name == 'idle')
+			{
+				// We look for an animation called 'idlePost' to switch to
+				if (animation.getByName('idlePost') != null)
+					// (( WE DON'T USE 'PLAYANIM' BECAUSE WE WANT TO FEED OFF OF THE IDLE OFFSETS! ))
+					animation.play('idlePost', true, false, 0);
+			}
 		}
 
 		super.update(elapsed);
@@ -260,11 +287,13 @@ class Character extends FNFSprite
 	 */
 	public function dance(?forced:Bool = false)
 	{
-		if (!debugMode)
+		if (!debugMode && animation.curAnim != null && !specialAnim)
 		{
 			// reset color if it's not white;
 			if (color != 0xFFFFFFFF)
 				color = 0xFFFFFFFF;
+
+			specialAnim = false;
 
 			var curCharSimplified:String = simplifyCharacter();
 			switch (curCharSimplified)
@@ -281,6 +310,7 @@ class Character extends FNFSprite
 					}
 				default:
 					// Left/right dancing, think Skid & Pump
+
 					if (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null)
 					{
 						danced = !danced;
@@ -467,17 +497,15 @@ class Character extends FNFSprite
 			return true;
 		});
 
-		/*
-			setVar('setDeathChar',
-				function(char:String = 'bf-dead', lossSfx:String = 'fnf_loss_sfx', song:String = 'gameOver', confirmSound:String = 'gameOverEnd', bpm:Int)
-				{
-					GameOverSubstate.character = char;
-					GameOverSubstate.deathSound = lossSfx;
-					GameOverSubstate.deathMusic = song;
-					GameOverSubstate.deathConfirm = confirmSound;
-					GameOverSubstate.deathBPM = bpm;
-				});
-		 */
+		setVar('setDeathChar',
+			function(char:String = 'bf-dead', lossSfx:String = 'fnf_loss_sfx', song:String = 'gameOver', confirmSound:String = 'gameOverEnd', bpm:Int)
+			{
+				meta.subState.GameOverSubstate.bfType = char;
+				meta.subState.GameOverSubstate.deathNoise = lossSfx;
+				meta.subState.GameOverSubstate.deathTrack = song;
+				meta.subState.GameOverSubstate.leaveTrack = confirmSound;
+				meta.subState.GameOverSubstate.trackBpm = bpm;
+			});
 
 		setVar('get', function(variable:String)
 		{

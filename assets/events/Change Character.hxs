@@ -1,0 +1,5 @@
+function returnDescription()
+	return "Sets the current Character to a new one\nValue 1: Character to change (dad, bf, gf, defaults to dad)\nValue 2: New character's name\nValue 3: Delay to Change Characters (in Milliseconds)";
+
+function returnValue3()
+	return true;

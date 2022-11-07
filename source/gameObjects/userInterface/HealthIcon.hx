@@ -66,15 +66,17 @@ class HealthIcon extends FlxSprite
 			trimmedCharacter = trimmedCharacter.substring(0, trimmedCharacter.indexOf('-'));
 
 		var iconPath = char;
-		if (!FileSystem.exists(Paths.getPath('characters/$iconPath/icon' + suffix + '.png', IMAGE)))
+		if (!FileSystem.exists(Paths.getPath('characters/$iconPath/icon$suffix.png', IMAGE)))
 		{
 			if (iconPath != trimmedCharacter)
 				iconPath = trimmedCharacter;
 			else
 				iconPath = 'placeholder';
+			trace('$char icon trying $iconPath instead you fuck');
 		}
 
-		antialiasing = (iconPath.endsWith('-pixel'));
+		antialiasing = true;
+
 		var iconGraphic:FlxGraphic = Paths.image('$iconPath/icon$suffix', 'characters');
 
 		loadGraphic(iconGraphic); // get file size;

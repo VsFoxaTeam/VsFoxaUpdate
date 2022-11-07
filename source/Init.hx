@@ -305,13 +305,7 @@ class Init extends FlxState
 			|| trueSettings.get("Stage Opacity") > 100)
 			trueSettings.set("Stage Opacity", 100);
 
-		// 'hardcoded' ui skins
-		gameSettings.get("UI Skin")[4] = CoolUtil.returnAssetsLibrary('UI');
-		if (!gameSettings.get("UI Skin")[4].contains(trueSettings.get("UI Skin")))
-			trueSettings.set("UI Skin", 'default');
-		gameSettings.get("Note Skin")[4] = CoolUtil.returnAssetsLibrary('noteskins/notes');
-		if (!gameSettings.get("Note Skin")[4].contains(trueSettings.get("Note Skin")))
-			trueSettings.set("Note Skin", 'default');
+		reloadUISkins();
 
 		saveSettings();
 
@@ -371,5 +365,16 @@ class Init extends FlxState
 
 		FlxG.game.setFilters(filters);
 		// */
+	}
+
+	public static function reloadUISkins()
+	{
+		// 'hardcoded' ui skins
+		gameSettings.get("UI Skin")[4] = CoolUtil.returnAssetsLibrary('UI');
+		if (!gameSettings.get("UI Skin")[4].contains(trueSettings.get("UI Skin")))
+			trueSettings.set("UI Skin", 'default');
+		gameSettings.get("Note Skin")[4] = CoolUtil.returnAssetsLibrary('noteskins/notes');
+		if (!gameSettings.get("Note Skin")[4].contains(trueSettings.get("Note Skin")))
+			trueSettings.set("Note Skin", 'default');
 	}
 }

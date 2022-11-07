@@ -71,11 +71,11 @@ class ClassHUD extends FlxSpriteGroup
 		reloadHealthBar();
 		add(healthBar);
 
-		iconP1 = new HealthIcon(PlayState.SONG.player1, true);
+		iconP1 = new HealthIcon(PlayState.boyfriend.characterData.icon, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 		add(iconP1);
 
-		iconP2 = new HealthIcon(PlayState.SONG.player2, false);
+		iconP2 = new HealthIcon(PlayState.opponent.characterData.icon, false);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 

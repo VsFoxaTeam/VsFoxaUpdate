@@ -1,7 +1,11 @@
 package meta;
 
 import flixel.FlxG;
+import flixel.FlxCamera;
 import flixel.FlxSubState;
+import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
@@ -121,6 +125,61 @@ class MusicBeatState extends FNFUIState
 	public function beatHit():Void
 	{
 		// used for updates when beats are hit in classes that extend this one
+	}
+
+	var textField:FlxText;
+	var fieldTween:FlxTween;
+
+	public function logTrace(input:String, duration:Float, traceOnConsole:Bool = true, cam:FlxCamera)
+	{
+		if (traceOnConsole)
+			trace(input);
+		if (textField != null)
+		{
+			var oldField:FlxText = cast textField;
+			FlxTween.tween(oldField, {alpha: 0}, 0.2, {
+				onComplete: function(twn:FlxTween)
+				{
+					remove(oldField);
+					oldField.destroy();
+				}
+			});
+			textField = null;
+		}
+
+		if (fieldTween != null)
+		{
+			fieldTween.cancel();
+			fieldTween = null;
+		}
+
+		if (input != '' && duration > 0)
+		{
+			textField = new FlxText(0, 0, FlxG.width, input);
+			textField.setFormat(Paths.font("vcr"), 32, 0xFFFFFFFF, CENTER);
+			textField.setBorderStyle(OUTLINE, 0xFF000000, 2);
+			textField.alpha = 0;
+			textField.screenCenter(X);
+			textField.cameras = [cam];
+			add(textField);
+
+			fieldTween = FlxTween.tween(textField, {alpha: 1}, 0.2, {
+				onComplete: function(twn:FlxTween)
+				{
+					fieldTween = FlxTween.tween(textField, {alpha: 0}, 0.2, {
+						startDelay: duration,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(textField);
+							textField.destroy();
+							textField = null;
+							if (fieldTween == twn)
+								fieldTween = null;
+						}
+					});
+				}
+			});
+		}
 	}
 }
 

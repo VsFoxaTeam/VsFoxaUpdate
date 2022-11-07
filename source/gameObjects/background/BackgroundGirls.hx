@@ -16,6 +16,8 @@ class BackgroundGirls extends FNFSprite
 		animation.addByIndices('danceLeft', 'BG girls group', CoolUtil.numberArray(14), "", 24, false);
 		animation.addByIndices('danceRight', 'BG girls group', CoolUtil.numberArray(30, 15), "", 24, false);
 
+		antialiasing = false;
+
 		animation.play('danceLeft');
 	}
 

@@ -16,6 +16,7 @@ import meta.data.PlayerSettings;
 import meta.data.dependency.Discord;
 import meta.data.dependency.FNFTransition;
 import meta.data.dependency.FNFUIState;
+import meta.Overlay.Console;
 import openfl.Assets;
 import openfl.Lib;
 import openfl.display.FPS;
@@ -44,6 +45,7 @@ class Main extends Sprite
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
+	var infoConsole:Console; // intiialize the on-screen console for script debug traces before creating it.
 
 	// heres gameweeks set up!
 
@@ -157,8 +159,13 @@ class Main extends Sprite
 		// test initialising the player settings
 		PlayerSettings.init();
 
+		#if !mobile
 		infoCounter = new Overlay(0, 0);
 		addChild(infoCounter);
+
+		infoConsole = new Console();
+		addChild(infoConsole);
+		#end
 	}
 
 	public static function framerateAdjust(input:Float)
@@ -207,6 +214,7 @@ class Main extends Sprite
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
 		var errMsg:String = "";
+		var errMsgPrint:String = "";
 		var path:String;
 		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
 		var dateNow:String = Date.now().toString();
@@ -222,6 +230,7 @@ class Main extends Sprite
 			{
 				case FilePos(s, file, line, column):
 					errMsg += file + " (line " + line + ")\n";
+					errMsgPrint += file + ":" + line + "\n"; // if you Ctrl+Mouse Click its go to the line.
 				default:
 					Sys.println(stackItem);
 			}
@@ -234,7 +243,7 @@ class Main extends Sprite
 
 		File.saveContent(path, errMsg + "\n");
 
-		Sys.println(errMsg);
+		Sys.println(errMsgPrint);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
 		var crashDialoguePath:String = "FE-CrashDialog";

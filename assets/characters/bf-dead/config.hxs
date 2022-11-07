@@ -8,7 +8,8 @@ function loadAnimations()
 	addOffset("deathConfirm", -10, 0);
 	addOffset("deathLoop", -10, 0);
 
-	set('antialiasing', true);
+	characterData.antialiasing = true;
+	characterData.flipX = true;
 
 	if (isPlayer)
 		set('flipX', true);

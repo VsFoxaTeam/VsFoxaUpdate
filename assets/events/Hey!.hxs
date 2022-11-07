@@ -1,0 +1,42 @@
+function eventNoteHit(val1, val2, val3)
+{
+	var fromValue:String = val1;
+	var timer:Float = Std.parseFloat(val2);
+	if (Math.isNaN(timer) || timer <= 0)
+		timer = 0.6;
+	if (val1 == null || val1.length < 1)
+	{
+		val1 == 'bf';
+		fromValue = StringTools.trim(StringTools.toLowerCase(val1));
+	}
+	else
+		fromValue = StringTools.trim(StringTools.toLowerCase(val1));
+
+	switch (fromValue)
+	{
+		case 'bf' | 'boyfriend' | 'player' | '0':
+			if (PlayState.boyfriend.animOffsets.exists('hey'))
+			{
+				PlayState.boyfriend.playAnim('hey', true);
+				PlayState.boyfriend.specialAnim = true;
+				PlayState.boyfriend.heyTimer = timer;
+			}
+		case 'gf' | 'girlfriend' | 'spectator' | '2':
+			if (PlayState.gf.animOffsets.exists('hey'))
+				PlayState.gf.playAnim('hey', true);
+			else if (PlayState.gf.animOffsets.exists('cheer'))
+				PlayState.gf.playAnim('cheer', true);
+			PlayState.gf.specialAnim = true;
+			PlayState.gf.heyTimer = timer;
+		case 'dad' | 'dadOpponent' | 'opponent' | '1':
+			if (PlayState.opponent.animOffsets.exists('hey'))
+			{
+				PlayState.opponent.playAnim('hey', true);
+				PlayState.opponent.specialAnim = true;
+				PlayState.opponent.heyTimer = timer;
+			}
+	}
+}
+
+function returnDescription()
+	return "Plays the \"Hey!\" animation from Bopeebo,\nValue 1: Character (bf, gf, dad, defaults to bf).\nValue 2: Custom animation duration,\nleave it blank for 0.6s";

@@ -57,9 +57,13 @@ class Note extends FNFSprite
 
 	public static var noteScript:ScriptHandler;
 
-	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?sustainNote:Bool = false)
+	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?isSustainNote:Bool = false)
 	{
-		super(x, y);
+		this.prevNote = prevNote;
+		this.isSustainNote = isSustainNote;
+		this.strumTime = strumTime;
+		this.noteData = noteData;
+		this.noteAlt = noteAlt;
 
 		if (prevNote == null)
 			prevNote = this;
@@ -67,15 +71,10 @@ class Note extends FNFSprite
 		if (noteType == null)
 			noteType = 'default';
 
-		this.prevNote = prevNote;
-		isSustainNote = sustainNote;
+		super(x, y);
 
 		// oh okay I know why this exists now
 		y -= 2000;
-
-		this.strumTime = strumTime;
-		this.noteData = noteData;
-		this.noteAlt = noteAlt;
 
 		// determine parent note
 		if (isSustainNote && prevNote != null)
@@ -101,29 +100,26 @@ class Note extends FNFSprite
 
 	public function generateNote(noteType:String)
 	{
-		// heavily based on forever 1.0;
-		if (this.noteType != noteType)
+		this.noteType = noteType;
+		noteScript = getNoteScript(noteType);
+
+		noteScript.set('getNoteColor', getNoteColor);
+		noteScript.set('getNoteAction', getNoteAction);
+		noteScript.set('noteSkin', Init.trueSettings.get('Note Skin'));
+		// noteScript.set('playerNote', framesArg);
+
+		var noteFunc:String = isSustainNote ? 'generateSustain' : 'generateNote';
+
+		try
 		{
-			this.noteType == noteType;
-
-			noteScript = getNoteScript(noteType);
-			noteScript.set('getNoteColor', getNoteColor);
-			noteScript.set('getNoteAction', getNoteAction);
-			noteScript.set('noteSkin', Init.trueSettings.get('Note Skin'));
-
-			var noteFunc:String = isSustainNote ? 'generateSustain' : 'generateNote';
-
-			try
-			{
-				noteScript.call(noteFunc, [this]);
-				trace('new note module loaded: ' + noteType);
-			}
-			catch (e)
-			{
-				trace('[NOTE ERROR] Script: $noteType is null');
-				this.destroy();
-				return;
-			}
+			noteScript.call(noteFunc, [this]);
+			trace('new note module loaded: ' + noteType);
+		}
+		catch (e)
+		{
+			trace('[NOTE ERROR] Script: $noteType is null');
+			this.destroy();
+			return;
 		}
 	}
 
@@ -309,16 +305,28 @@ class Note extends FNFSprite
 	}
 
 	public function noteHit()
-		noteScript.call('onHit', [this]);
+	{
+		if (noteScript != null)
+			noteScript.call('onHit', [this]);
+	}
 
 	public function noteMiss()
-		noteScript.call('onMiss', [this]);
+	{
+		if (noteScript != null)
+			noteScript.call('onMiss', [this]);
+	}
 
 	public function stepHit()
-		noteScript.call('stepHit', [this]);
+	{
+		if (noteScript != null)
+			noteScript.call('stepHit', [this]);
+	}
 
 	public function beatHit()
-		noteScript.call('beatHit', [this]);
+	{
+		if (noteScript != null)
+			noteScript.call('beatHit', [this]);
+	}
 
 	public static function getNoteScript(noteType:String):ScriptHandler
 	{

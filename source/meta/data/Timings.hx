@@ -45,7 +45,7 @@ class Timings
 	public static var notesHit:Int = 0;
 	public static var segmentsHit:Int = 0;
 
-	public static var ratingFinal:String = "";
+	public static var ratingFinal:String = "F";
 	public static var comboDisplay:String = "";
 
 	public static var gottenJudgements:Map<String, Int> = [];
@@ -81,7 +81,7 @@ class Timings
 		combo = 0;
 		misses = 0;
 
-		ratingFinal = "";
+		ratingFinal = "F";
 		comboDisplay = "";
 		updateScoreRating();
 	}
@@ -138,7 +138,5 @@ class Timings
 	}
 
 	public static function returnScoreRating()
-	{
 		return ratingFinal;
-	}
 }

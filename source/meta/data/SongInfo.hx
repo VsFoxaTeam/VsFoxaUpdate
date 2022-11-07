@@ -9,6 +9,7 @@ typedef SwagSong =
 {
 	var song:String;
 	var notes:Array<SwagSection>;
+	var events:Array<Array<Dynamic>>;
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
@@ -30,6 +31,7 @@ typedef SwagSong =
 typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
+	var sectionBeats:Float;
 	var lengthInSteps:Int;
 	var typeOfSection:Int;
 	var mustHitSection:Bool;
@@ -45,6 +47,7 @@ typedef TimedEvent =
 {
 	public var strumTime:Float;
 	public var event:String;
+	public var description:String;
 	public var val1:String;
 	public var val2:String;
 	public var val3:String;
