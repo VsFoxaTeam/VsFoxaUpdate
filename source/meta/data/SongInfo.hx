@@ -47,7 +47,6 @@ typedef TimedEvent =
 {
 	public var strumTime:Float;
 	public var event:String;
-	public var description:String;
 	public var val1:String;
 	public var val2:String;
 	public var val3:String;

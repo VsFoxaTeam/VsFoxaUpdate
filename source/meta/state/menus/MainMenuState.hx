@@ -140,15 +140,11 @@ class MainMenuState extends MusicBeatState
 		//
 	}
 
-	// var colorTest:Float = 0;
 	var selectedSomethin:Bool = false;
 	var counterControl:Float = 0;
 
 	override function update(elapsed:Float)
 	{
-		// colorTest += 0.125;
-		// bg.color = FlxColor.fromHSB(colorTest, 100, 100, 0.5);
-
 		var up = controls.UI_UP;
 		var down = controls.UI_DOWN;
 		var up_p = controls.UI_UP_P;
@@ -165,40 +161,45 @@ class MainMenuState extends MusicBeatState
 					// if single press
 					if (i > 1)
 					{
-						// up is 2 and down is 3
-						// paaaaaiiiiiiinnnnn
+						// up == 2 - down == 3
 						if (i == 2)
 							curSelected--;
 						else if (i == 3)
 							curSelected++;
+						
+						if (curSelected < 0)
+							curSelected = optionShit.length - 1;
+						else if (curSelected >= optionShit.length)
+							curSelected = 0;
 
 						FlxG.sound.play(Paths.sound('scrollMenu'));
 					}
-					/* idk something about it isn't working yet I'll rewrite it later
-						else
+					/*
+					else
+					{
+						// up == 0 - down == 1
+						var directionInteger:Int = (i == 0 ? -1 : 0) + (i == 1 ? 1 : 0);
+
+						if (Math.abs(directionInteger) > 0)
 						{
-							// paaaaaaaiiiiiiiinnnn
-							var curDir:Int = 0;
-							if (i == 0)
-								curDir = -1;
-							else if (i == 1)
-								curDir = 1;
+							if (counterControl <= 0)
+								counterControl += FlxG.updateFramerate / 4;
+							else
+								counterControl--;
+						}
+						else
+							counterControl = 0;
 
-							if (counterControl < 2)
-								counterControl += 0.05;
+						//						
+						if (counterControl >= 30) // bitch?
+							curSelected += directionInteger;
 
-							if (counterControl >= 1)
-							{
-								curSelected += (curDir * (counterControl / 24));
-								if (curSelected % 1 == 0)
-									FlxG.sound.play(Paths.sound('scrollMenu'));
-							}
-					}*/
-
-					if (curSelected < 0)
-						curSelected = optionShit.length - 1;
-					else if (curSelected >= optionShit.length)
-						curSelected = 0;
+						if (curSelected < 0)
+							curSelected = optionShit.length - 1;
+						else if (curSelected >= optionShit.length)
+							curSelected = 0;
+					}
+					*/
 				}
 				//
 			}
@@ -207,6 +208,14 @@ class MainMenuState extends MusicBeatState
 		{
 			// reset variables
 			counterControl = 0;
+		}
+
+		if ((controls.BACK) && (!selectedSomethin))
+		{
+			//
+			selectedSomethin = true;
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			Main.switchState(this, new TitleState());
 		}
 
 		if ((controls.ACCEPT) && (!selectedSomethin))

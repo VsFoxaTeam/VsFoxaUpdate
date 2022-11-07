@@ -1,33 +1,31 @@
-function eventNoteHit(val1, val2, val3)
+function eventNoteHit(params)
 {
-	var timer:Float = Std.parseFloat(val3);
+	var timer:Float = Std.parseFloat(params[1]);
 	if (Math.isNaN(timer) || timer <= 0)
 		timer = 0.6;
-	if (val1 == null || val1.length < 1)
-		val1 == 'dad';
 
-	switch (val2.toLowerCase().trim())
+	switch (params[1])
 	{
-		case 'bf' | 'boyfriend' | 'player' | '0':
-			if (boyfriend.animOffsets.exists(val1))
+		case 'dad', 'dadOpponent', 'opponent', '1':
+			if (PlayState.opponent.animOffsets.exists(params[0]))
 			{
-				PlayState.boyfriend.playAnim(val1, true);
-				PlayState.boyfriend.specialAnim = true;
-				PlayState.boyfriend.heyTimer = timer;
+				PlayState.opponent.playAnim(params[0], true);
+				PlayState.opponent.specialAnim = true;
+				PlayState.opponent.heyTimer = timer;
 			}
-		case 'gf' | 'girlfriend' | 'spectator' | '2':
-			if (gf.animOffsets.exists(val1))
+		case 'gf', 'girlfriend', 'spectator', '2':
+			if (PlayState.gf.animOffsets.exists(params[0]))
 			{
-				PlayState.gf.playAnim(val1, true);
+				PlayState.gf.playAnim(params[0], true);
 				PlayState.gf.specialAnim = true;
 				PlayState.gf.heyTimer = timer;
 			}
-		case 'dad' | 'dadOpponent' | 'opponent' | '1':
-			if (opponent.animOffsets.exists(val1))
+		default:
+			if (PlayState.boyfriend.animOffsets.exists(params[0]))
 			{
-				PlayState.opponent.playAnim(val1, true);
-				PlayState.opponent.specialAnim = true;
-				PlayState.opponent.heyTimer = timer;
+				PlayState.boyfriend.playAnim(params[0], true);
+				PlayState.boyfriend.specialAnim = true;
+				PlayState.boyfriend.heyTimer = timer;
 			}
 	}
 }

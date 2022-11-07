@@ -152,13 +152,13 @@ class Init extends FlxState
 		],
 		"Note Skin" => ['default', Selector, 'Choose a note skin.', NOT_FORCED, ''],
 		"Framerate Cap" => [120, Selector, 'Define your maximum FPS.', NOT_FORCED, ['']],
-		"Opaque Arrows" => [
-			false,
-			Checkmark,
-			"Makes the arrows at the top of the screen opaque again.",
+		"Arrow Opacity" => [
+			80,
+			Selector,
+			"Sets the opacity for the arrows at the top/bottom of the screen.",
 			NOT_FORCED
 		],
-		"Opaque Holds" => [false, Checkmark, "Huh, why isnt the trail cut off?", NOT_FORCED],
+		"Hold Opacity" => [60, Selector, "Sets the opacity for the Hold Notes... Huh, why isnt the trail cut off?", NOT_FORCED],
 		'Ghost Tapping' => [
 			true,
 			Checkmark,
@@ -295,15 +295,10 @@ class Init extends FlxState
 		}
 
 		// lemme fix that for you
-		if (!Std.isOfType(trueSettings.get("Framerate Cap"), Int)
-			|| trueSettings.get("Framerate Cap") < 30
-			|| trueSettings.get("Framerate Cap") > 360)
-			trueSettings.set("Framerate Cap", 30);
-
-		if (!Std.isOfType(trueSettings.get("Stage Opacity"), Int)
-			|| trueSettings.get("Stage Opacity") < 0
-			|| trueSettings.get("Stage Opacity") > 100)
-			trueSettings.set("Stage Opacity", 100);
+		setDefaultValue("Framerate Cap", 0, 360, 60);
+		setDefaultValue("Stage Opacity", 0, 100, 100);
+		setDefaultValue("Arrow Opacity", 0, 1, 80);
+		setDefaultValue("Hold Opacity", 0, 1, 60);
 
 		reloadUISkins();
 
@@ -315,6 +310,14 @@ class Init extends FlxState
 			FlxG.sound.volume = FlxG.save.data.volume;
 		if (FlxG.save.data.mute != null)
 			FlxG.sound.muted = FlxG.save.data.mute;
+	}
+
+	public static function setDefaultValue(setting:String, valueMin:Float, valueMax:Float, valueDef:Float)
+	{
+		if (!Std.isOfType(trueSettings.get(setting), Int)
+			|| trueSettings.get(setting) < valueMin
+			|| trueSettings.get(setting) > valueMax)
+			trueSettings.set(setting, valueDef);	
 	}
 
 	public static function loadControls():Void

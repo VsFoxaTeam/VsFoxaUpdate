@@ -37,7 +37,9 @@ class Receptor extends FlxSprite
 	public var yTo:Float;
 	public var angleTo:Float;
 
-	public var setAlpha:Float = (Init.trueSettings.get('Opaque Arrows')) ? 1 : 0.8;
+	public var overrideAlpha:Bool = false;
+
+	public var setAlpha:Float = Init.trueSettings.get('Arrow Opacity') * 0.01;
 
 	public static var actions:Array<String> = ['left', 'down', 'up', 'right'];
 	public static var colors:Array<String> = ['purple', 'blue', 'green', 'red'];
@@ -58,10 +60,8 @@ class Receptor extends FlxSprite
 	// literally just character code
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (AnimName == 'confirm')
-			alpha = 1;
-		else
-			alpha = setAlpha;
+		if (!overrideAlpha)
+			alpha = AnimName == 'confirm' ? 1 : setAlpha;
 
 		animation.play(AnimName, Force, Reversed, Frame);
 		updateHitbox();

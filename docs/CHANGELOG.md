@@ -44,3 +44,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stages per Chart, rather than Hardcoded
 - on-screen error log (by superpowers04)
 - Week 6 fixes
+
+--------------------------
+11/07/22
+
+- Fixed "Hey!" and "Play Animation" events crashing the game
+- Unhardcoded "Change Character" event
+- Added Personalization Options for Strumline and Hold Note Opacity
+- Improved Selector Options Code
+- Added "Exit to options" to the Pause Menu
+- Slightly Improved Options Menu

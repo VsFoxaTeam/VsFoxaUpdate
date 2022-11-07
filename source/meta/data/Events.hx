@@ -16,9 +16,10 @@ class Events
 
 	public static function getScriptEvents()
 	{
+		loadedEvents.clear();
 		eventArray = [];
 
-		var pseudoEvents:Array<String> = [];
+		var myEvents:Array<String> = [];
 
 		for (event in sys.FileSystem.readDirectory('assets/events'))
 		{
@@ -26,13 +27,13 @@ class Events
 			{
 				event = event.substring(0, event.indexOf('.', 0));
 				loadedEvents.set(event, new ScriptHandler(Paths.module('$event', 'events')));
-				trace('new event module loaded: ' + event);
-				pseudoEvents.push(event);
+				//trace('new event module loaded: ' + event);
+				myEvents.push(event);
 			}
 		}
-		pseudoEvents.sort(function(e1, e2) return Reflect.compare(e1.toLowerCase(), e2.toLowerCase()));
+		myEvents.sort(function(e1, e2) return Reflect.compare(e1.toLowerCase(), e2.toLowerCase()));
 
-		for (e in pseudoEvents)
+		for (e in myEvents)
 		{
 			if (!eventArray.contains(e))
 				eventArray.push(e);
@@ -42,7 +43,7 @@ class Events
 		for (e in eventArray)
 			returnValue3(e);
 
-		pseudoEvents = [];
+		myEvents = [];
 	}
 
 	public static function returnValue3(event:String):Array<String>

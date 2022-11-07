@@ -96,8 +96,8 @@ class OptionsMenuState extends MusicBeatState
 					["Clip Style", getFromOption],
 					['No Camera Note Movement', getFromOption],
 					['Disable Note Splashes', getFromOption],
-					['Opaque Arrows', getFromOption],
-					['Opaque Holds', getFromOption],
+					['Arrow Opacity', getFromOption],
+					['Hold Opacity', getFromOption],
 					['', null],
 					['Accessibility Settings', null],
 					['', null],
@@ -208,13 +208,32 @@ class OptionsMenuState extends MusicBeatState
 			if (currentAttachmentMap != null)
 				setAttachmentAlpha(currentAttachmentMap.get(activeSubgroup.members[i]), 0.6);
 			activeSubgroup.members[i].targetY = (i - curSelection) / 2;
-			activeSubgroup.members[i].xTo = 200 + ((i - curSelection) * 25);
+			//activeSubgroup.members[i].xTo = 200 + ((i - curSelection) * 25);
 
 			// check for null members and hardcode the dividers
 			if (categoryMap.get(curCategory)[0][i][1] == null)
 			{
-				activeSubgroup.members[i].alpha = 1;
-				activeSubgroup.members[i].xTo += Std.int((FlxG.width / 2) - ((activeSubgroup.members[i].text.length / 2) * 40)) - 200;
+				var sepMem = activeSubgroup.members[i];
+
+				var decreaseVal:Int = 250;
+				var divideVal:Int = 40;
+
+				// horizontal offsets for each category label
+				switch (sepMem.text)
+				{
+					case 'Meta Settings' | 'Text Settings':
+						decreaseVal = 300;
+					case 'Accessibility Settings':
+						decreaseVal = 55;
+						divideVal = 50;
+					default:
+						decreaseVal = 200;
+						divideVal = 40;
+				}
+
+				sepMem.alpha = 0.3;
+				sepMem.xTo = Std.int((FlxG.width / 2) - ((sepMem.text.length / 2) * divideVal)) - decreaseVal;
+				//sepMem.xTo += Std.int((FlxG.width / 2) - ((sepMem.text.length / 2) * 40)) - 200;
 			}
 		}
 
@@ -307,6 +326,8 @@ class OptionsMenuState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			if (curCategory != 'main')
 				loadSubgroup('main');
+			else if (meta.subState.PauseSubState.toOptions)
+				Main.switchState(this, new PlayState());
 			else
 				Main.switchState(this, new MainMenuState());
 		}
@@ -390,13 +411,10 @@ class OptionsMenuState extends MusicBeatState
 						// checkmark
 						var checkmark = ForeverAssets.generateCheckmark(10, letter.y, 'checkboxThingie', 'base', 'default', 'UI');
 						checkmark.playAnim(Std.string(Init.trueSettings.get(letter.text)) + ' finished');
-
 						extrasMap.set(letter, checkmark);
 					case Init.SettingTypes.Selector:
 						// selector
-						var selector:Selector = new Selector(10, letter.y, letter.text, Init.gameSettings.get(letter.text)[4],
-							(letter.text == 'Framerate Cap') ? true : false, (letter.text == 'Stage Opacity') ? true : false);
-
+						var selector:Selector = new Selector(10, letter.y, letter.text, Init.gameSettings.get(letter.text)[4]);
 						extrasMap.set(letter, selector);
 					default:
 						// dont do ANYTHING
@@ -464,58 +482,21 @@ class OptionsMenuState extends MusicBeatState
 
 	function updateSelector(selector:Selector, updateBy:Int)
 	{
-		var fps = selector.fpsCap;
-		var bgdark = selector.darkBG;
-		if (fps)
+		if (selector.isNumber)
 		{
-			// bro I dont even know if the engine works in html5 why am I even doing this
-			// lazily hardcoded fps cap
-			var originalFPS = Init.trueSettings.get(activeSubgroup.members[curSelection].text);
-			var increase = 15 * updateBy;
-			if (originalFPS + increase < 30)
-				increase = 0;
-			// high fps cap
-			if (originalFPS + increase > 360)
-				increase = 0;
-
-			if (updateBy == -1)
-				selector.selectorPlay('left', 'press');
-			else
-				selector.selectorPlay('right', 'press');
-
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-
-			originalFPS += increase;
-			selector.chosenOptionString = Std.string(originalFPS);
-			selector.optionChosen.text = Std.string(originalFPS);
-			Init.trueSettings.set(activeSubgroup.members[curSelection].text, originalFPS);
-			Init.saveSettings();
+			switch (selector.name)
+			{
+				case 'Framerate Cap':
+					generateSelector(updateBy, selector, 30, 360, 15);
+				case 'Darkness Opacity':
+					generateSelector(updateBy, selector, 0, 100, 5);
+				case 'Arrow Opacity' | 'Hold Opacity':
+					generateSelector(updateBy, selector, 0, 100, 1);
+				default:
+					generateSelector(updateBy, selector);
+			}
 		}
-		else if (bgdark)
-		{
-			// lazily hardcoded darkness cap
-			var originaldark = Init.trueSettings.get(activeSubgroup.members[curSelection].text);
-			var increase = 5 * updateBy;
-			if (originaldark + increase < 0)
-				increase = 0;
-			// high darkness cap
-			if (originaldark + increase > 100)
-				increase = 0;
-
-			if (updateBy == -1)
-				selector.selectorPlay('left', 'press');
-			else
-				selector.selectorPlay('right', 'press');
-
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-
-			originaldark += increase;
-			selector.chosenOptionString = Std.string(originaldark);
-			selector.optionChosen.text = Std.string(originaldark);
-			Init.trueSettings.set(activeSubgroup.members[curSelection].text, originaldark);
-			Init.saveSettings();
-		}
-		else if (!fps && !bgdark)
+		else
 		{
 			// get the current option as a number
 			var storedNumber:Int = 0;
@@ -524,7 +505,7 @@ class OptionsMenuState extends MusicBeatState
 			{
 				for (curOption in 0...selector.options.length)
 				{
-					if (selector.options[curOption] == selector.optionChosen.text)
+					if (selector.options[curOption] == selector.chosenOptionString)
 						storedNumber = curOption;
 				}
 
@@ -543,11 +524,35 @@ class OptionsMenuState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 
 			selector.chosenOptionString = selector.options[newSelection];
-			selector.optionChosen.text = selector.chosenOptionString;
 
-			Init.trueSettings.set(activeSubgroup.members[curSelection].text, selector.chosenOptionString);
+			Init.trueSettings.set(selector.name, selector.chosenOptionString);
 			Init.saveSettings();
 		}
+	}
+
+	public function generateSelector(updateBy:Int, selector:Selector, min:Float = 0, max:Float = 100, inc:Float = 5)
+	{
+		// lazily hardcoded selector generator.
+		var originalValue = Init.trueSettings.get(selector.name);
+		var increase = inc * updateBy;
+		// min
+		if (originalValue + increase < min)
+			increase = 0;
+		// max
+		if (originalValue + increase > max)
+			increase = 0;
+
+		if (updateBy == -1)
+			selector.selectorPlay('left', 'press');
+		else
+			selector.selectorPlay('right', 'press');
+
+		FlxG.sound.play(Paths.sound('scrollMenu'));
+
+		originalValue += increase;
+		selector.chosenOptionString = Std.string(originalValue);
+		Init.trueSettings.set(selector.name, originalValue);
+		Init.saveSettings();
 	}
 
 	public function callNewGroup()
@@ -586,7 +591,10 @@ class OptionsMenuState extends MusicBeatState
 			lockedMovement = true;
 			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
 			{
-				Main.switchState(this, new MainMenuState());
+				if (meta.subState.PauseSubState.toOptions)
+					Main.switchState(this, new PlayState());
+				else
+					Main.switchState(this, new MainMenuState());
 				lockedMovement = false;
 			});
 		}

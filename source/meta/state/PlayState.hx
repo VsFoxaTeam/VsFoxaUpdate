@@ -57,8 +57,8 @@ class PlayState extends MusicBeatState
 	public static var moduleArray:Array<ScriptHandler> = [];
 
 	// Notes;
-	private var unspawnNotes:Array<Note> = [];
-	private var timedEvents:Array<TimedEvent> = [];
+	public var unspawnNotes:Array<Note> = [];
+	public static var timedEvents:Array<TimedEvent> = [];
 
 	// Song;
 	public static var SONG:SwagSong;
@@ -153,10 +153,12 @@ class PlayState extends MusicBeatState
 	{
 		Timings.resetAccuracy();
 		GameOverSubstate.resetDeathVariables();
+		Events.getScriptEvents();
 
 		deaths = 0;
 		health = 1;
 
+		timedEvents = [];
 		moduleArray = [];
 		lastCombo = [];
 
@@ -1484,7 +1486,7 @@ class PlayState extends MusicBeatState
 				if (Conductor.songPosition < line.strumTime)
 					break;
 
-				eventNoteHit(line.event, line.val1, line.val2, line.val3);
+				eventNoteHit(line.event, [line.val1, line.val2, line.val3]);
 				timedEvents.shift();
 			}
 		}
@@ -1494,58 +1496,26 @@ class PlayState extends MusicBeatState
 	{
 		// trace('Event Name: ${event.event}, Event V1: ${event.val1}, Event V2: ${event.val2}, Event V3: ${event.val3}');
 
-		switch (event.event)
+		var params:Array<String> = [event.val1, event.val2, event.val3];
+
+		if (Events.loadedEvents.get(event.event) != null)
 		{
-			case 'Change Character':
-				var char:Character = new Character(false);
-				char.setCharacter(0, 0, event.val2);
-				characterGroup.add(char);
-			default:
-				if (Events.loadedEvents.get(event.event) != null)
-				{
-					var eventModule:ScriptHandler = Events.loadedEvents.get(event.event);
-					eventModule.call('eventPreload', [event.val1, event.val2, event.val3]);
-				}
+			var eventModule:ScriptHandler = Events.loadedEvents.get(event.event);
+			eventModule.call('eventPreload', [params]);
 		}
 	}
 
 	public var songSpeedTween:FlxTween;
 
-	public function eventNoteHit(event:String, value1:String, value2:String, ?value3:String)
+	public function eventNoteHit(event:String, params:Array<String>)
 	{
-		switch (event)
+		if (Events.loadedEvents.get(event) != null)
 		{
-			case 'Change Character':
-				var changeTimer:FlxTimer;
-				var timer:Float = Std.parseFloat(value3);
-				if (Math.isNaN(timer))
-					timer = 0;
-				if (value1 == null || value1.length < 1)
-					value1 == 'dad';
-				changeTimer = new FlxTimer().start(timer, function(tmr:FlxTimer)
-				{
-					switch (value1.toLowerCase().trim())
-					{
-						case 'bf' | 'boyfriend' | 'player' | '0':
-							boyfriend.setCharacter(770, 450, value2);
-							uiHUD.iconP1.updateIcon(value2, true);
-						case 'gf' | 'girlfriend' | 'spectator' | '2':
-							gf.setCharacter(300, 100, value2);
-						case 'dad' | 'dadOpponent' | 'opponent' | '1':
-							opponent.setCharacter(100, 100, value2);
-							uiHUD.iconP2.updateIcon(value2, false);
-					}
-					uiHUD.reloadHealthBar();
-				});
-			default:
-				if (Events.loadedEvents.get(event) != null)
-				{
-					var eventModule:ScriptHandler = Events.loadedEvents.get(event);
-					eventModule.call('eventNoteHit', [value1, value2, value3]);
-				}
+			var eventModule:ScriptHandler = Events.loadedEvents.get(event);
+			eventModule.call('eventNoteHit', [params]);
 		}
 
-		callFunc('eventNoteHit', [event, value1, value2, value3]);
+		callFunc('eventNoteHit', [event, params]);
 	}
 
 	function resyncVocals():Void

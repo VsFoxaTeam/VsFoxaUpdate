@@ -38,7 +38,7 @@ using StringTools;
 **/
 class TitleState extends MusicBeatState
 {
-	static var initialized:Bool = false;
+	public static var initialized:Bool = false;
 
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
@@ -49,6 +49,8 @@ class TitleState extends MusicBeatState
 	var curWacky:Array<String> = [];
 
 	var wackyImage:FlxSprite;
+
+	var colorTest:Float = 0;
 
 	override public function create():Void
 	{
