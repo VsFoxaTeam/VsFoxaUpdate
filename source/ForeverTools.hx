@@ -251,8 +251,8 @@ class ForeverTools
 
 	public static function createSpriteGroup(?variable)
 	{
-  		variable = new FlxSpriteGroup();
-  		return variable;
+		variable = new FlxSpriteGroup();
+		return variable;
 	}
 
 	// FLXCOLOR;
