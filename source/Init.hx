@@ -158,7 +158,12 @@ class Init extends FlxState
 			"Sets the opacity for the arrows at the top/bottom of the screen.",
 			NOT_FORCED
 		],
-		"Hold Opacity" => [60, Selector, "Sets the opacity for the Hold Notes... Huh, why isnt the trail cut off?", NOT_FORCED],
+		"Hold Opacity" => [
+			60,
+			Selector,
+			"Sets the opacity for the Hold Notes... Huh, why isnt the trail cut off?",
+			NOT_FORCED
+		],
 		'Ghost Tapping' => [
 			true,
 			Checkmark,
@@ -314,10 +319,8 @@ class Init extends FlxState
 
 	public static function setDefaultValue(setting:String, valueMin:Float, valueMax:Float, valueDef:Float)
 	{
-		if (!Std.isOfType(trueSettings.get(setting), Int)
-			|| trueSettings.get(setting) < valueMin
-			|| trueSettings.get(setting) > valueMax)
-			trueSettings.set(setting, valueDef);	
+		if (!Std.isOfType(trueSettings.get(setting), Int) || trueSettings.get(setting) < valueMin || trueSettings.get(setting) > valueMax)
+			trueSettings.set(setting, valueDef);
 	}
 
 	public static function loadControls():Void

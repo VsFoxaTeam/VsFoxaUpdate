@@ -214,7 +214,7 @@ class ClassHUD extends FlxSpriteGroup
 		var colorPlayer = PlayState.boyfriend.characterData.healthColor;
 
 		if (!Init.trueSettings.get('Colored Health Bar'))
-			healthBar.createFilledBar(0xFFFF0048, 0xFF33FF5F - 0xFFFF0048);
+			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33 - 0xFFFF0000);
 		else
 			healthBar.createFilledBar(FlxColor.fromRGB(Std.int(colorOpponent[0]), Std.int(colorOpponent[1]), Std.int(colorOpponent[2])),
 				FlxColor.fromRGB(Std.int(colorPlayer[0]), Std.int(colorPlayer[1]), Std.int(colorPlayer[2])));
