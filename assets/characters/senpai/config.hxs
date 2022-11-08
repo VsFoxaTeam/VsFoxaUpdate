@@ -16,8 +16,8 @@ function loadAnimations()
 
 	playAnim('idle');
 
-	setOffsets(230, 500);
-	setCamOffsets(-210, -300);
+	setOffsets(200, 500);
+	setCamOffsets(-180, -290);
 	setBarColor([255, 170, 111]);
 	quickDancer(false);
 }

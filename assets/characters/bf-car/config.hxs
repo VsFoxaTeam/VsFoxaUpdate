@@ -31,7 +31,7 @@ function loadAnimations()
 	setBarColor([49, 176, 209]);
 	if (isPlayer)
 	{
-		setOffsets(80, 10);
+		setOffsets(230, -230);
 	}
 	else
 	{
