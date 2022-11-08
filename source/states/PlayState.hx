@@ -375,8 +375,8 @@ class PlayState extends MusicBeatState
 		var dadData = opponent.characterData;
 		var bfData = boyfriend.characterData;
 
-		dadStrums = new Strumline(placement - (FlxG.width / 4), height, dadData.noteSkin, [opponent], downscroll, false, true, checkTween(true), 4);
-		bfStrums = new Strumline(placement + (!centered ? (FlxG.width / 4) : 0), height, bfData.noteSkin, [boyfriend], downscroll, true, false,
+		dadStrums = new Strumline(placement - (FlxG.width / 4), height, dadData.noteSkin, dadData.assetModifier, [opponent], downscroll, false, true, checkTween(true), 4);
+		bfStrums = new Strumline(placement + (!centered ? (FlxG.width / 4) : 0), height, bfData.noteSkin, bfData.assetModifier, [boyfriend], downscroll, true, false,
 			checkTween(false), 4);
 
 		dadStrums.visible = !centered;

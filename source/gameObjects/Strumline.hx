@@ -93,9 +93,10 @@ class Strumline extends FlxSpriteGroup
 	public var xPos:Float = 0;
 	public var yPos:Float = 0;
 
-	public var receptorFrames:String = 'NOTE_assets';
+	public var receptorFrames:String = "NOTE_assets";
+	public var assetModifier:String = "base";
 
-	public function new(xPos:Float = 0, yPos:Float = 0, receptorFrames:String = 'NOTE_assets', characters:Array<Character>, ?downscroll:Bool = false,
+	public function new(xPos:Float = 0, yPos:Float = 0, receptorFrames:String = 'NOTE_assets', assetModifier:String = 'base', characters:Array<Character>, ?downscroll:Bool = false,
 			?displayJudges:Bool = true, ?autoplay:Bool = true, ?doTween:Bool = true, ?keyAmount:Int = 4)
 	{
 		super();
@@ -113,6 +114,7 @@ class Strumline extends FlxSpriteGroup
 
 		this.displayJudges = displayJudges;
 		this.receptorFrames = receptorFrames;
+		this.assetModifier = assetModifier;
 
 		this.xPos = xPos;
 		this.keyAmount = keyAmount;
@@ -139,8 +141,11 @@ class Strumline extends FlxSpriteGroup
 
 		for (i in 0...keyAmount)
 		{
-			var receptor:Receptor = ForeverAssets.generateUIArrows(-20 + (xNew == null ? xPos : xNew), 25 + (yNew == null ? yPos : yNew), i, receptorFrames,
-				PlayState.assetModifier);
+			var addX:Int = assetModifier == 'pixel' ? -35 : -20;
+			var addY:Int = assetModifier == 'pixel' ? 40 : 25;
+
+			var receptor:Receptor = ForeverAssets.generateUIArrows(addX + (xNew == null ? xPos : xNew), addY + (yNew == null ? yPos : yNew), i, receptorFrames,
+				assetModifier);
 			receptor.ID = i;
 
 			receptor.x -= ((keyAmount / 2) * Note.swagWidth);

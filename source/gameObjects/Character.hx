@@ -40,6 +40,7 @@ typedef CharacterData =
 	var adjustPos:Bool;
 	var noteSkin:String;
 	var splashSkin:String;
+	var assetModifier:String;
 	var icon:String;
 }
 
@@ -90,6 +91,7 @@ class Character extends FNFSprite
 			adjustPos: !character.startsWith('gf'),
 			noteSkin: "NOTE_assets",
 			splashSkin: 'noteSplashes',
+			assetModifier: "base",
 			icon: null,
 			quickDancer: false
 		};

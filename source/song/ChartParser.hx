@@ -32,6 +32,7 @@ class ChartParser
 				var daNoteAlt:Float = 0;
 				var daNoteType:String = 'default';
 				var daNoteSkin:String = 'NOTE_assets';
+				var assetModifier:String = "base";
 
 				// very stupid but I'm lazy
 				if (songNotes.length > 2)
@@ -46,7 +47,10 @@ class ChartParser
 
 				var char:Character = (gottaHitNote ? PlayState.boyfriend : PlayState.opponent);
 				if (char != null)
+				{
 					daNoteSkin = char.characterData.noteSkin;
+					assetModifier = char.characterData.assetModifier;
+				}
 
 				// define the note that comes before (previous note)
 				var oldNote:Note;
@@ -56,7 +60,7 @@ class ChartParser
 					oldNote = null;
 
 				// create the new note
-				var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, PlayState.assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
+				var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
 
 				swagNote.noteType = daNoteType;
 				swagNote.noteSpeed = songData.speed;
@@ -82,7 +86,7 @@ class ChartParser
 						{
 							oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-							var sustainNote:Note = ForeverAssets.generateArrow(daNoteSkin, PlayState.assetModifier,
+							var sustainNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier,
 								daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteAlt, daNoteType, true, oldNote);
 							sustainNote.mustPress = gottaHitNote;
 							sustainNote.scrollFactor.set();

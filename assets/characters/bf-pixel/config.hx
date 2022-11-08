@@ -24,6 +24,7 @@ function loadAnimations()
 
 	setGraphicSize(get('width') * 6);
 	characterData.antialiasing = false;
+	characterData.assetModifier = 'pixel';
 
 	if (!isPlayer)
 		characterData.flipX = true;
