@@ -134,6 +134,7 @@ class Character extends FNFSprite
 					addOffset("singUP", -45, 11);
 					addOffset("singRIGHT", -61, -14);
 					characterData.camOffsetY = -5;
+					characterData.flipX = false;
 				}
 
 				playAnim('idle');
@@ -169,7 +170,7 @@ class Character extends FNFSprite
 
 		antialiasing = characterData.antialiasing;
 
-		flipX = characterData.flipX;
+		flipX = isPlayer ? !characterData.flipX : characterData.flipX;
 		flipY = characterData.flipY;
 
 		if (isPlayer) // fuck you ninjamuffin lmao
