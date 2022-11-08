@@ -30,8 +30,8 @@ import song.ChartParser;
 import song.Conductor;
 import song.MusicBeat;
 import song.Song;
-import song.SongInfo.SwagSong;
-import song.SongInfo.TimedEvent;
+import song.SongFormat.SwagSong;
+import song.SongFormat.TimedEvent;
 import states.menus.*;
 import states.substates.GameOverSubstate;
 

@@ -22,7 +22,7 @@ import openfl.geom.ColorTransform;
 import song.Conductor;
 import song.MusicBeat.MusicBeatState;
 import song.Song;
-import song.SongInfo.SwagSong;
+import song.SongFormat.SwagSong;
 
 using StringTools;
 

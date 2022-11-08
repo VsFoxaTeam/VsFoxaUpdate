@@ -3,8 +3,8 @@ package song;
 import flixel.util.FlxSort;
 import gameObjects.Character;
 import gameObjects.Note;
-import song.SongInfo.SwagSong;
-import song.SongInfo.TimedEvent;
+import song.SongFormat.SwagSong;
+import song.SongFormat.TimedEvent;
 import states.PlayState;
 
 /**

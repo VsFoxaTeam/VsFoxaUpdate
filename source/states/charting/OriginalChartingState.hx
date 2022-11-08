@@ -40,7 +40,7 @@ import openfl.utils.ByteArray;
 import song.*;
 import song.Conductor.BPMChangeEvent;
 import song.MusicBeat.MusicBeatState;
-import song.SongInfo;
+import song.SongFormat;
 
 using StringTools;
 

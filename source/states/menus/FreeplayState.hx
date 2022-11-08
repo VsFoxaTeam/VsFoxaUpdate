@@ -16,7 +16,7 @@ import openfl.media.Sound;
 import playerData.Highscore;
 import song.MusicBeat.MusicBeatState;
 import song.Song;
-import song.SongInfo.SwagSong;
+import song.SongFormat.SwagSong;
 import sys.FileSystem;
 import sys.thread.Mutex;
 import sys.thread.Thread;
