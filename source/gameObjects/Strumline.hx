@@ -171,7 +171,7 @@ class Strumline extends FlxSpriteGroup
 				for (character in this.characters)
 				{
 					var splashSkin:String = character.characterData.splashSkin;
-					noteSplash = ForeverAssets.generateNoteSplashes(splashSkin, splashNotes, PlayState.assetModifier, PlayState.changeableSkin, 'UI', i);
+					noteSplash = ForeverAssets.generateNoteSplashes(splashSkin, splashNotes, PlayState.assetModifier, PlayState.changeableSkin, 'default/skins', i);
 				}
 				splashNotes.add(noteSplash);
 			}

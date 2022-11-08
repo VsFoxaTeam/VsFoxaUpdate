@@ -119,9 +119,9 @@ class Paths
 		localTrackedAssets = [];
 	}
 
-	public static function returnGraphic(key:String, ?folder:String = 'images', ?library:String, ?textureCompression:Bool = false)
+	public static function returnGraphic(key:String, ?folder:String, ?library:String, ?textureCompression:Bool = false)
 	{
-		var path = getPath('$folder/$key.png', IMAGE, library);
+		var path = getPath(folder.length > 1 ? '$folder/$key.png' : '$key.png', IMAGE, library);
 		if (FileSystem.exists(path))
 		{
 			if (!currentTrackedAssets.exists(key))

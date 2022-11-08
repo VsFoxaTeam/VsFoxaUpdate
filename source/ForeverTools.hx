@@ -38,14 +38,21 @@ class ForeverTools
 	}
 
 	public static function returnSkinAsset(asset:String, assetModifier:String = 'base', changeableSkin:String = 'default', baseLibrary:String,
-			baseFolder:String = 'images', ?defaultChangeableSkin:String = 'default', ?defaultBaseAsset:String = 'base'):String
+			?baseFolder:String):String
 	{
+		if (baseFolder == null)
+			baseFolder = 'images';
+		baseFolder = Paths.getPath(baseFolder, IMAGE);
+
+		var defaultChangeable:String = 'default';
+		var defaultAssetModifier:String = 'base';
+
 		var realAsset = '$baseLibrary/$changeableSkin/$assetModifier/$asset';
-		if (!FileSystem.exists(Paths.getPath('$baseFolder/' + realAsset + '.png', IMAGE)))
+		if (!FileSystem.exists('$baseFolder/$realAsset.png'))
 		{
-			realAsset = '$baseLibrary/$defaultChangeableSkin/$assetModifier/$asset';
-			if (!FileSystem.exists(Paths.getPath('$baseFolder/' + realAsset + '.png', IMAGE)))
-				realAsset = '$baseLibrary/$defaultChangeableSkin/$defaultBaseAsset/$asset';
+			realAsset = '$baseLibrary/$defaultChangeable/$assetModifier/$asset';
+			if (!FileSystem.exists('$baseFolder/$realAsset.png'))
+				realAsset = '$baseLibrary/$defaultChangeable/$defaultAssetModifier/$asset';
 		}
 
 		return realAsset;

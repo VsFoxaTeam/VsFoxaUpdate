@@ -17,7 +17,7 @@ class Note extends FNFSprite
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
 	public var noteAlt:Float = 0;
-	public var noteType:String = null;
+	public var noteType:String = 'default';
 	public var noteString:String = "";
 
 	public var canBeHit:Bool = false;
@@ -157,7 +157,9 @@ class Note extends FNFSprite
 
 		if (assetModifier != 'pixel')
 		{
-			newNote.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, 'noteskins/notes'));
+			var skinAssetPath:String = ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable,
+				'${newNote.noteType}/skins', 'notetypes');
+			newNote.frames = Paths.getSparrowAtlas(skinAssetPath, 'notetypes');
 
 			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'Scroll', Receptor.colors[newNote.noteData] + '0');
 			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'holdend', Receptor.colors[newNote.noteData] + ' hold end');
@@ -169,13 +171,18 @@ class Note extends FNFSprite
 		{
 			if (newNote.isSustainNote)
 			{
-				newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, 'noteskins/notes')), true, 7, 6);
+				var skinAssetPath:String = ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable,
+					'${newNote.noteType}/skins', 'notetypes');
+				newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'), true, 7, 6);
+
 				newNote.animation.add(Receptor.colors[newNote.noteData] + 'holdend', [pixelData[newNote.noteData]]);
 				newNote.animation.add(Receptor.colors[newNote.noteData] + 'hold', [pixelData[newNote.noteData] - 4]);
 			}
 			else
 			{
-				newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, 'noteskins/notes')), true, 17, 17);
+				var skinAssetPath:String = ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable,
+					'${newNote.noteType}/skins', 'notetypes');
+				newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'), true, 17, 17);
 				newNote.animation.add(Receptor.colors[newNote.noteData] + 'Scroll', [pixelData[newNote.noteData]], 12);
 			}
 		}
@@ -238,8 +245,9 @@ class Note extends FNFSprite
 				{
 					// in case you're unfamiliar with these, they're ternary operators, I just dont wanna check for pixel notes using a separate statement
 					var newNoteSize:Int = (assetModifier == 'pixel') ? 17 : 157;
-					newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('NOTE_quants', assetModifier, Init.trueSettings.get("Note Skin"),
-						'noteskins/notes', 'quant')),
+					var skinAssetPath:String = ForeverTools.returnSkinAsset('NOTE_quants', assetModifier, Init.trueSettings.get("Note Skin"),
+						'default/skins', 'notetypes');
+					newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'),
 						true, newNoteSize, newNoteSize);
 
 					newNote.animation.add('leftScroll', [0 + (newNote.noteQuant * 4)]);
@@ -251,8 +259,9 @@ class Note extends FNFSprite
 				else
 				{
 					// quant holds
-					newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('HOLD_quants', assetModifier, Init.trueSettings.get("Note Skin"),
-						'noteskins/notes', 'quant')),
+					var skinAssetPath:String = ForeverTools.returnSkinAsset('HOLD_quants', assetModifier, Init.trueSettings.get("Note Skin"),
+						'default/skins', 'notetypes');
+					newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'),
 						true, (assetModifier == 'pixel') ? 17 : 109, (assetModifier == 'pixel') ? 6 : 52);
 					newNote.animation.add('hold', [0 + (newNote.noteQuant * 4)]);
 					newNote.animation.add('holdend', [1 + (newNote.noteQuant * 4)]);
