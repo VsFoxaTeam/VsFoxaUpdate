@@ -1,16 +1,16 @@
+import base.CoolUtil;
+import base.Overlay;
+import dependency.Discord;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.FlxGraphic;
 import flixel.input.keyboard.FlxKey;
-import meta.CoolUtil;
-import meta.Overlay;
-import meta.data.Highscore;
-import meta.data.dependency.Discord;
-import meta.state.*;
-import meta.state.charting.*;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
+import playerData.Highscore;
+import states.*;
+import states.charting.*;
 
 using StringTools;
 

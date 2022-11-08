@@ -1,5 +1,6 @@
 package gameObjects.userInterface;
 
+import dependency.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -10,8 +11,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import meta.data.dependency.FNFSprite;
-import meta.data.font.Alphabet;
+import gameObjects.gameFonts.Alphabet;
 
 typedef PortraitDataDef =
 {

@@ -1,9 +1,7 @@
 package gameObjects.userInterface;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import sys.FileSystem;
 

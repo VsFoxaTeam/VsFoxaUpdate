@@ -1,18 +1,18 @@
 package;
 
-import meta.data.*;
 import flixel.FlxG;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxTween.FlxTweenType;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import openfl.utils.AssetType;
-import meta.state.PlayState;
+import song.Conductor;
+import states.PlayState;
 import sys.FileSystem;
 
 /**

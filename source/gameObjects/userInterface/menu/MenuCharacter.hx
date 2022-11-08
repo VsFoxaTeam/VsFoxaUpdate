@@ -1,11 +1,9 @@
 package gameObjects.userInterface.menu;
 
-import meta.data.dependency.FNFSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
-import lime.utils.Assets;
+import dependency.FNFSprite;
+import haxe.Json;
 import sys.FileSystem;
 import sys.io.File;
-import haxe.Json;
 
 typedef StoryCharacter =
 {

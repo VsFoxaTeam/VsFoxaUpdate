@@ -1,13 +1,12 @@
 package gameObjects;
 
+import base.feather.ScriptHandler;
+import dependency.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
-import gameObjects.background.*;
-import meta.data.ScriptHandler;
-import meta.data.dependency.FNFSprite;
-import meta.state.PlayState;
+import states.PlayState;
 
 using StringTools;
 

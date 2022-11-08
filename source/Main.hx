@@ -1,5 +1,10 @@
 package;
 
+import base.*;
+import base.Overlay.Console;
+import dependency.Discord;
+import dependency.FNFTransition;
+import dependency.FNFUIState;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -9,24 +14,19 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxColor;
 import haxe.CallStack.StackItem;
 import haxe.CallStack;
+import haxe.Json;
 import haxe.io.Path;
 import lime.app.Application;
-import meta.*;
-import meta.data.PlayerSettings;
-import meta.data.dependency.Discord;
-import meta.data.dependency.FNFTransition;
-import meta.data.dependency.FNFUIState;
-import meta.Overlay.Console;
 import openfl.Assets;
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
+import playerData.PlayerSettings;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
-import haxe.Json;
 
 typedef GameWeek =
 {
@@ -73,14 +73,12 @@ class Main extends Sprite
 	public static var gameWeeks:Array<String> = [];
 
 	// heres gameweeks set up!
-
 	// in case you wanna hardcode weeks
 
 	public static function loadHardcodedWeeks()
 	{
 		gameWeeksMap = [
-			"myWeek" =>
-			{
+			"myWeek" => {
 				songs: [
 					{
 						"name": "Bopeebo",

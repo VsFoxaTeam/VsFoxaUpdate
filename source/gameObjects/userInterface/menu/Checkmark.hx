@@ -1,6 +1,6 @@
 package gameObjects.userInterface.menu;
 
-import meta.data.dependency.FNFSprite;
+import dependency.FNFSprite;
 
 using StringTools;
 

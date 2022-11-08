@@ -3,13 +3,13 @@ package;
 /*
 	Aw hell yeah! something I can actually work on!
  */
+import base.CoolUtil;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
-import lime.utils.Assets;
-import meta.CoolUtil;
-import openfl.display.BitmapData;
 import gameObjects.Character;
+import lime.utils.Assets;
+import openfl.display.BitmapData;
 import openfl.display3D.textures.Texture;
 import openfl.media.Sound;
 import openfl.system.System;
@@ -313,14 +313,14 @@ class Paths
 
 	inline static public function module(key:String, folder:String = 'scripts', ?library:String)
 	{
-		var extension = '.hxs';
+		var extension = '.hx';
 
 		for (j in scriptExts)
 		{
 			if (FileSystem.exists(getPath('$folder/$key.$j', TEXT, library)))
 				extension = '.$j';
 			else
-				extension = '.hxs';
+				extension = '.hx';
 		}
 		return getPath('$folder/$key' + extension);
 	}
@@ -346,9 +346,9 @@ class Paths
 					if (FileSystem.exists(getPath('characters/$folder/$character.$j', TEXT, library)))
 						extension = '.$j';
 					else
-						extension = '.hxs';
+						extension = '.hx';
 				}
-				extension = '.hxs';
+				extension = '.hx';
 			case FUNKIN_COCOA:
 				extension = '.yaml';
 			default:

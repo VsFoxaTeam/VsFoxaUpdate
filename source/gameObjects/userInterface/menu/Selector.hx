@@ -1,9 +1,9 @@
 package gameObjects.userInterface.menu;
 
+import dependency.FNFSprite;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
-import meta.data.dependency.FNFSprite;
-import meta.data.font.Alphabet;
+import gameObjects.gameFonts.Alphabet;
 
 class Selector extends FlxTypedSpriteGroup<FlxSprite>
 {

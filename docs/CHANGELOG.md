@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - splashes are now recycled sprites;
 - moved score related stuffs to Timings;
 - added Character-specific Health Bar Colors;
-- added Character-specific Noteskins and Note Splashes
+- added Character-specific Noteskins and Note Splashes;
 - simplified countdown code;
 - UI Class is now a sprite group, meaning it can be manipulated (as in alpha, position, etc) similar to receptors;
 
@@ -37,33 +37,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 11/06/22
 
 - updated default health bar for it to match Forever 1.0's;
-- Custom Game Over Variables for characters
-- Softcoded Event Notes (with hardcoding still being possible)
-- Psych Engine Chart Support (for newer versions)
-- Chart Editor Shortcut on Freeplay
-- Stages per Chart, rather than Hardcoded
-- on-screen error log (by superpowers04)
-- Week 6 fixes
+- Custom Game Over Variables for characters;
+- Softcoded Event Notes (with hardcoding still being possible);
+- Psych Engine Chart Support (for newer versions);
+- Chart Editor Shortcut on Freeplay;
+- Stages per Chart, rather than Hardcoded;
+- on-screen error log (by superpowers04);
+- Week 6 fixes;
 
 --------------------------
 11/07/22
 
-- Fixed "Hey!" and "Play Animation" events crashing the game
-- Unhardcoded "Change Character" event
-- Added Personalization Options for Strumline and Hold Note Opacity
-- Improved Selector Options Code
-- Added "Exit to options" to the Pause Menu
-- Slightly Improved Options Menu
-- Weeks are now managed by JSONs on the assets folder (notice that weeks can still be hardcoded)
-- Week Characters are now separated on their own individual images, along with having a JSON file attached for customiization
-- Difficulty Images are now separated in individual files
-- added an option to disable flashing lights
-- Title Text is now hardcoded
-- Game Logo on Titlescreen is now hardcoded
+- Fixed "Hey!" and "Play Animation" events crashing the game;
+- Unhardcoded "Change Character" event;
+- Added Personalization Options for Strumline and Hold Note Opacity;
+- Improved Selector Options Code;
+- Added "Exit to options" to the Pause Menu;
+- Slightly Improved Options Menu;
+- Weeks are now managed by JSONs on the assets folder (notice that weeks can still be hardcoded);
+- Week Characters are now separated on their own individual images, along with having a JSON file attached for customiization;
+- Difficulty Images are now separated in individual files;
+- added an option to disable flashing lights;
+- Title Text is now hardcoded;
+- Game Logo on Titlescreen is now hardcoded;
 
 --------------------------
 11/08/22
 
-- Scripted Stages
-- Change Stage Event
-- You can now regenerate characters by calling "regenerateCharacters()" on PlayState
+- Scripted Stages;
+- Change Stage Event;
+- You can now regenerate characters by calling "regenerateCharacters()" on PlayState;
+- Reorganized Source Filesystem;
+- Removed a few unused imports within the Source Classes;
+- Changed Default Script Extension to "hx" so haxe formatter actually works with them;

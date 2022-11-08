@@ -4,20 +4,15 @@ package gameObjects;
 	The character class initialises any and all characters that exist within gameplay. For now, the character class will
 	stay the same as it was in the original source of the game. I'll most likely make some changes afterwards though!
 **/
-import flixel.FlxG;
-import flixel.addons.util.FlxSimplex;
-import flixel.animation.FlxBaseAnimation;
+import base.compatibility.PsychChar;
+import base.feather.ScriptHandler;
+import dependency.FNFSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
-import gameObjects.userInterface.HealthIcon;
-import meta.*;
-import meta.data.*;
-import meta.data.dependency.FNFSprite;
-import gameObjects.compatibility.PsychChar;
-import meta.state.PlayState;
-import openfl.utils.Assets as OpenFlAssets;
-import sys.io.File;
-import sys.FileSystem;
 import haxe.Json;
+import song.Conductor;
+import states.PlayState;
+import sys.FileSystem;
+import sys.io.File;
 
 using StringTools;
 
@@ -500,11 +495,11 @@ class Character extends FNFSprite
 		setVar('setDeathChar',
 			function(char:String = 'bf-dead', lossSfx:String = 'fnf_loss_sfx', song:String = 'gameOver', confirmSound:String = 'gameOverEnd', bpm:Int)
 			{
-				meta.subState.GameOverSubstate.bfType = char;
-				meta.subState.GameOverSubstate.deathNoise = lossSfx;
-				meta.subState.GameOverSubstate.deathTrack = song;
-				meta.subState.GameOverSubstate.leaveTrack = confirmSound;
-				meta.subState.GameOverSubstate.trackBpm = bpm;
+				states.substates.GameOverSubstate.bfType = char;
+				states.substates.GameOverSubstate.deathNoise = lossSfx;
+				states.substates.GameOverSubstate.deathTrack = song;
+				states.substates.GameOverSubstate.leaveTrack = confirmSound;
+				states.substates.GameOverSubstate.trackBpm = bpm;
 			});
 
 		setVar('get', function(variable:String)

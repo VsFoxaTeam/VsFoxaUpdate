@@ -1,18 +1,17 @@
 package;
 
+import base.feather.ScriptHandler;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
-import gameObjects.userInterface.*;
-import gameObjects.userInterface.menu.*;
-import gameObjects.userInterface.notes.*;
-import gameObjects.userInterface.notes.Strumline.Receptor;
-import meta.data.Conductor;
-import meta.data.SongInfo.SwagSection;
-import meta.data.Timings;
-import meta.state.PlayState;
+import gameObjects.*;
+import gameObjects.Strumline.Receptor;
+import gameObjects.userInterface.menu.Checkmark;
+import playerData.Timings;
+import song.Conductor;
+import states.PlayState;
 
 using StringTools;
 
@@ -124,7 +123,7 @@ class ForeverAssets
 			return noteSplash;
 		});
 
-		var noteScript:meta.data.ScriptHandler = Note.getNoteScript(noteType);
+		var noteScript:ScriptHandler = Note.getNoteScript(noteType);
 
 		switch (assetModifier)
 		{
