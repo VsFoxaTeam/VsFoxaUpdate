@@ -47,13 +47,13 @@ class Init extends FlxState
 		'Downscroll' => [
 			false,
 			Checkmark,
-			'Whether to have the strumline vertically flipped in gameplay.',
+			'Whether to have the strumline vertically flipped during Gameplay.',
 			NOT_FORCED
 		],
 		'Controller Mode' => [
 			false,
 			Checkmark,
-			'Whether to use a controller instead of the keyboard to play.',
+			'Whether to use a controller instead of a keyboard to play.',
 			NOT_FORCED
 		],
 		'Auto Pause' => [
@@ -66,7 +66,7 @@ class Init extends FlxState
 		'Memory Counter' => [
 			true,
 			Checkmark,
-			'Whether to display approximately how much memory is being used.',
+			'Whether to display approximately how much Memory is being used.',
 			NOT_FORCED
 		],
 		'Debug Info' => [
@@ -78,29 +78,29 @@ class Init extends FlxState
 		'Reduced Movements' => [
 			false,
 			Checkmark,
-			'Whether to reduce movements, like icons bouncing or beat zooms in gameplay.',
+			'Whether to reduce movements, like icons bouncing or beat zooms during Gameplay.',
 			NOT_FORCED
 		],
 		'Stage Opacity' => [
 			Checkmark,
 			Selector,
-			'Darkens non-ui elements, useful if you find the characters and backgrounds distracting.',
+			'Darkens non-UI elements, useful if you find the characters and backgrounds distracting.',
 			NOT_FORCED
 		],
 		'Opacity Type' => [
 			'UI',
 			Selector,
-			'Choose whether the filter will be behind the notes or the UI',
+			'Choose whether the filter will be behind the notes or the UI.',
 			NOT_FORCED,
 			['UI', 'Notes']
 		],
 		'Colored Health Bar' => [
 			false,
 			Checkmark,
-			'Whether the Health Bar should be colored after the Icons',
+			'Whether the Health Bar should be colored after the Icons.',
 			NOT_FORCED,
 		],
-		'Opaque User Interface' => [false, Checkmark, 'Makes the UI (Healthbar, Icons, etc) opaque.', NOT_FORCED],
+		'Opaque User Interface' => [false, Checkmark, 'Makes the UI (Healthbar, Icons, etc.) opaque.', NOT_FORCED],
 		'Counter' => [
 			'None',
 			Selector,
@@ -112,7 +112,7 @@ class Init extends FlxState
 		'Disable Antialiasing' => [
 			false,
 			Checkmark,
-			'Whether to disable Anti-aliasing. helps to improve performance.',
+			'Whether to disable Anti-Aliasing, helps in improving performance.',
 			NOT_FORCED
 		],
 		'Disable Flashing Lights' => [
@@ -124,7 +124,7 @@ class Init extends FlxState
 		'Disable Screen Shaders' => [
 			false,
 			Checkmark,
-			'Whether to disable Screen Shaders during gameplay, helps to improve performance.',
+			'Whether to disable Screen Shaders during gameplay, helps in improving performance.',
 			NOT_FORCED
 		],
 		'No Camera Note Movement' => [
@@ -136,7 +136,7 @@ class Init extends FlxState
 		'Disable Note Splashes' => [
 			false,
 			Checkmark,
-			'Whether to disable note splashes in gameplay. Useful if you find them distracting.',
+			'Whether to disable note splashes during Gameplay, useful if you find them distracting.',
 			NOT_FORCED
 		],
 		// custom ones lol
@@ -192,7 +192,7 @@ class Init extends FlxState
 		'Skip Text' => [
 			'freeplay only',
 			Selector,
-			'Decides whether to skip cutscenes and dialogue in gameplay. May be always, only in freeplay, or never.',
+			'Decides whether to skip cutscenes and dialogue in gameplay. May be always, only in Freeplay, or never.',
 			NOT_FORCED,
 			['never', 'freeplay only', 'always']
 		],
@@ -205,7 +205,7 @@ class Init extends FlxState
 		'Simply Judgements' => [
 			false,
 			Checkmark,
-			"Simplifies the judgement animations, displaying only one judgement / rating sprite at a time.",
+			"Simplifies the judgement animations, displaying only one judgement/rating sprite at a time.",
 			NOT_FORCED
 		],
 	];
