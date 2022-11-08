@@ -23,7 +23,6 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
-import playerData.PlayerSettings;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
@@ -147,16 +146,13 @@ class Main extends Sprite
 	{
 		super();
 
-		/**
-			ok so, haxe html5 CANNOT do 120 fps. it just cannot.
-			so here i just set the framerate to 60 if its complied in html5.
-			reason why we dont just keep it because the game will act as if its 120 fps, and cause
-			note studders and shit its weird.
-		**/
-
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
-		#if (html5 || neko)
+		/**
+		* locking neko platforms on 60 because similar to html5 it cannot go over that
+		* avoids note stutters and stuff
+		**/
+		#if neko
 		framerate = 60;
 		#end
 
@@ -185,22 +181,18 @@ class Main extends Sprite
 		gameCreate = new FlxGame(gameWidth, gameHeight, mainClassState, zoom, framerate, framerate, skipSplash);
 		addChild(gameCreate); // and create it afterwards
 
-		// default game FPS settings, I'll probably comment over them later.
-		// addChild(new FPS(10, 3, 0xFFFFFF));
-
 		// begin the discord rich presence
 		#if DISCORD_RPC
 		Discord.initializeRPC();
 		Discord.changePresence('');
 		#end
 
-		// test initialising the player settings
-		PlayerSettings.init();
-
 		#if !mobile
 		infoCounter = new Overlay(0, 0);
 		addChild(infoCounter);
+		#end
 
+		#if SHOW_CONSOLE
 		infoConsole = new Console();
 		addChild(infoConsole);
 		#end

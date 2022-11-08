@@ -75,10 +75,10 @@ class OptionsMenuState extends MusicBeatState
 					['Meta Settings', null],
 					['', null],
 					['Auto Pause', getFromOption],
-					#if !neko ["Framerate Cap", getFromOption], #end
+					["Framerate Cap", getFromOption],
 					['FPS Counter', getFromOption],
 					['Memory Counter', getFromOption],
-					#if !neko ['Debug Info', getFromOption], #end
+					['Debug Info', getFromOption],
 				]
 			],
 			'appearance' => [
@@ -459,7 +459,6 @@ class OptionsMenuState extends MusicBeatState
 						});
 					}
 				case Init.SettingTypes.Selector:
-					#if !html5
 					var selector:Selector = currentAttachmentMap.get(activeSubgroup.members[curSelection]);
 
 					if (!controls.UI_LEFT)
@@ -471,7 +470,6 @@ class OptionsMenuState extends MusicBeatState
 						updateSelector(selector, 1);
 					else if (controls.UI_LEFT_P)
 						updateSelector(selector, -1);
-					#end
 				default:
 					// none
 			}

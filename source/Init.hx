@@ -8,7 +8,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.input.keyboard.FlxKey;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
-import playerData.Highscore;
+import playerData.*;
 import states.*;
 import states.charting.*;
 
@@ -73,7 +73,7 @@ class Init extends FlxState
 			false,
 			Checkmark,
 			'Whether to display information like your game state.',
-			NOT_FORCED
+			#if neko FORCED #else NOT_FORCED #end
 		],
 		'Reduced Movements' => [
 			false,
@@ -139,7 +139,7 @@ class Init extends FlxState
 			'none',
 			Selector,
 			'Choose a filter for colorblindness.',
-			NOT_FORCED,
+			#if neko FORCED, #else NOT_FORCED, #end
 			['none', 'Deuteranopia', 'Protanopia', 'Tritanopia']
 		],
 		"Clip Style" => [
@@ -157,7 +157,12 @@ class Init extends FlxState
 			''
 		],
 		"Note Skin" => ['default', Selector, 'Choose a note skin.', NOT_FORCED, ''],
-		"Framerate Cap" => [120, Selector, 'Define your maximum FPS.', NOT_FORCED, ['']],
+		"Framerate Cap" => [
+			120,
+			Selector,
+			'Define your maximum FPS.',
+			#if neko FORCED #else NOT_FORCED #end
+		],
 		"Arrow Opacity" => [
 			80,
 			Selector,
@@ -224,6 +229,7 @@ class Init extends FlxState
 
 	public static var filters:Array<BitmapFilter> = []; // the filters the game has active
 	/// initalise filters here
+	#if !neko
 	public static var gameFilters:Map<String, {filter:BitmapFilter, ?onUpdate:Void->Void}> = [
 		"Deuteranopia" => {
 			var matrix:Array<Float> = [
@@ -253,21 +259,25 @@ class Init extends FlxState
 			{filter: new ColorMatrixFilter(matrix)}
 		}
 	];
+	#end
 
 	override public function create():Void
 	{
 		FlxG.save.bind('foreverengine-options');
+
+		// initialize controls and highscore
+		PlayerSettings.init();
 		Highscore.load();
 
 		loadSettings();
 		loadControls();
 
-		#if !html5
 		Main.updateFramerate(trueSettings.get("Framerate Cap"));
-		#end
 
+		#if !neko
 		// apply saved filters
 		FlxG.game.setFilters(filters);
+		#end
 
 		// Some additional changes to default HaxeFlixel settings, both for ease of debugging and usability.
 		FlxG.fixedTimestep = false; // This ensures that the game is not tied to the FPS
@@ -358,12 +368,12 @@ class Init extends FlxState
 
 		Overlay.updateDisplayInfo(trueSettings.get('FPS Counter'), trueSettings.get('Debug Info'), trueSettings.get('Memory Counter'));
 
-		#if !html5
 		Main.updateFramerate(trueSettings.get("Framerate Cap"));
-		#end
 
 		///*
 		filters = [];
+
+		#if !neko
 		FlxG.game.setFilters(filters);
 
 		var theFilter:String = trueSettings.get('Filter');
@@ -376,6 +386,7 @@ class Init extends FlxState
 		}
 
 		FlxG.game.setFilters(filters);
+		#end
 		// */
 	}
 

@@ -47,6 +47,10 @@ class ScriptHandler extends SScript
 		set('FNFSprite', dependency.FNFSprite);
 		set('ForeverAssets', ForeverAssets);
 		set('ForeverTools', ForeverTools);
+
+		// OTHER
+		set('GraphicsShader', openfl.display.GraphicsShader);
+		set('ShaderFilter', openfl.filters.ShaderFilter);
 	}
 
 	public static function callScripts(moduleArray:Array<ScriptHandler>):Array<ScriptHandler>
