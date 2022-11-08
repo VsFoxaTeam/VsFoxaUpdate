@@ -234,6 +234,9 @@ class TitleState extends MusicBeatState
 				FlxG.sound.music.fadeOut(0.3);
 				FlxG.camera.fade(FlxColor.BLACK, 0.5, false, function()
 				{
+					#if DISCORD_RPC
+					Discord.shutdownRPC();
+					#end
 					Sys.exit(0);
 				}, false);
 			}
