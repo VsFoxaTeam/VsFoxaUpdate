@@ -54,3 +54,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved Selector Options Code
 - Added "Exit to options" to the Pause Menu
 - Slightly Improved Options Menu
+- Weeks are now managed by JSONs on the assets folder (notice that weeks can still be hardcoded)
+- Week Characters are now separated on their own individual images, along with having a JSON file attached for customiization
+- Difficulty Images are now separated in individual files
+- added an option to disable flashing lights
+- Title Text is now hardcoded
+- Game Logo on Titlescreen is now hardcoded
