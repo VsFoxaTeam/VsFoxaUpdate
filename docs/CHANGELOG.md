@@ -60,3 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added an option to disable flashing lights
 - Title Text is now hardcoded
 - Game Logo on Titlescreen is now hardcoded
+
+--------------------------
+11/08/22
+
+- Scripted Stages
+- Change Stage Event
+- You can now regenerate characters by calling "regenerateCharacters()" on PlayState

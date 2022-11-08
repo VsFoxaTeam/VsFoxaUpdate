@@ -16,11 +16,15 @@ class ScriptHandler extends SScript
 	{
 		super.preset();
 
+		// here we set up the built-in imports
+		// these should work on *any* script;
+
 		// CLASSES (FLIXEL);
 		set('FlxG', flixel.FlxG);
 		set('FlxBasic', flixel.FlxBasic);
 		set('FlxObject', flixel.FlxObject);
 		set('FlxSprite', flixel.FlxSprite);
+		set('FlxSound', flixel.system.FlxSound);
 		set('FlxTimer', flixel.util.FlxTimer);
 		set('FlxTween', flixel.tweens.FlxTween);
 		set('FlxEase', flixel.tweens.FlxEase);
@@ -28,9 +32,11 @@ class ScriptHandler extends SScript
 		// CLASSES (FUNKIN);
 		set('Alphabet', meta.data.font.Alphabet);
 		set('Boyfriend', gameObjects.Boyfriend);
+		set('CoolUtil', meta.CoolUtil);
 		set('Character', gameObjects.Character);
 		set('Conductor', meta.data.Conductor);
 		set('HealthIcon', gameObjects.userInterface.HealthIcon);
+		set('game', meta.state.PlayState.main);
 		set('PlayState', meta.state.PlayState);
 		set('Paths', Paths);
 

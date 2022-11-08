@@ -72,7 +72,6 @@ class HealthIcon extends FlxSprite
 				iconPath = trimmedCharacter;
 			else
 				iconPath = 'placeholder';
-			trace('$char icon trying $iconPath instead you fuck');
 		}
 
 		antialiasing = true;

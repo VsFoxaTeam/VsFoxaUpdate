@@ -130,7 +130,9 @@ class PlayState extends MusicBeatState
 	public static var uiHUD:ClassHUD;
 	public static var daPixelZoom:Float = 6;
 
-	public var stageBuild:Stage;
+	public static var stageBuild:Stage;
+
+	public static var stageGroup:FlxTypedGroup<Stage>;
 
 	// strumlines
 	public static var dadStrums:Strumline;
@@ -180,6 +182,74 @@ class PlayState extends MusicBeatState
 		if (skipCountdown)
 			return false;
 		return true;
+	}
+
+	public function generateCharacters()
+	{
+		opponent = new Character();
+		boyfriend = new Boyfriend();
+		gf = new Character();
+
+		gf.setCharacter(0, 0, SONG.gfVersion);
+		gf.scrollFactor.set(0.95, 0.95);
+
+		opponent.setCharacter(0, 0, SONG.player2);
+		boyfriend.setCharacter(0, 0, SONG.player1);
+
+		// add characters
+		if (stageBuild.spawnGirlfriend)
+			add(gf);
+
+		add(stageBuild.layers);
+
+		add(opponent);
+		add(boyfriend);
+		add(stageBuild.foreground);
+
+		// force them to dance
+		opponent.dance();
+		gf.dance();
+		boyfriend.dance();
+
+		characterPostGeneration();
+	}
+
+	public function regenerateCharacters()
+	{
+		remove(gf);
+		remove(opponent);
+		remove(boyfriend);
+		remove(stageBuild.layers);
+		remove(stageBuild.foreground);
+
+		// add characters
+		if (stageBuild.spawnGirlfriend)
+			add(gf);
+
+		add(stageBuild.layers);
+
+		add(opponent);
+		add(boyfriend);
+
+		add(stageBuild.foreground);
+
+		// force them to dance
+		opponent.dance();
+		gf.dance();
+		boyfriend.dance();
+
+		characterPostGeneration();
+	}
+
+	public function characterPostGeneration()
+	{
+		boyfriend.setPosition(stageBuild.stageJson.bfPos[0], stageBuild.stageJson.bfPos[1]);
+		opponent.setPosition(stageBuild.stageJson.dadPos[0], stageBuild.stageJson.dadPos[1]);
+		gf.setPosition(stageBuild.stageJson.gfPos[0], stageBuild.stageJson.gfPos[1]);
+
+		stageBuild.repositionPlayers(curStage, boyfriend, gf, opponent);
+		stageBuild.dadPosition(curStage, boyfriend, gf, opponent, new FlxPoint(gf.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100));
+		defaultCamZoom = stageBuild.stageJson.defaultZoom;
 	}
 
 	// at the beginning of the playstate
@@ -234,25 +304,17 @@ class PlayState extends MusicBeatState
 		popUpCombo(true);
 		//
 
+		stageGroup = new FlxTypedGroup<Stage>();
+		add(stageGroup);
+
 		stageBuild = new Stage(curStage);
-		add(stageBuild);
+		stageGroup.add(stageBuild);
 
 		if (SONG.gfVersion == null || SONG.gfVersion.length < 1)
 			SONG.gfVersion = stageBuild.returnGFtype(curStage);
 
-		// set up characters here too
-		gf = new Character();
-		gf.setCharacter(300, 100, SONG.gfVersion);
-		gf.scrollFactor.set(0.95, 0.95);
-
-		opponent = new Character().setCharacter(50, 850, SONG.player2);
-		boyfriend = new Boyfriend();
-		boyfriend.setCharacter(750, 850, SONG.player1);
-
-		var camPos:FlxPoint = new FlxPoint(gf.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
-
-		stageBuild.repositionPlayers(curStage, boyfriend, opponent, gf);
-		stageBuild.dadPosition(curStage, boyfriend, opponent, gf, camPos);
+		// set up characters
+		generateCharacters();
 
 		if (SONG.assetModifier != null && SONG.assetModifier.length > 1)
 			assetModifier = SONG.assetModifier;
@@ -261,22 +323,6 @@ class PlayState extends MusicBeatState
 		characterGroup = new FlxSpriteGroup();
 		characterGroup.alpha = 0.000001;
 		add(characterGroup);
-
-		// add characters
-		if (stageBuild.spawnGirlfriend)
-			add(gf);
-
-		add(stageBuild.layers);
-
-		add(opponent);
-		add(boyfriend);
-
-		add(stageBuild.foreground);
-
-		// force them to dance
-		opponent.dance();
-		gf.dance();
-		boyfriend.dance();
 
 		// set song position before beginning
 		Conductor.songPosition = -(Conductor.crochet * 4);
@@ -293,6 +339,8 @@ class PlayState extends MusicBeatState
 
 		// generate the song
 		generateSong(SONG.song);
+
+		var camPos:FlxPoint = new FlxPoint(gf.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 
 		// set the camera position to the center of the stage
 		camPos.set(gf.x + (gf.frameWidth / 2), gf.y + (gf.frameHeight / 2));
