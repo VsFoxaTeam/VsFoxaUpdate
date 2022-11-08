@@ -157,12 +157,7 @@ class Init extends FlxState
 			''
 		],
 		"Note Skin" => ['default', Selector, 'Choose a note skin.', NOT_FORCED, ''],
-		"Framerate Cap" => [
-			120,
-			Selector,
-			'Define your maximum FPS.',
-			#if neko FORCED #else NOT_FORCED #end
-		],
+		"Framerate Cap" => [120, Selector, 'Define your maximum FPS.', #if neko FORCED #else NOT_FORCED #end],
 		"Arrow Opacity" => [
 			80,
 			Selector,

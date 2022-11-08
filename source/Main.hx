@@ -149,8 +149,8 @@ class Main extends Sprite
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
 		/**
-		* locking neko platforms on 60 because similar to html5 it cannot go over that
-		* avoids note stutters and stuff
+		 * locking neko platforms on 60 because similar to html5 it cannot go over that
+		 * avoids note stutters and stuff
 		**/
 		#if neko
 		framerate = 60;
