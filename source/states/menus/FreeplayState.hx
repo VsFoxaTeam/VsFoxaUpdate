@@ -28,8 +28,6 @@ class FreeplayState extends MusicBeatState
 	//
 	var songs:Array<SongMetadata> = [];
 
-	var selector:FlxText;
-
 	static var curSelected:Int = 0;
 
 	var curSongPlaying:Int = -1;
@@ -46,7 +44,6 @@ class FreeplayState extends MusicBeatState
 	var songToPlay:Sound = null;
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
-	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
 
@@ -132,10 +129,6 @@ class FreeplayState extends MusicBeatState
 		// LOAD MUSIC
 		// ForeverTools.resetMenuMusic();
 
-		#if DISCORD_RPC
-		Discord.changePresence('FREEPLAY MENU', 'Main Menu');
-		#end
-
 		// LOAD CHARACTERS
 		bg = new FlxSprite().loadGraphic(Paths.image('menus/base/menuDesat'));
 		add(bg);
@@ -156,10 +149,6 @@ class FreeplayState extends MusicBeatState
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
 			add(icon);
-
-			// songText.x += 40;
-			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
-			// songText.screenCenter(X);
 		}
 
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
@@ -179,14 +168,6 @@ class FreeplayState extends MusicBeatState
 
 		changeSelection();
 		changeDiff();
-
-		// FlxG.sound.playMusic(Paths.music('title'), 0);
-		// FlxG.sound.music.fadeIn(2, 0, 0.8);
-		selector = new FlxText();
-
-		selector.size = 40;
-		selector.text = ">";
-		// add(selector);
 	}
 
 	function checkProgression(week:String):Bool
@@ -344,8 +325,6 @@ class FreeplayState extends MusicBeatState
 		if (curSelected >= songs.length)
 			curSelected = 0;
 
-		// selector.y = (70 * curSelected) + 30;
-
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 
 		// set up color stuffs
@@ -356,9 +335,7 @@ class FreeplayState extends MusicBeatState
 		var bullShit:Int = 0;
 
 		for (i in 0...iconArray.length)
-		{
 			iconArray[i].alpha = 0.6;
-		}
 
 		iconArray[curSelected].alpha = 1;
 
@@ -380,6 +357,7 @@ class FreeplayState extends MusicBeatState
 
 		changeDiff();
 		changeSongPlaying();
+		updateDiscord();
 	}
 
 	function changeSongPlaying()
@@ -417,7 +395,13 @@ class FreeplayState extends MusicBeatState
 		songThread.sendMessage(curSelected);
 	}
 
-	var playingSongs:Array<FlxSound> = [];
+	function updateDiscord()
+	{
+		var mySong:String = ' [Listening to: ${songs[curSelected].songName}]';
+		#if DISCORD_RPC
+		Discord.changePresence('CHOOSING A SONG', 'Freeplay Menu' + mySong);
+		#end
+	}
 }
 
 class SongMetadata

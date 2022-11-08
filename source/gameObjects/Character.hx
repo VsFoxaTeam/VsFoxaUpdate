@@ -138,6 +138,7 @@ class Character extends FNFSprite
 
 				playAnim('idle');
 				characterData.healthColor = [161, 161, 161];
+
 			default:
 				if (characterType == PSYCH_ENGINE)
 					generatePsychChar(character);
@@ -173,9 +174,6 @@ class Character extends FNFSprite
 
 		if (isPlayer) // fuck you ninjamuffin lmao
 		{
-			// do a cool fip
-			flipX = !flipX;
-
 			// Doesn't flip for BF, since his are already in the right place???
 			if (!curCharacter.startsWith('bf'))
 				flipLeftRight();

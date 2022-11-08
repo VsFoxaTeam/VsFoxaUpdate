@@ -2,6 +2,7 @@ package states.charting;
 
 import base.CoolUtil;
 import base.feather.Events;
+import dependency.Discord;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -154,6 +155,10 @@ class OriginalChartingState extends MusicBeatState
 		loadSong(_song.song);
 		Conductor.changeBPM(_song.bpm);
 		Conductor.mapBPMChanges(_song);
+
+		#if DISCORD_RPC
+		Discord.changePresence('CHART EDITOR', 'Song: ' + _song.song);
+		#end
 
 		bpmTxt = new FlxText(1000, 50, 0, "", 16);
 		bpmTxt.scrollFactor.set();

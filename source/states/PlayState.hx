@@ -166,7 +166,8 @@ class PlayState extends MusicBeatState
 		assetModifier = 'base';
 		changeableSkin = 'default';
 
-		preventScoring = false;
+		if (!preventScoring)
+			preventScoring = false;
 	}
 
 	function checkTween(isDad:Bool = false):Bool
@@ -746,7 +747,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.play(Paths.sound(GameOverSubstate.deathNoise));
 
 			#if DISCORD_RPC
-			Discord.changePresence("Game Over - " + songDetails, detailsSub, iconRPC);
+			Discord.changePresence("GAME OVER - " + songDetails, detailsSub, iconRPC);
 			#end
 			isDead = true;
 			return true;
@@ -1445,7 +1446,7 @@ class PlayState extends MusicBeatState
 		Conductor.changeBPM(songData.bpm);
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
-		songDetails = CoolUtil.dashToSpace(SONG.song) + ' - ' + CoolUtil.difficultyFromNumber(storyDifficulty);
+		songDetails = CoolUtil.dashToSpace(SONG.song) + ' - ' + CoolUtil.difficultyString;
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + songDetails;

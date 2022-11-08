@@ -1,5 +1,6 @@
 package states.charting;
 
+import dependency.Discord;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -75,6 +76,10 @@ class ChartingState extends MusicBeatState
 		loadSong(_song.song);
 		Conductor.changeBPM(_song.bpm);
 		Conductor.mapBPMChanges(_song);
+
+		#if DISCORD_RPC
+		Discord.changePresence('CHART EDITOR', 'Song: ' + _song.song);
+		#end
 
 		generateGrid();
 

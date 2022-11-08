@@ -45,10 +45,6 @@ class OptionsMenuState extends MusicBeatState
 
 		// NOTE : Make sure to check Init.hx if you are trying to add options.
 
-		#if DISCORD_RPC
-		Discord.changePresence('OPTIONS MENU', 'Main Menu');
-		#end
-
 		categoryMap = [
 			'main' => [
 				[
@@ -61,19 +57,19 @@ class OptionsMenuState extends MusicBeatState
 			'preferences' => [
 				[
 					['Gameplay Settings', null],
-					['', null],
+
 					['Controller Mode', getFromOption],
 					['Downscroll', getFromOption],
 					['Centered Notefield', getFromOption],
 					['Ghost Tapping', getFromOption],
 					['', null],
 					['Text Settings', null],
-					['', null],
+
 					['Display Accuracy', getFromOption],
 					['Skip Text', getFromOption],
 					['', null],
 					['Meta Settings', null],
-					['', null],
+
 					['Auto Pause', getFromOption],
 					["Framerate Cap", getFromOption],
 					['FPS Counter', getFromOption],
@@ -84,14 +80,14 @@ class OptionsMenuState extends MusicBeatState
 			'appearance' => [
 				[
 					['Judgements', null],
-					['', null],
+
 					["UI Skin", getFromOption],
 					['Fixed Judgements', getFromOption],
 					['Simply Judgements', getFromOption],
 					['Counter', getFromOption],
 					['', null],
 					['Notes', null],
-					['', null],
+
 					["Note Skin", getFromOption],
 					["Clip Style", getFromOption],
 					['No Camera Note Movement', getFromOption],
@@ -100,10 +96,11 @@ class OptionsMenuState extends MusicBeatState
 					['Hold Opacity', getFromOption],
 					['', null],
 					['Accessibility Settings', null],
-					['', null],
+
 					['Filter', getFromOption],
 					['Disable Antialiasing', getFromOption],
 					['Disable Flashing Lights', getFromOption],
+					['Disable Screen Shaders', getFromOption],
 					["Stage Opacity", getFromOption],
 					["Colored Health Bar", getFromOption],
 					["Opaque User Interface", getFromOption],
@@ -170,6 +167,13 @@ class OptionsMenuState extends MusicBeatState
 
 		// set the category
 		curCategory = subgroupName;
+
+		var myPresence:String = curCategory == 'main' ? 'Navigating through Categories' : 'Changing $curCategory';
+
+		#if DISCORD_RPC
+		// changes depending on your current category;
+		Discord.changePresence(myPresence.toUpperCase(), 'Options Menu');
+		#end
 
 		// add all group attachments afterwards
 		currentAttachmentMap = categoryMap.get(subgroupName)[2];
