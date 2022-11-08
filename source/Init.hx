@@ -115,6 +115,12 @@ class Init extends FlxState
 			'Whether to disable Anti-aliasing. Helps improve performance in FPS.',
 			NOT_FORCED
 		],
+		'Disable Flashing Lights' => [
+			false,
+			Checkmark,
+			'Whether to disable Flashing Lights on Menus, check this if you are sensitive to those.',
+			NOT_FORCED
+		],
 		'No Camera Note Movement' => [
 			false,
 			Checkmark,

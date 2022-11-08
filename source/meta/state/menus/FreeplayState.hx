@@ -66,10 +66,12 @@ class FreeplayState extends MusicBeatState
 
 		mutex = new Mutex();
 
+		// load week data;
+		Main.loadGameWeeks(false);
+
 		/**
-			Wanna add songs? They're in the Main state now, you can just find the week array and add a song there to a specific week.
-			Alternatively, you can make a folder in the Songs folder and put your songs there, however, this gives you less
-			control over what you can display about the song (color, icon, etc) since it will be pregenerated for you instead.
+			Wanna add songs? they are on the Weeks Folder inside the assets folder
+			if you wish to hardcode your weeks, make sure to look through the Main State
 		**/
 		// load in all songs that exist in folder
 		var folderSongs:Array<String> = CoolUtil.returnAssetsLibrary('songs', 'assets');
@@ -77,8 +79,39 @@ class FreeplayState extends MusicBeatState
 		///*
 		for (i in 0...Main.gameWeeks.length)
 		{
-			addWeek(Main.gameWeeks[i][0], i, Main.gameWeeks[i][1], Main.gameWeeks[i][2]);
-			for (j in cast(Main.gameWeeks[i][0], Array<Dynamic>))
+			// is the week locked?;
+			if (checkProgression(Main.gameWeeks[i]))
+				continue;
+
+			var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[i]);
+
+			var storedSongs:Array<String> = [];
+			var storedIcons:Array<String> = [];
+			var storedColors:Array<FlxColor> = [];
+
+			if (!gameWeek.hideOnFreeplay)
+			{
+				//
+				for (i in 0...gameWeek.songs.length)
+				{
+					var songInfo = gameWeek.songs[i];
+
+					storedSongs.push(songInfo.name);
+					storedIcons.push(songInfo.opponent);
+
+					//
+					if (songInfo.colors != null)
+						storedColors.push(FlxColor.fromRGB(songInfo.colors[0], songInfo.colors[1], songInfo.colors[2]));
+					else
+						storedColors.push(FlxColor.WHITE);
+				}
+
+				// actually add the week;
+				addWeek(storedSongs, i, storedIcons, storedColors);
+			}
+
+			// add week songs to the existing songs array;
+			for (j in storedSongs)
 				existingSongs.push(j.toLowerCase());
 		}
 
@@ -157,6 +190,13 @@ class FreeplayState extends MusicBeatState
 		selector.size = 40;
 		selector.text = ">";
 		// add(selector);
+	}
+
+	function checkProgression(week:String):Bool
+	{
+		// here we check if the target week is locked;
+		var weekProgress = Main.gameWeeksMap.get(week);
+		return weekProgress.startsLocked;
 	}
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String, songColor:FlxColor)

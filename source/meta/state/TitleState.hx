@@ -9,8 +9,10 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxSound;
@@ -42,7 +44,6 @@ class TitleState extends MusicBeatState
 
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
-	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 
@@ -61,10 +62,16 @@ class TitleState extends MusicBeatState
 		startIntro();
 	}
 
-	var logoBl:FlxSprite;
+	var gameLogo:FlxSprite;
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
+
+	var initLogowidth:Float = 0;
+	var newLogoScale:Float = 0;
+
+	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
+	var titleTextAlphas:Array<Float> = [1, .64];
 
 	function startIntro()
 	{
@@ -86,14 +93,11 @@ class TitleState extends MusicBeatState
 		// bg.updateHitbox();
 		add(bg);
 
-		logoBl = new FlxSprite(-150, -100);
-		logoBl.frames = Paths.getSparrowAtlas('menus/base/title/logoBumpin');
-		logoBl.antialiasing = true;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
-		logoBl.animation.play('bump');
-		logoBl.updateHitbox();
-		// logoBl.screenCenter();
-		// logoBl.color = FlxColor.BLACK;
+		gameLogo = new FlxSprite(-10, 10);
+		gameLogo.loadGraphic(Paths.image('menus/base/title/logo'));
+		gameLogo.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+		initLogowidth = gameLogo.width;
+		newLogoScale = gameLogo.scale.x;
 
 		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
 		gfDance.frames = Paths.getSparrowAtlas('menus/base/title/gfDanceTitle');
@@ -101,25 +105,34 @@ class TitleState extends MusicBeatState
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		gfDance.antialiasing = true;
 		add(gfDance);
-		add(logoBl);
+		add(gameLogo);
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
 		titleText.frames = Paths.getSparrowAtlas('menus/base/title/titleEnter');
-		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
-		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
-		titleText.antialiasing = true;
+		var animFrames:Array<FlxFrame> = [];
+		@:privateAccess {
+			titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
+			titleText.animation.findByPrefix(animFrames, "ENTER FREEZE");
+		}
+
+		if (animFrames.length > 0)
+		{
+			newTitle = true;
+
+			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
+			titleText.animation.addByPrefix('press', !Init.trueSettings.get('Disable Flashing Lights') ? "ENTER PRESSED" : "ENTER FREEZE", 24);
+		}
+		else
+		{
+			newTitle = false;
+
+			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
+			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
+		}
+		titleText.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
-		// titleText.screenCenter(X);
 		add(titleText);
-
-		// var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menus/base/title/logo'));
-		// logo.screenCenter();
-		// logo.antialiasing = true;
-		// add(logo);
-
-		// FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
-		// FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
 
 		credGroup = new FlxGroup();
 		add(credGroup);
@@ -127,13 +140,6 @@ class TitleState extends MusicBeatState
 
 		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		credGroup.add(blackScreen);
-
-		credTextShit = new Alphabet(0, 0, "ninjamuffin99\nPhantomArcade\nkawaisprite\nevilsk8er", true);
-		credTextShit.screenCenter();
-
-		// credTextShit.alignment = CENTER;
-
-		credTextShit.visible = false;
 
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('menus/base/title/newgrounds_logo'));
 		add(ngSpr);
@@ -143,14 +149,10 @@ class TitleState extends MusicBeatState
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
 
-		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
-
 		if (initialized)
 			skipIntro();
 		else
 			initialized = true;
-
-		// credGroup.add(credTextShit);
 	}
 
 	function getIntroTextShit():Array<Array<String>>
@@ -169,6 +171,8 @@ class TitleState extends MusicBeatState
 	}
 
 	var transitioning:Bool = false;
+	var newTitle:Bool = false;
+	var titleTimer:Float = 0;
 
 	override function update(elapsed:Float)
 	{
@@ -176,7 +180,17 @@ class TitleState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
 
+		gameLogo.scale.x = FlxMath.lerp(newLogoScale, gameLogo.scale.x, 0.95);
+		gameLogo.scale.y = FlxMath.lerp(newLogoScale, gameLogo.scale.y, 0.95);
+
 		var pressedEnter:Bool = controls.ACCEPT;
+
+		if (newTitle)
+		{
+			titleTimer += CoolUtil.boundTo(elapsed, 0, 1);
+			if (titleTimer > 2)
+				titleTimer -= 2;
+		}
 
 		#if mobile
 		for (touch in FlxG.touches.list)
@@ -201,21 +215,51 @@ class TitleState extends MusicBeatState
 			#end
 		}
 
-		if (pressedEnter && !transitioning && skippedIntro)
+		if (initialized && !transitioning && skippedIntro)
 		{
-			titleText.animation.play('press');
-
-			FlxG.camera.flash(FlxColor.WHITE, 1);
-			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
-
-			transitioning = true;
-			// FlxG.sound.music.stop();
-
-			new FlxTimer().start(2, function(tmr:FlxTimer)
+			if (newTitle && !pressedEnter)
 			{
-				Main.switchState(this, new MainMenuState());
-			});
-			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
+				var timer:Float = titleTimer;
+				if (timer >= 1)
+					timer = (-timer) + 2;
+
+				timer = FlxEase.quadInOut(timer);
+
+				titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
+				titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
+			}
+
+			if (FlxG.keys.justPressed.ESCAPE && !pressedEnter)
+			{
+				FlxG.sound.music.fadeOut(0.3);
+				FlxG.camera.fade(FlxColor.BLACK, 0.5, false, function()
+				{
+					Sys.exit(0);
+				}, false);
+			}
+
+			if (pressedEnter)
+			{
+				titleText.color = FlxColor.WHITE;
+				titleText.alpha = 1;
+				titleText.animation.play('press');
+
+				if (!Init.trueSettings.get('Disable Flashing Lights'))
+					FlxG.camera.flash(FlxColor.WHITE, 1);
+
+				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+
+				transitioning = true;
+				if (logoTween != null)
+					logoTween.cancel();
+
+				gameLogo.setGraphicSize(Std.int(initLogowidth * 1.15));
+
+				new FlxTimer().start(2, function(tmr:FlxTimer)
+				{
+					Main.switchState(this, new MainMenuState());
+				});
+			}
 		}
 
 		// hi game, please stop crashing its kinda annoyin, thanks!
@@ -260,17 +304,28 @@ class TitleState extends MusicBeatState
 		}
 	}
 
+	var logoTween:FlxTween;
+
 	override function beatHit()
 	{
 		super.beatHit();
 
-		logoBl.animation.play('bump');
-		danceLeft = !danceLeft;
+		if (gameLogo != null && !transitioning)
+		{
+			if (logoTween != null)
+				logoTween.cancel();
+			gameLogo.scale.set(1, 1);
+			logoTween = FlxTween.tween(gameLogo, {'scale.x': 0.9, 'scale.y': 0.9}, 60 / Conductor.bpm, {ease: FlxEase.expoOut});
+		}
 
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
+		if (gfDance != null)
+		{
+			danceLeft = !danceLeft;
+			if (danceLeft)
+				gfDance.animation.play('danceRight');
+			else
+				gfDance.animation.play('danceLeft');
+		}
 
 		FlxG.log.add(curBeat);
 
@@ -317,7 +372,8 @@ class TitleState extends MusicBeatState
 		{
 			remove(ngSpr);
 
-			FlxG.camera.flash(FlxColor.WHITE, 4);
+			if (!Init.trueSettings.get('Disable Flashing Lights'))
+				FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
 			skippedIntro = true;
 		}

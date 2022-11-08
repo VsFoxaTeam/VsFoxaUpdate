@@ -19,6 +19,11 @@ class CoolUtil
 		return difficultyArray[number];
 	}
 
+	public static function boundTo(value:Float, minValue:Float, maxValue:Float):Float
+	{
+		return Math.max(minValue, Math.min(maxValue, value));
+	}
+
 	public static function dashToSpace(string:String):String
 	{
 		return string.replace("-", " ");
@@ -63,15 +68,21 @@ class CoolUtil
 	{
 		var libraryArray:Array<String> = [];
 
-		#if sys
-		var unfilteredLibrary = FileSystem.readDirectory('$subDir/$library');
-
-		for (folder in unfilteredLibrary)
+		try
 		{
-			if (!folder.contains('.'))
-				libraryArray.push(folder);
+			var unfilteredLibrary = FileSystem.readDirectory('$subDir/$library');
+
+			for (folder in unfilteredLibrary)
+			{
+				if (!folder.contains('.'))
+					libraryArray.push(folder);
+			}
 		}
-		#end
+		catch (e)
+		{
+			trace('$subDir/$library is returning null');
+			libraryArray = [];
+		}
 
 		return libraryArray;
 	}

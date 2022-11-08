@@ -1,0 +1,18 @@
+{
+	"songs": [
+		{
+			"name": "Tutorial",
+			"opponent": "gf",
+			"colors": [165, 0, 77]
+		}
+	],
+
+	"attachedImage": "week0",
+	"storyName": "Funky Beginnings",
+	"characters": ["", "bf", "gf"],
+
+	"startsLocked": false,
+	"hideOnStory": false,
+	"hideOnFreeplay": false,
+	"hideUntilUnlocked": false
+}

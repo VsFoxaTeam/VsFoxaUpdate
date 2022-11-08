@@ -270,9 +270,9 @@ class OriginalChartingState extends MusicBeatState
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
 
-		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
+		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characters/characterList'));
 		var assetModifiers:Array<String> = CoolUtil.returnAssetsLibrary('UI/default');
-		var stages:Array<String> = CoolUtil.coolTextFile(Paths.txt('stageList'));
+		var stages:Array<String> = CoolUtil.coolTextFile(Paths.txt('stages/stageList'));
 
 		var player1DropDown = new FlxUIDropDownMenu(10, stepperSpeed.y + 45, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true),
 			function(character:String)

@@ -13,10 +13,10 @@ class MenuItem extends FlxSpriteGroup
 	public var week:FlxSprite;
 	public var flashingInt:Int = 0;
 
-	public function new(x:Float, y:Float, weekNum:Int = 0)
+	public function new(x:Float, y:Float, weekImage:String = 'week1')
 	{
 		super(x, y);
-		week = new FlxSprite().loadGraphic(Paths.image('menus/base/storymenu/weeks/week' + weekNum));
+		week = new FlxSprite().loadGraphic(Paths.image('menus/base/storymenu/weeks/' + weekImage));
 		add(week);
 	}
 
@@ -24,7 +24,8 @@ class MenuItem extends FlxSpriteGroup
 
 	public function startFlashing():Void
 	{
-		isFlashing = true;
+		if (!Init.trueSettings.get('Disable Flashing Lights'))
+			isFlashing = true;
 	}
 
 	// if it runs at 60fps, fake framerate will be 6

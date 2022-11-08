@@ -26,6 +26,28 @@ import openfl.events.UncaughtErrorEvent;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
+import haxe.Json;
+
+typedef GameWeek =
+{
+	var songs:Array<WeekSong>;
+	var characters:Array<String>;
+	var ?difficulties:Array<String>;
+	var attachedImage:String;
+	var storyName:String;
+	var startsLocked:Bool;
+	var hideOnStory:Bool;
+	var hideOnFreeplay:Bool;
+	var hideUntilUnlocked:Bool;
+}
+
+typedef WeekSong =
+{
+	var name:String;
+	var opponent:String;
+	var ?player:String; // wanna do something with this later haha;
+	var colors:Array<Int>;
+}
 
 // Here we actually import the states and metadata, and just the metadata.
 // It's nice to have modularity so that we don't have ALL elements loaded at the same time.
@@ -47,54 +69,72 @@ class Main extends Sprite
 	var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
 	var infoConsole:Console; // intiialize the on-screen console for script debug traces before creating it.
 
+	public static var gameWeeksMap:Map<String, GameWeek> = [];
+	public static var gameWeeks:Array<String> = [];
+
 	// heres gameweeks set up!
 
-	/**
-		Small bit of documentation here, gameweeks are what control everything in my engine
-		this system will eventually be overhauled in favor of using actual week folders within the 
-		assets.
-		Enough of that, here's how it works
-		[ [songs to use], [characters in songs], [color of week], name of week ]
-	**/
-	public static var gameWeeks:Array<Dynamic> = [
-		[['Tutorial'], ['gf'], [FlxColor.fromRGB(165, 0, 77)], 'Funky Beginnings'],
-		[
-			['Bopeebo', 'Fresh', 'Dadbattle'],
-			['dad', 'dad', 'dad'],
-			[FlxColor.fromRGB(129, 100, 223)],
-			'vs. DADDY DEAREST'
-		],
-		[
-			['Spookeez', 'South', 'Monster'],
-			['spooky', 'spooky', 'monster'],
-			[FlxColor.fromRGB(30, 45, 60)],
-			'Spooky Month'
-		],
-		[
-			['Pico', 'Philly-Nice', 'Blammed'],
-			['pico'],
-			[FlxColor.fromRGB(111, 19, 60)],
-			'vs. Pico'
-		],
-		[
-			['Satin-Panties', 'High', 'Milf'],
-			['mom'],
-			[FlxColor.fromRGB(203, 113, 170)],
-			'MOMMY MUST MURDER'
-		],
-		[
-			['Cocoa', 'Eggnog', 'Winter-Horrorland'],
-			['parents-christmas', 'parents-christmas', 'monster-christmas'],
-			[FlxColor.fromRGB(141, 165, 206)],
-			'RED SNOW'
-		],
-		[
-			['Senpai', 'Roses', 'Thorns'],
-			['senpai', 'senpai', 'spirit'],
-			[FlxColor.fromRGB(206, 106, 169)],
-			"hating simulator ft. moawling"
-		],
-	];
+	// in case you wanna hardcode weeks
+
+	public static function loadHardcodedWeeks()
+	{
+		gameWeeksMap = [
+			"myWeek" =>
+			{
+				songs: [
+					{
+						"name": "Bopeebo",
+						"opponent": "dad",
+						"colors": [129, 100, 223]
+					}
+				],
+
+				attachedImage: "week1",
+				storyName: "vs. DADDY DEAREST",
+				characters: ["dad", "bf", "gf"],
+
+				startsLocked: false,
+				hideOnStory: false,
+				hideOnFreeplay: false,
+				hideUntilUnlocked: false
+			}
+		];
+		gameWeeks.push('myWeek');
+	}
+
+	public static function loadGameWeeks(isStory:Bool = false)
+	{
+		gameWeeksMap.clear();
+		gameWeeks = [];
+
+		var weekList:Array<String> = CoolUtil.coolTextFile(Paths.txt('weeks/weekList'));
+		for (i in 0...weekList.length)
+		{
+			if (!gameWeeksMap.exists(weekList[i]))
+			{
+				var week:GameWeek = parseGameWeeks(Paths.file('weeks/' + weekList[i] + '.json'));
+				if (week != null)
+				{
+					if ((isStory && (!week.hideOnStory || !week.hideUntilUnlocked))
+						|| (!isStory && (!week.hideOnFreeplay || !week.hideUntilUnlocked)))
+					{
+						gameWeeksMap.set(weekList[i], week);
+						gameWeeks.push(weekList[i]);
+					}
+				}
+			}
+		}
+	}
+
+	public static function parseGameWeeks(path:String):GameWeek
+	{
+		var rawJson:String = null;
+
+		if (FileSystem.exists(path))
+			rawJson = File.getContent(path);
+
+		return Json.parse(rawJson);
+	}
 
 	// most of these variables are just from the base game!
 	// be sure to mess around with these if you'd like.
