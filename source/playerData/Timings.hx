@@ -23,7 +23,7 @@ class Timings
 	public static var judgementsMap:Map<String, Array<Dynamic>> = [
 		"sick" => [0, 45, 350, 100, 'SFC'],
 		"good" => [1, 90, 150, 75, 'GFC'],
-		"bad" => [2, 135, 0, 25, ' FC'],
+		"bad" => [2, 135, 0, 25, 'FC'],
 		"shit" => [3, 157.5, -50, -150],
 		"miss" => [4, 180, -100, -175],
 	];

@@ -8,18 +8,22 @@ function generateStage()
 
 	var bgSky:FNFSprite = new FNFSprite().loadGraphic(Paths.image('weebSky', stageDir));
 	bgSky.scrollFactor.set(0.1, 0.1);
+	bgSky.antialiasing = false;
 	add(bgSky);
 
 	var bgSchool:FNFSprite = new FNFSprite(-200, 0).loadGraphic(Paths.image('weebSchool', stageDir));
 	bgSchool.scrollFactor.set(0.6, 0.90);
+	bgSchool.antialiasing = false;
 	add(bgSchool);
 
 	var bgStreet:FNFSprite = new FNFSprite(-200).loadGraphic(Paths.image('weebStreet', stageDir));
 	bgStreet.scrollFactor.set(0.95, 0.95);
+	bgStreet.antialiasing = false;
 	add(bgStreet);
 
 	var fgTrees:FNFSprite = new FNFSprite(-200 + 170, 130).loadGraphic(Paths.image('weebTreesBack', stageDir));
 	fgTrees.scrollFactor.set(0.9, 0.9);
+	fgTrees.antialiasing = false;
 	add(fgTrees);
 
 	bgTrees = new FNFSprite(-200 - 380, -800);
@@ -27,6 +31,7 @@ function generateStage()
 	bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 12);
 	bgTrees.animation.play('treeLoop');
 	bgTrees.scrollFactor.set(0.85, 0.85);
+	bgTrees.antialiasing = false;
 	add(bgTrees);
 
 	treeLeaves = new FNFSprite(-200, -40);
@@ -34,6 +39,7 @@ function generateStage()
 	treeLeaves.animation.addByPrefix('leaves', 'PETALS ALL', 24, true);
 	treeLeaves.animation.play('leaves');
 	treeLeaves.scrollFactor.set(0.85, 0.85);
+	treeLeaves.antialiasing = false;
 	add(treeLeaves);
 
 	bgGirls = new FNFSprite(-100, 190);
