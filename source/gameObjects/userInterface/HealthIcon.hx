@@ -14,6 +14,7 @@ class HealthIcon extends FlxSprite
 	public var initialWidth:Float = 0;
 	public var initialHeight:Float = 0;
 
+	// script values;
 	public var canBounce:Bool = true;
 	public var scaleFactorX:Float = 1.2;
 	public var scaleFactorY:Float = 1.2;
@@ -75,9 +76,14 @@ class HealthIcon extends FlxSprite
 		antialiasing = true;
 
 		var iconGraphic:FlxGraphic = Paths.image('$iconPath/icon$suffix', 'characters');
+		var iconWidth:Int = 1;
+
+		// icons with endless frames;
+		iconWidth = Std.int(iconGraphic.width / 150) - 1;
+		iconWidth = iconWidth + 1;
 
 		loadGraphic(iconGraphic); // get file size;
-		loadGraphic(iconGraphic, true, Std.int(iconGraphic.width / 2), iconGraphic.height); // then load it;
+		loadGraphic(iconGraphic, true, Std.int(iconGraphic.width / iconWidth), iconGraphic.height); // then load it;
 
 		initialWidth = width;
 		initialHeight = height;

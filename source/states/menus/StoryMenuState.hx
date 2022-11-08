@@ -100,7 +100,7 @@ class StoryMenuState extends MusicBeatState
 			var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[i]);
 			var lockedWeek:Bool = checkProgression(Main.gameWeeks[i]);
 
-			if (!gameWeek.hideOnStory)
+			if (!lockedWeek && !gameWeek.hideUntilUnlocked)
 			{
 				var weekThing:MenuItem = new MenuItem(0, yellowBG.y + yellowBG.height + 10, gameWeek.attachedImage);
 				weekThing.y += ((weekThing.height + 20) * weekID);
@@ -274,6 +274,7 @@ class StoryMenuState extends MusicBeatState
 			diffic = diffic.replace('-normal', '');
 
 			PlayState.storyDifficulty = curDifficulty;
+			CoolUtil.difficultyString = CoolUtil.difficultyFromNumber(curDifficulty);
 
 			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 			PlayState.storyWeek = curWeek;

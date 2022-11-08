@@ -96,11 +96,12 @@ class PlayState extends MusicBeatState
 
 	// Events;
 	public var startingSong:Bool = false;
-	public var paused:Bool = false;
+	public var endingSong:Bool = false;
 	public var startedCountdown:Bool = false;
 	public var skipCountdown:Bool = false;
 	public var inCutscene:Bool = false;
 	public var canPause:Bool = true;
+	public var paused:Bool = false;
 
 	// Cameras;
 	private var camFollow:FlxObject;
@@ -293,8 +294,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// cache shit
-		displayRating('sick', 'early', true);
-		popUpCombo(true);
+		displayScore('sick', 'early', true);
 		//
 
 		stageGroup = new FlxTypedGroup<Stage>();
@@ -536,7 +536,10 @@ class PlayState extends MusicBeatState
 				}
 				else // else just call bad notes
 					if (!Init.trueSettings.get('Ghost Tapping'))
-						missNoteCheck(true, key, bfStrums, true);
+					{
+						if (!inCutscene && !endingSong)
+							missNoteCheck(true, key, bfStrums, true);
+					}
 				Conductor.songPosition = previousTime;
 			}
 
@@ -1262,16 +1265,11 @@ class PlayState extends MusicBeatState
 			if (Timings.perfectCombo)
 				Timings.perfectCombo = false;
 
-		if (strumline.autoplay)
-			displayRating('sick', timing);
-		else
-			displayRating(baseRating, timing);
+		displayScore(baseRating, timing);
 		Timings.updateAccuracy(Timings.judgementsMap.get(baseRating)[3]);
 
 		ratingScore = Std.int(Timings.judgementsMap.get(baseRating)[2]);
 		Timings.score += ratingScore;
-
-		popUpCombo();
 	}
 
 	public function createSplash(coolNote:Note, strumline:Strumline)
@@ -1282,10 +1280,113 @@ class PlayState extends MusicBeatState
 			strumline.splashNotes.members[coolNote.noteData].playAnim('anim' + noteSplashRandom, true);
 	}
 
+	function decreaseCombo(?popMiss:Bool = false)
+	{
+		// painful if statement
+		if (((Timings.combo > 5) || (Timings.combo < 0)) && (gf.animOffsets.exists('sad')))
+			gf.playAnim('sad');
+
+		if (Timings.combo > 0)
+			Timings.combo = 0; // bitch lmao
+		else
+			Timings.combo--;
+
+		// misses
+		Timings.score -= 10;
+		Timings.misses++;
+
+		// display negative combo
+		if (popMiss)
+		{
+			// doesnt matter miss ratings dont have timings
+			displayScore("miss", 'late');
+			healthCall(Timings.judgementsMap.get("miss")[3]);
+		}
+
+		// gotta do it manually here lol
+		Timings.updateFCDisplay();
+	}
+
+	function increaseCombo(?baseRating:String, ?direction = 0, ?strumline:Strumline)
+	{
+		// trolled this can actually decrease your combo if you get a bad/shit/miss
+		if (baseRating != null)
+		{
+			if (Timings.judgementsMap.get(baseRating)[3] > 0)
+			{
+				if (Timings.combo < 0)
+					Timings.combo = 0;
+				Timings.combo += 1;
+			}
+			else
+				missNoteCheck(true, direction, strumline, false, true);
+		}
+	}
+
+	// "Miss" Judgement Color;
 	private var createdColor = FlxColor.fromRGB(204, 66, 66);
 
-	function popUpCombo(?cache:Bool = false)
+	public function displayScore(daRating:String, timing:String, ?cache:Bool = false)
 	{
+		/* so you might be asking
+			"oh but if the rating isn't sick why not just reset it"
+			because miss judgements can pop, and they dont mess with your sick combo
+		 */
+		var rating = ForeverAssets.generateRating('$daRating', (daRating == 'sick' ? Timings.perfectCombo : false), timing, assetModifier, changeableSkin,
+			'UI');
+		add(rating);
+
+		if (!Init.trueSettings.get('Simply Judgements'))
+		{
+			add(rating);
+
+			FlxTween.tween(rating, {alpha: 0}, 0.2, {
+				onComplete: function(tween:FlxTween)
+				{
+					rating.kill();
+				},
+				startDelay: Conductor.crochet * 0.00125
+			});
+		}
+		else
+		{
+			if (lastRating != null)
+				lastRating.kill();
+			add(rating);
+			lastRating = rating;
+			FlxTween.tween(rating, {y: rating.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+			FlxTween.tween(rating, {"scale.x": 0, "scale.y": 0}, 0.1, {
+				onComplete: function(tween:FlxTween)
+				{
+					rating.kill();
+				},
+				startDelay: Conductor.crochet * 0.00125
+			});
+		}
+		// */
+
+		if (!cache)
+		{
+			if (Init.trueSettings.get('Fixed Judgements'))
+			{
+				// bound to camera
+				rating.cameras = [camHUD];
+				rating.screenCenter();
+			}
+
+			// return the actual rating to the array of judgements
+			Timings.gottenJudgements.set(daRating, Timings.gottenJudgements.get(daRating) + 1);
+
+			// set new smallest rating
+			if (Timings.smallestRating != daRating)
+			{
+				if (Timings.judgementsMap.get(Timings.smallestRating)[0] < Timings.judgementsMap.get(daRating)[0])
+					Timings.smallestRating = daRating;
+			}
+		}
+
+		// COMBO
+
 		var comboString:String = Std.string(Timings.combo);
 		var negative = false;
 		if ((comboString.startsWith('-')) || (Timings.combo == 0))
@@ -1337,112 +1438,6 @@ class PlayState extends MusicBeatState
 				numScore.y += 50;
 			}
 			numScore.x += 100;
-		}
-	}
-
-	function decreaseCombo(?popMiss:Bool = false)
-	{
-		// painful if statement
-		if (((Timings.combo > 5) || (Timings.combo < 0)) && (gf.animOffsets.exists('sad')))
-			gf.playAnim('sad');
-
-		if (Timings.combo > 0)
-			Timings.combo = 0; // bitch lmao
-		else
-			Timings.combo--;
-
-		// misses
-		Timings.score -= 10;
-		Timings.misses++;
-
-		// display negative combo
-		if (popMiss)
-		{
-			// doesnt matter miss ratings dont have timings
-			displayRating("miss", 'late');
-			healthCall(Timings.judgementsMap.get("miss")[3]);
-		}
-		popUpCombo();
-
-		// gotta do it manually here lol
-		Timings.updateFCDisplay();
-	}
-
-	function increaseCombo(?baseRating:String, ?direction = 0, ?strumline:Strumline)
-	{
-		// trolled this can actually decrease your combo if you get a bad/shit/miss
-		if (baseRating != null)
-		{
-			if (Timings.judgementsMap.get(baseRating)[3] > 0)
-			{
-				if (Timings.combo < 0)
-					Timings.combo = 0;
-				Timings.combo += 1;
-			}
-			else
-				missNoteCheck(true, direction, strumline, false, true);
-		}
-	}
-
-	public function displayRating(daRating:String, timing:String, ?cache:Bool = false)
-	{
-		/* so you might be asking
-			"oh but if the rating isn't sick why not just reset it"
-			because miss judgements can pop, and they dont mess with your sick combo
-		 */
-		var rating = ForeverAssets.generateRating('$daRating', (daRating == 'sick' ? Timings.perfectCombo : false), timing, assetModifier, changeableSkin,
-			'UI');
-		add(rating);
-
-		if (!Init.trueSettings.get('Simply Judgements'))
-		{
-			add(rating);
-
-			FlxTween.tween(rating, {alpha: 0}, 0.2, {
-				onComplete: function(tween:FlxTween)
-				{
-					rating.kill();
-				},
-				startDelay: Conductor.crochet * 0.00125
-			});
-		}
-		else
-		{
-			if (lastRating != null)
-			{
-				lastRating.kill();
-			}
-			add(rating);
-			lastRating = rating;
-			FlxTween.tween(rating, {y: rating.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
-			FlxTween.tween(rating, {"scale.x": 0, "scale.y": 0}, 0.1, {
-				onComplete: function(tween:FlxTween)
-				{
-					rating.kill();
-				},
-				startDelay: Conductor.crochet * 0.00125
-			});
-		}
-		// */
-
-		if (!cache)
-		{
-			if (Init.trueSettings.get('Fixed Judgements'))
-			{
-				// bound to camera
-				rating.cameras = [camHUD];
-				rating.screenCenter();
-			}
-
-			// return the actual rating to the array of judgements
-			Timings.gottenJudgements.set(daRating, Timings.gottenJudgements.get(daRating) + 1);
-
-			// set new smallest rating
-			if (Timings.smallestRating != daRating)
-			{
-				if (Timings.judgementsMap.get(Timings.smallestRating)[0] < Timings.judgementsMap.get(daRating)[0])
-					Timings.smallestRating = daRating;
-			}
 		}
 	}
 
@@ -1753,6 +1748,8 @@ class PlayState extends MusicBeatState
 		callFunc('endSong', []);
 
 		canPause = false;
+		endingSong = true;
+
 		songMusic.volume = 0;
 		vocals.volume = 0;
 		if (SONG.validScore && !bfStrums.autoplay)

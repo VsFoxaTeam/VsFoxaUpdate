@@ -348,7 +348,7 @@ class TitleState extends MusicBeatState
 			case 9:
 				createCoolText([curWacky[0]]);
 				if (curWacky[0].contains('Psych'))
-					FlxG.sound.play('psych');
+					FlxG.sound.play(Paths.sound('psych'));
 			case 11:
 				addMoreText(curWacky[1]);
 			case 12:
@@ -358,7 +358,7 @@ class TitleState extends MusicBeatState
 			case 14:
 				addMoreText('Night');
 			case 15:
-				addMoreText('Funkin');
+				addMoreText("Funkin'");
 			case 16:
 				skipIntro();
 		}

@@ -38,7 +38,7 @@ class ClassHUD extends FlxSpriteGroup
 	public var timingsMap:Map<String, FlxText> = [];
 
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
-	public var diffDisplay:String = CoolUtil.difficultyFromNumber(PlayState.storyDifficulty);
+	public var diffDisplay:String = CoolUtil.difficultyString;
 	public var engineDisplay:String = "F.E. FEATHER v" + Main.featherVersion;
 
 	// eep
@@ -173,7 +173,7 @@ class ClassHUD extends FlxSpriteGroup
 		var displayAccuracy:Bool = Init.trueSettings.get('Display Accuracy');
 		if (displayAccuracy)
 		{
-			scoreDisplay += divider + 'Accuracy: ${Timings.returnAccuracy()}%';
+			scoreDisplay += divider + 'Accuracy: ${Timings.returnAccuracy()}';
 			scoreDisplay += isRated ? ' [' + Timings.comboDisplay + divider + Timings.returnScoreRating() + ']' : rank;
 			scoreDisplay += divider + 'Combo Breaks: ${Timings.misses}';
 		}

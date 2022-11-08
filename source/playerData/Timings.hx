@@ -99,6 +99,10 @@ class Timings
 		}
 		trueAccuracy = (accuracy / notesHit);
 
+		// avoid over 100% accuracy bug;
+		if (trueAccuracy >= 100)
+			trueAccuracy = 100;
+
 		updateFCDisplay();
 		updateScoreRating();
 	}
@@ -133,7 +137,7 @@ class Timings
 	{
 		var accuracyFinal:String = 'N/A';
 		if (notesHit > 0)
-			accuracyFinal = '${Math.floor(trueAccuracy * 100) / 100}';
+			accuracyFinal = '${Math.floor(trueAccuracy * 100) / 100}%';
 		return accuracyFinal;
 	}
 

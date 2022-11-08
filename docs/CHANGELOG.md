@@ -70,3 +70,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reorganized Source Filesystem;
 - Removed a few unused imports within the Source Classes;
 - Changed Default Script Extension to "hx" so haxe formatter actually works with them;
+
+- Center Mark now shows the accurate difficulty name regardless that song has that difficulty or not;
+- You won't get misses from pressing keys while the song is ending if Ghost Tapping is not enabled;
+- Accuracy shouldn't go over 100%, now, additionally, there shouldn't be a percentage symbol while accuracy is at "N/A";
+- Icons have infinite frames (to avoid a wall of icons blocking your vision on freeplay in case you got a third one);
+- It's no longer christmas in Fresh :(

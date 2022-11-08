@@ -274,6 +274,8 @@ class FreeplayState extends MusicBeatState
 			PlayState.storyDifficulty = curDifficulty;
 			PlayState.storyWeek = songs[curSelected].week;
 
+			CoolUtil.difficultyString = existingDifficulties[curSelected][curDifficulty];
+
 			if (FlxG.sound.music != null)
 				FlxG.sound.music.stop();
 
