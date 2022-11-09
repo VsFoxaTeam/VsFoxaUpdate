@@ -712,6 +712,8 @@ class PlayState extends MusicBeatState
 				var dunceNote:Note = unspawnNotes[0];
 				var strumline:Strumline = (dunceNote.mustPress ? bfStrums : dadStrums);
 
+				callFunc('noteSpawn', [dunceNote, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustain]);
+
 				// push note to its correct strumline
 				strumLines.members[
 					Math.floor((dunceNote.noteData + (dunceNote.mustPress ? 4 : 0)) / strumline.keyAmount)
