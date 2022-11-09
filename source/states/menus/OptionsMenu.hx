@@ -19,7 +19,7 @@ import states.substates.OptionsSubstate;
 /**
 	Options menu rewrite because I'm unhappy with how it was done previously
 **/
-class OptionsMenuState extends MusicBeatState
+class OptionsMenu extends MusicBeatState
 {
 	private var categoryMap:Map<String, Dynamic>;
 	private var activeSubgroup:FlxTypedGroup<Alphabet>;
@@ -337,7 +337,7 @@ class OptionsMenuState extends MusicBeatState
 			else if (states.substates.PauseSubstate.toOptions)
 				Main.switchState(this, new PlayState());
 			else
-				Main.switchState(this, new MainMenuState());
+				Main.switchState(this, new MainMenu());
 		}
 	}
 
@@ -600,7 +600,7 @@ class OptionsMenuState extends MusicBeatState
 				if (states.substates.PauseSubstate.toOptions)
 					Main.switchState(this, new PlayState());
 				else
-					Main.switchState(this, new MainMenuState());
+					Main.switchState(this, new MainMenu());
 				lockedMovement = false;
 			});
 		}

@@ -21,7 +21,7 @@ import song.Song;
 
 using StringTools;
 
-class StoryMenuState extends MusicBeatState
+class StoryMenu extends MusicBeatState
 {
 	var scoreText:FlxText;
 	var curDifficulty:Int = 1;
@@ -232,7 +232,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
-			Main.switchState(this, new MainMenuState());
+			Main.switchState(this, new MainMenu());
 		}
 
 		super.update(elapsed);

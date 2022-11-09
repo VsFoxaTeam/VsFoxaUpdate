@@ -30,7 +30,7 @@ typedef MainMenuDef =
 	currently, the Main Menu is completely handled by a script located on the assets/scripts/menus folder
 	you can get as expressive as you can with that, create your own custom menu
  */
-class MainMenuState extends MusicBeatState
+class MainMenu extends MusicBeatState
 {
 	var parsedJson:MainMenuDef;
 	var mainScript:ScriptHandler;

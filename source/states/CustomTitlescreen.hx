@@ -204,7 +204,7 @@ class CustomTitlescreen extends MusicBeatState
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				//
-				Main.switchState(this, new states.menus.MainMenuState());
+				Main.switchState(this, new states.menus.MainMenu());
 			});
 		}
 

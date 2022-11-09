@@ -23,7 +23,7 @@ import sys.thread.Thread;
 
 using StringTools;
 
-class FreeplayState extends MusicBeatState
+class FreeplayMenu extends MusicBeatState
 {
 	//
 	var songs:Array<SongMetadata> = [];
@@ -241,7 +241,7 @@ class FreeplayState extends MusicBeatState
 		if (controls.BACK)
 		{
 			threadActive = false;
-			Main.switchState(this, new MainMenuState());
+			Main.switchState(this, new MainMenu());
 		}
 
 		if (accepted)

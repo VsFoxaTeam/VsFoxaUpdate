@@ -35,7 +35,7 @@ class Events
 				catch (e)
 				{
 					// have to use FlxG instead of main since this isn't a class;
-					flixel.FlxG.switchState(new states.menus.MainMenuState('[CHART EVENT]: Uncaught Error: $e'));
+					flixel.FlxG.switchState(new states.menus.MainMenu('[CHART EVENT]: Uncaught Error: $e'));
 				}
 			}
 		}

@@ -42,7 +42,7 @@ class ScriptableState extends MusicBeatState
 	{
 		if (stateScript == null)
 		{
-			Main.switchState(this, new states.menus.MainMenuState('[SCRIPTABLE STATE]: $errorCatch'));
+			Main.switchState(this, new states.menus.MainMenu('[SCRIPTABLE STATE]: $errorCatch'));
 			return;
 		}
 		scriptCall('update', [elapsed]);
@@ -115,6 +115,10 @@ class ScriptableState extends MusicBeatState
 			#if DISCORD_RPC
 			dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
 			#end
+		});
+		scriptSet('logTrace', function(text:String, time:Float, onConsole:Bool = false)
+		{
+			logTrace(text, time, onConsole, null);
 		});
 	}
 

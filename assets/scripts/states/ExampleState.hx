@@ -1,20 +1,22 @@
-import states.menus.MainMenuState;
+import states.menus.MainMenu;
 
 function create() {}
 
 function postCreate()
 {
+	updatePresence('EXAMPLE MENU', 'Scriptable State');
+
 	var bg:FlxSprite = new FlxSprite();
 	bg.loadGraphic(Paths.image('menus/chart/bg'));
 	add(bg);
 
-	updatePresence('EXAMPLE MENU', 'Scriptable State');
+	logTrace('Hello, this is an Example State, made with HScript!', 3);
 }
 
 function update(elapsed:Float)
 {
 	if (controls.BACK)
-		Main.switchState(this, new MainMenuState());
+		Main.switchState(this, new MainMenu());
 }
 
 function postUpdate(elapsed:Float) {}

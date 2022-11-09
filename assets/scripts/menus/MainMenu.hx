@@ -12,10 +12,11 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 // import states and stuff
 import states.TitleState;
-import states.menus.StoryMenuState;
-import states.menus.FreeplayState;
-import states.menus.MainMenuState;
-import states.menus.OptionsMenuState;
+import states.menus.StoryMenu;
+import states.menus.FreeplayMenu;
+import states.menus.OptionsMenu;
+import states.ScriptableState;
+import states.menus.MainMenu;
 
 ////////////////////////////////////////////
 // main objects
@@ -43,7 +44,7 @@ function postCreate()
 	// loop through the menu options
 	for (i in 0...parsedJson.options.length)
 	{
-		var menuItem:FlxSprite = new FlxSprite(0, 70 + (i * 220));
+		var menuItem:FlxSprite = new FlxSprite(0, 70 + (i * 160));
 		menuItem.frames = Paths.getSparrowAtlas('menus/base/menuItems/' + parsedJson.options[i]);
 
 		// add the animations in a cool way (real
@@ -168,11 +169,13 @@ function update(elapsed:Float)
 					switch (daChoice)
 					{
 						case 'story mode':
-							Main.switchState(this, new StoryMenuState());
+							Main.switchState(this, new StoryMenu());
 						case 'freeplay':
-							Main.switchState(this, new FreeplayState());
+							Main.switchState(this, new FreeplayMenu());
+						case 'credits':
+							Main.switchState(this, new ScriptableState('CreditsMenu'));
 						case 'options':
-							Main.switchState(this, new OptionsMenuState());
+							Main.switchState(this, new OptionsMenu());
 					}
 				});
 			}

@@ -85,7 +85,7 @@ class ScriptHandler extends SScript
 							catch (e)
 							{
 								//
-								flixel.FlxG.switchState(new states.menus.MainMenuState('[MAIN GAME]: $e'));
+								flixel.FlxG.switchState(new states.menus.MainMenu('[MAIN GAME]: $e'));
 							}
 						}
 					}
