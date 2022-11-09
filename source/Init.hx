@@ -195,12 +195,15 @@ class Init extends FlxState
 			NOT_FORCED
 		],
 		'Centered Notefield' => [false, Checkmark, "Center the notes, disables the enemy's notes."],
-		"Custom Titlescreen" => [
+		/*
+		"Vanilla Menus" => [
 			false,
 			Checkmark,
-			"Enables the custom Forever Engine titlescreen! (only effective with a restart)",
+			"Whether to use the old Base Game menus instead of the Custom-made ones",
 			FORCED
 		],
+		// doing later
+		*/
 		'Skip Text' => [
 			'freeplay only',
 			Selector,
@@ -298,15 +301,7 @@ class Init extends FlxState
 		FlxG.mouse.visible = false; // Hide mouse on start
 		FlxGraphic.defaultPersist = true; // make sure we control all of the memory
 
-		gotoTitleScreen();
-	}
-
-	private function gotoTitleScreen()
-	{
-		if (trueSettings.get("Custom Titlescreen"))
-			Main.switchState(this, new CustomTitlescreen());
-		else
-			Main.switchState(this, new TitleState());
+		Main.switchState(this, cast Type.createInstance(Main.mainClassState, []));
 	}
 
 	public static function loadSettings():Void
