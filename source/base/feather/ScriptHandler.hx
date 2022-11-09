@@ -50,6 +50,7 @@ class ScriptHandler extends SScript
 
 		// CLASSES (FEATHER);
 		set('ScriptableState', states.ScriptableState);
+		set('FeatherSprite', dependency.FeatherSprite);
 
 		// OTHER
 		set('GraphicsShader', openfl.display.GraphicsShader);
