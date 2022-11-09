@@ -81,7 +81,10 @@ class PlayState extends MusicBeatState
 	public static var gf:Character;
 	public static var boyfriend:Boyfriend;
 
-	public static var characterGroup:FlxSpriteGroup;
+	// used by events, stores characters and character names in maps;
+	public static var playerMap:Map<String, Character> = new Map();
+	public static var opponentMap:Map<String, Character> = new Map();
+	public static var spectatorMap:Map<String, Character> = new Map();
 
 	// Custom;
 	public static var assetModifier:String = 'base';
@@ -314,10 +317,6 @@ class PlayState extends MusicBeatState
 			assetModifier = SONG.assetModifier;
 		changeableSkin = Init.trueSettings.get("UI Skin");
 
-		characterGroup = new FlxSpriteGroup();
-		characterGroup.alpha = 0.000001;
-		add(characterGroup);
-
 		// set song position before beginning
 		Conductor.songPosition = -(Conductor.crochet * 4);
 
@@ -375,9 +374,10 @@ class PlayState extends MusicBeatState
 		var dadData = opponent.characterData;
 		var bfData = boyfriend.characterData;
 
-		dadStrums = new Strumline(placement - (FlxG.width / 4), height, dadData.noteSkin, dadData.assetModifier, [opponent], downscroll, false, true, checkTween(true), 4);
-		bfStrums = new Strumline(placement + (!centered ? (FlxG.width / 4) : 0), height, bfData.noteSkin, bfData.assetModifier, [boyfriend], downscroll, true, false,
-			checkTween(false), 4);
+		dadStrums = new Strumline(placement - (FlxG.width / 4), height, dadData.noteSkin, dadData.assetModifier, [opponent], downscroll, false, true,
+			checkTween(true), 4);
+		bfStrums = new Strumline(placement + (!centered ? (FlxG.width / 4) : 0), height, bfData.noteSkin, bfData.assetModifier, [boyfriend], downscroll, true,
+			false, checkTween(false), 4);
 
 		dadStrums.visible = !centered;
 

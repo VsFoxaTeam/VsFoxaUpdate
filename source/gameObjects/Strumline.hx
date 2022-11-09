@@ -96,8 +96,8 @@ class Strumline extends FlxSpriteGroup
 	public var receptorFrames:String = "NOTE_assets";
 	public var assetModifier:String = "base";
 
-	public function new(xPos:Float = 0, yPos:Float = 0, receptorFrames:String = 'NOTE_assets', assetModifier:String = 'base', characters:Array<Character>, ?downscroll:Bool = false,
-			?displayJudges:Bool = true, ?autoplay:Bool = true, ?doTween:Bool = true, ?keyAmount:Int = 4)
+	public function new(xPos:Float = 0, yPos:Float = 0, receptorFrames:String = 'NOTE_assets', assetModifier:String = 'base', characters:Array<Character>,
+			?downscroll:Bool = false, ?displayJudges:Bool = true, ?autoplay:Bool = true, ?doTween:Bool = true, ?keyAmount:Int = 4)
 	{
 		super();
 
@@ -123,7 +123,7 @@ class Strumline extends FlxSpriteGroup
 		reloadReceptors();
 	}
 
-	public function reloadReceptors(?xNew:Float, ?yNew:Float, skipTween:Bool = false)
+	public function reloadReceptors(?modifier:String = "base", ?xNew:Float, ?yNew:Float, ?skipTween:Bool = false)
 	{
 		receptors.forEachAlive(function(receptor:Receptor)
 		{
@@ -141,11 +141,11 @@ class Strumline extends FlxSpriteGroup
 
 		for (i in 0...keyAmount)
 		{
-			var addX:Int = assetModifier == 'pixel' ? -35 : -20;
-			var addY:Int = assetModifier == 'pixel' ? 40 : 25;
+			var addX:Int = modifier == 'pixel' ? -35 : -20;
+			var addY:Int = modifier == 'pixel' ? 40 : 25;
 
-			var receptor:Receptor = ForeverAssets.generateUIArrows(addX + (xNew == null ? xPos : xNew), addY + (yNew == null ? yPos : yNew), i, receptorFrames,
-				assetModifier);
+			var receptor:Receptor = ForeverAssets.generateUIArrows(addX + (xNew == null ? xPos : xNew), addY + (yNew == null ? yPos : yNew), i,
+				receptorFrames, modifier);
 			receptor.ID = i;
 
 			receptor.x -= ((keyAmount / 2) * Note.swagWidth);
@@ -176,7 +176,7 @@ class Strumline extends FlxSpriteGroup
 				for (character in this.characters)
 				{
 					var splashSkin:String = character.characterData.splashSkin;
-					noteSplash = ForeverAssets.generateNoteSplashes(splashSkin, splashNotes, PlayState.assetModifier, PlayState.changeableSkin, 'default/skins', i);
+					noteSplash = ForeverAssets.generateNoteSplashes(splashSkin, splashNotes, modifier, PlayState.changeableSkin, 'default/skins', i);
 				}
 				splashNotes.add(noteSplash);
 			}

@@ -128,7 +128,9 @@ class ForeverAssets
 		switch (assetModifier)
 		{
 			case 'pixel':
-				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('splash-pixel', assetModifier, changeableSkin, baseLibrary, 'notetypes'), 'notetypes'), true, 34, 34);
+				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('splash-pixel', assetModifier, changeableSkin, baseLibrary, 'notetypes'),
+					'notetypes'), true, 34,
+					34);
 				tempSplash.animation.add('anim1', [noteData, 4 + noteData, 8 + noteData, 12 + noteData], 24, false);
 				tempSplash.animation.add('anim2', [16 + noteData, 20 + noteData, 24 + noteData, 28 + noteData], 24, false);
 				tempSplash.animation.play('anim1');
@@ -146,7 +148,9 @@ class ForeverAssets
 				else
 				{
 					// trace('[SPLASH ERROR] Script: $noteType is null');
-					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary, 'notetypes'), 'notetypes'), true, 210, 210);
+					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary, 'notetypes'),
+						'notetypes'), true, 210,
+						210);
 					tempSplash.animation.add('anim1', [
 						(noteData * 2 + 1),
 						8 + (noteData * 2 + 1),
@@ -170,7 +174,8 @@ class ForeverAssets
 		return tempSplash;
 	}
 
-	public static function generateUIArrows(x:Float, y:Float, ?receptorData:Int = 0, framesArg:String, assetModifier:String, noteType:String = 'default'):Receptor
+	public static function generateUIArrows(x:Float, y:Float, ?receptorData:Int = 0, framesArg:String, assetModifier:String,
+			noteType:String = 'default'):Receptor
 	{
 		var uiReceptor:Receptor = new Receptor(x, y, receptorData);
 		switch (assetModifier)
@@ -180,8 +185,9 @@ class ForeverAssets
 				// not even just a cleanliness thing it's just so annoying to tweak if something goes wrong like
 				// genuinely more programmers should make their code more modular
 				uiReceptor.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('arrows-pixels', assetModifier, Init.trueSettings.get("Note Skin"),
-					'$noteType/skins', 'notetypes'), 'notetypes'), true,
-					17, 17);
+					'$noteType/skins', 'notetypes'),
+					'notetypes'),
+					true, 17, 17);
 				uiReceptor.animation.add('static', [receptorData]);
 				uiReceptor.animation.add('pressed', [4 + receptorData, 8 + receptorData], 12, false);
 				uiReceptor.animation.add('confirm', [12 + receptorData, 16 + receptorData], 24, false);
@@ -211,7 +217,8 @@ class ForeverAssets
 				stringSect = Receptor.actions[receptorData];
 
 				uiReceptor.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('$framesArg', assetModifier, Init.trueSettings.get("Note Skin"),
-					'$noteType/skins', 'notetypes'), 'notetypes');
+					'$noteType/skins', 'notetypes'),
+					'notetypes');
 
 				uiReceptor.animation.addByPrefix('static', 'arrow' + stringSect.toUpperCase());
 				uiReceptor.animation.addByPrefix('pressed', stringSect + ' press', 24, false);
