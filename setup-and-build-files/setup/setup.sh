@@ -12,5 +12,6 @@ haxelib install flixel-tools
 haxelib run flixel-tools setup
 haxelib install hxcpp-debug-server
 haxelib git SScript https://github.com/AltronMaxX/SScript
-haxelib git hxCodec https://github.com/polybiusproxy/hxCodec=
+haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+haxelib git polymod https://github.com/MasterEric/polymod

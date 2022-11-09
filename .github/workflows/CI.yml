@@ -30,6 +30,7 @@ jobs:
           haxelib install hscript
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
+          haxelib git polymod https://github.com/MasterEric/polymod
           haxelib git SScript https://github.com/AltronMaxX/SScript
 
       - name: Compile
@@ -62,6 +63,7 @@ jobs:
           haxelib install hscript
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
+          haxelib git polymod https://github.com/MasterEric/polymod
           haxelib git SScript https://github.com/AltronMaxX/SScript
         shell: cmd
 
@@ -95,6 +97,7 @@ jobs:
           haxelib install hscript
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
+          haxelib git polymod https://github.com/MasterEric/polymod
           haxelib git SScript https://github.com/AltronMaxX/SScript
 
       - name: Compile
