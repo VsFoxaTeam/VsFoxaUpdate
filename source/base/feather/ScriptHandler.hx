@@ -48,6 +48,9 @@ class ScriptHandler extends SScript
 		set('ForeverAssets', ForeverAssets);
 		set('ForeverTools', ForeverTools);
 
+		// CLASSES (FEATHER);
+		set('ScriptableState', states.ScriptableState);
+
 		// OTHER
 		set('GraphicsShader', openfl.display.GraphicsShader);
 		set('ShaderFilter', openfl.filters.ShaderFilter);
