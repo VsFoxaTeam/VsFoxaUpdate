@@ -57,6 +57,9 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	public var stageScript:ScriptHandler;
 	public var stageJson:StageDataDef;
 
+	public var sendMessage:Bool = false;
+	public var messageText:String = '';
+
 	public function new(curStage:String = 'unknown', stageDebug:Bool = false)
 	{
 		super();
@@ -86,12 +89,13 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 		try
 		{
+			//
 			callStageScript();
 		}
 		catch (e)
 		{
-			PlayState.main.logTrace('[GAME STAGE]: Uncaught Error: $e', 3, PlayState.dialogueHUD);
-			flixel.FlxG.sound.play(Paths.sound('cancelMenu'));
+			sendMessage = true;
+			messageText = '[GAME STAGE]: Uncaught Error: $e';
 		}
 	}
 

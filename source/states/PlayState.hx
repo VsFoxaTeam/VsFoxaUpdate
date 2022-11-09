@@ -418,6 +418,12 @@ class PlayState extends MusicBeatState
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
 
+		if (stageBuild.sendMessage)
+		{
+			if (stageBuild.messageText.length > 1)
+				logTrace(stageBuild.messageText, 3, true, dialogueHUD);
+		}
+
 		Paths.clearUnusedMemory();
 
 		// call the funny intro cutscene depending on the song
