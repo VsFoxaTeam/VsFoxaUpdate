@@ -75,9 +75,17 @@ class ScriptHandler extends SScript
 					{
 						if (!pushedModules.contains(script) && script != null && script.endsWith('.$ext'))
 						{
-							pushedModules.push(script);
-							moduleArray.push(new ScriptHandler(script));
-							trace('new module loaded: ' + script);
+							try
+							{
+								moduleArray.push(new ScriptHandler(script));
+								trace('new module loaded: ' + script);
+								pushedModules.push(script);
+							}
+							catch (e)
+							{
+								//
+								flixel.FlxG.switchState(new states.menus.MainMenuState('[MAIN GAME]: $e'));
+							}
 						}
 					}
 				}

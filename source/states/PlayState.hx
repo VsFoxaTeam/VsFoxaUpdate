@@ -288,14 +288,7 @@ class PlayState extends MusicBeatState
 		if (SONG.stage != null)
 			curStage = SONG.stage;
 
-		try
-		{
-			ScriptHandler.callScripts(moduleArray);
-		}
-		catch (e)
-		{
-			logTrace('Script Calling Error: $e', 3, camHUD);
-		}
+		ScriptHandler.callScripts(moduleArray);
 
 		// cache shit
 		displayScore('sick', 'early', true);

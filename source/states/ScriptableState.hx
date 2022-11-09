@@ -11,82 +11,86 @@ import flixel.FlxSubState;
 class ScriptableState extends MusicBeatState
 {
 	var stateScript:ScriptHandler;
+	var errorCatch:String; // string containing error information;
 
 	override public function new(className:String):Void
 	{
 		super();
 
 		// here we actually create the main script
-		stateScript = new ScriptHandler(Paths.module('states/$className'));
-		stateScript.call('new', [className]);
-		stateScript.set('controls', controls);
-		stateScript.set('this', this);
-		stateScript.set('add', add);
-		stateScript.set('remove', remove);
-		stateScript.set('kill', kill);
-		stateScript.set('updatePresence', function(detailsTop:String, subDetails:String, ?iconRPC:String, ?updateTime:Bool = false, time:Float)
+		try
 		{
-			#if DISCORD_RPC
-			dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
-			#end
-		});
+			stateScript = new ScriptHandler(Paths.module('states/$className'));
+		}
+		catch (e)
+		{
+			errorCatch = '$e';
+			stateScript = null;
+		}
+		scriptCall('new', [className]);
+		variableCalls();
 	}
 
 	override public function create():Void
 	{
-		stateScript.call('create', []);
+		scriptCall('create', []);
 		super.create();
-		stateScript.call('postCreate', []);
+		scriptCall('postCreate', []);
 	}
 
 	override public function update(elapsed:Float)
 	{
-		stateScript.call('update', [elapsed]);
+		if (stateScript == null)
+		{
+			Main.switchState(this, new states.menus.MainMenuState('[SCRIPTABLE STATE]: $errorCatch'));
+			return;
+		}
+		scriptCall('update', [elapsed]);
 		super.update(elapsed);
-		stateScript.call('postUpdate', [elapsed]);
+		scriptCall('postUpdate', [elapsed]);
 	}
 
 	override public function beatHit():Void
 	{
 		super.beatHit();
-		stateScript.call('beatHit', [curBeat]);
-		stateScript.set('curBeat', curBeat);
+		scriptCall('beatHit', [curBeat]);
+		scriptSet('curBeat', curBeat);
 	}
 
 	override public function stepHit():Void
 	{
 		super.stepHit();
-		stateScript.call('stepHit', [curStep]);
-		stateScript.set('curStep', curStep);
+		scriptCall('stepHit', [curStep]);
+		scriptSet('curStep', curStep);
 	}
 
 	override public function onFocus():Void
 	{
-		stateScript.call('onFocus', []);
+		scriptCall('onFocus', []);
 		super.onFocus();
 	}
 
 	override public function onFocusLost():Void
 	{
-		stateScript.call('onFocusLost', []);
+		scriptCall('onFocusLost', []);
 		super.onFocusLost();
 	}
 
 	override public function destroy():Void
 	{
-		stateScript.call('destroy', []);
+		scriptCall('destroy', []);
 		super.destroy();
 	}
 
 	override function openSubState(SubState:FlxSubState):Void
 	{
-		stateScript.call('openSubState', []);
+		scriptCall('openSubState', []);
 		super.openSubState(SubState);
 	}
 
 	override function closeSubState():Void
 	{
-		stateScript.call('closeSubState', []);
+		scriptCall('closeSubState', []);
 		super.closeSubState();
 	}
 
@@ -97,5 +101,32 @@ class ScriptableState extends MusicBeatState
 		if (Init.trueSettings.get('Disable Antialiasing') && Std.isOfType(Object, flixel.text.FlxText))
 			cast(Object, flixel.text.FlxText).antialiasing = false;
 		return super.add(Object);
+	}
+
+	function variableCalls()
+	{
+		scriptSet('controls', controls);
+		scriptSet('this', this);
+		scriptSet('add', add);
+		scriptSet('remove', remove);
+		scriptSet('kill', kill);
+		scriptSet('updatePresence', function(detailsTop:String, subDetails:String, ?iconRPC:String, ?updateTime:Bool = false, time:Float)
+		{
+			#if DISCORD_RPC
+			dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
+			#end
+		});
+	}
+
+	function scriptCall(funcName:String, params:Array<Dynamic>)
+	{
+		if (stateScript != null)
+			stateScript.call(funcName, params);
+	}
+
+	function scriptSet(varName:String, value:Dynamic)
+	{
+		if (stateScript != null)
+			stateScript.set(varName, value);
 	}
 }

@@ -3,6 +3,8 @@ package states.menus;
 import base.feather.ScriptHandler;
 import dependency.Discord;
 import flixel.FlxBasic;
+import flixel.FlxCamera;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.text.FlxText;
@@ -33,6 +35,29 @@ class MainMenuState extends MusicBeatState
 	var parsedJson:MainMenuDef;
 	var mainScript:ScriptHandler;
 
+	var menuCam:FlxCamera;
+	var menuHUD:FlxCamera;
+
+	public var logContent:String;
+
+	function cameraCalls()
+	{
+		menuCam = new FlxCamera();
+		menuHUD = new FlxCamera();
+		menuHUD.bgColor.alpha = 0;
+
+		FlxG.cameras.reset(menuCam);
+		FlxG.cameras.add(menuHUD, false);
+		FlxG.cameras.setDefaultDrawTarget(menuCam, true);
+	}
+
+	public function new(?logContent:String)
+	{
+		super();
+
+		this.logContent = logContent;
+	}
+
 	override function create()
 	{
 		// set the transitions to the previously set ones
@@ -41,6 +66,8 @@ class MainMenuState extends MusicBeatState
 
 		// make sure the music is playing
 		ForeverTools.resetMenuMusic();
+
+		cameraCalls();
 
 		#if DISCORD_RPC
 		Discord.changePresence('MENU SCREEN', 'Main Menu');
@@ -74,10 +101,15 @@ class MainMenuState extends MusicBeatState
 		mainScript.set('remove', remove);
 		mainScript.set('this', this);
 		mainScript.set('controls', controls);
+		mainScript.set('menuCam', menuCam);
+		mainScript.set('menuHUD', menuHUD);
 
 		super.create();
 
 		mainScript.call('postCreate', []);
+
+		if (logContent != null && logContent.length > 1)
+			logTrace('$logContent', 3, menuHUD);
 	}
 
 	override function update(elapsed:Float)

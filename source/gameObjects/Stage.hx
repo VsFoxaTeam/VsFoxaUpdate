@@ -90,7 +90,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 		}
 		catch (e)
 		{
-			trace('Uncaught Error: $e');
+			PlayState.main.logTrace('[GAME STAGE]: Uncaught Error: $e', 3, PlayState.dialogueHUD);
 			flixel.FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 	}

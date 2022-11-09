@@ -26,9 +26,17 @@ class Events
 			if (event.contains('.'))
 			{
 				event = event.substring(0, event.indexOf('.', 0));
-				loadedEvents.set(event, new ScriptHandler(Paths.module('$event', 'events')));
-				// trace('new event module loaded: ' + event);
-				myEvents.push(event);
+				try
+				{
+					loadedEvents.set(event, new ScriptHandler(Paths.module('$event', 'events')));
+					// trace('new event module loaded: ' + event);
+					myEvents.push(event);
+				}
+				catch (e)
+				{
+					// have to use FlxG instead of main since this isn't a class;
+					flixel.FlxG.switchState(new states.menus.MainMenuState('[CHART EVENT]: Uncaught Error: $e'));
+				}
 			}
 		}
 		myEvents.sort(function(e1, e2) return Reflect.compare(e1.toLowerCase(), e2.toLowerCase()));

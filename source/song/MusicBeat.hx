@@ -133,7 +133,7 @@ class MusicBeatState extends FNFUIState
 		if (textField != null)
 		{
 			var oldField:FlxText = cast textField;
-			FlxTween.tween(oldField, {alpha: 0}, 0.2, {
+			FlxTween.tween(oldField, {alpha: 0}, 0.6, {
 				onComplete: function(twn:FlxTween)
 				{
 					remove(oldField);
@@ -152,7 +152,7 @@ class MusicBeatState extends FNFUIState
 		if (input != '' && duration > 0)
 		{
 			textField = new FlxText(0, 0, FlxG.width, input);
-			textField.setFormat(Paths.font("vcr"), 32, 0xFFFFFFFF, CENTER);
+			textField.setFormat(Paths.font("vcr.ttf"), 32, 0xFFFFFFFF, CENTER);
 			textField.setBorderStyle(OUTLINE, 0xFF000000, 2);
 			textField.alpha = 0;
 			textField.screenCenter(X);
