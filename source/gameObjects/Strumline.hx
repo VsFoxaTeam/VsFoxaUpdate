@@ -120,7 +120,7 @@ class Strumline extends FlxSpriteGroup
 		this.keyAmount = keyAmount;
 		this.yPos = yPos;
 
-		reloadReceptors();
+		reloadReceptors(assetModifier);
 	}
 
 	public function reloadReceptors(?modifier:String = "base", ?xNew:Float, ?yNew:Float, ?skipTween:Bool = false)
