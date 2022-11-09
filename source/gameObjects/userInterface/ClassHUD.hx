@@ -74,6 +74,7 @@ class ClassHUD extends FlxSpriteGroup
 		scoreBar = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, scoreDisplay);
 		scoreBar.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
 		scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+		scoreBar.visible = !PlayState.bfStrums.autoplay;
 		updateScoreText();
 		add(scoreBar);
 
@@ -161,27 +162,38 @@ class ClassHUD extends FlxSpriteGroup
 
 	public static var divider:String = " • ";
 
+	private var markupDivider:String = '';
+
 	public function updateScoreText()
 	{
+		if (Timings.notesHit > 0 && Init.trueSettings.get('Accuracy Hightlight'))
+			markupDivider = '°';
+
 		scoreDisplay = 'Score: ' + Timings.score;
 
 		var isRated = (Timings.comboDisplay != null && Timings.comboDisplay != '' && Timings.notesHit > 0);
 		var rank:String = (Timings.returnScoreRating() != null
-			&& Timings.returnScoreRating() != '' ? ' [${Timings.returnScoreRating()}]' : '');
+			&& Timings.returnScoreRating() != '' ? '[${Timings.returnScoreRating()}]' : '');
 
 		// testing purposes
 		var displayAccuracy:Bool = Init.trueSettings.get('Display Accuracy');
 		if (displayAccuracy)
 		{
-			scoreDisplay += divider + 'Accuracy: ${Timings.returnAccuracy()}';
-			scoreDisplay += isRated ? ' [' + Timings.comboDisplay + divider + Timings.returnScoreRating() + ']' : rank;
+			scoreDisplay += divider + markupDivider + 'Accuracy: ${Timings.returnAccuracy()}' + markupDivider;
+			scoreDisplay += isRated ? ' $markupDivider[' + Timings.comboDisplay + divider + Timings.returnScoreRating() + ']$markupDivider' : ' $markupDivider'
+				+ rank
+				+ '$markupDivider';
 			scoreDisplay += divider + 'Combo Breaks: ${Timings.misses}';
 		}
 		scoreDisplay += '\n';
 
-		// safety measure ig;
-		if (scoreBar.text != scoreDisplay)
-			scoreBar.text = scoreDisplay;
+		scoreBar.text = scoreDisplay;
+
+		if (Init.trueSettings.get('Accuracy Hightlight'))
+		{
+			if (Timings.notesHit > 0)
+				scoreBar.applyMarkup(scoreBar.text, [new FlxTextFormatMarkerPair(scoreFlashFormat, markupDivider)]);
+		}
 
 		scoreBar.screenCenter(X);
 
@@ -219,6 +231,32 @@ class ClassHUD extends FlxSpriteGroup
 			iconP1.bop(60 / Conductor.bpm);
 			iconP2.bop(60 / Conductor.bpm);
 		}
+	}
+
+	var scoreFlashFormat:FlxTextFormat;
+
+	public function colorHighlight(judge:String, perfectSick:Bool)
+	{
+		// highlights the accuracy mark on the score bar;
+
+		var judgeMap:Map<String, FlxColor> = [
+			'sick' => FlxColor.CYAN,
+			'good' => FlxColor.LIME,
+			'bad' => FlxColor.ORANGE,
+			'shit' => FlxColor.PURPLE,
+			'miss' => FlxColor.RED,
+		];
+
+		var color:FlxColor = FlxColor.WHITE;
+		for (judgeName => judgeColor in judgeMap)
+		{
+			if (judge == 'sick' && perfectSick)
+				judgeColor = FlxColor.fromString('#F8D482'); // golden sicks;
+			if (judgeName == judge)
+				color = judgeColor;
+		}
+
+		scoreFlashFormat = new FlxTextFormat(color, true);
 	}
 
 	override function add(Object:FlxSprite):FlxSprite

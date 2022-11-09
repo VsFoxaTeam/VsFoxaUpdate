@@ -182,6 +182,12 @@ class Init extends FlxState
 			"Sets the opacity for the Hold Notes... Huh, why isnt the trail cut off?",
 			NOT_FORCED
 		],
+		'Accuracy Hightlight' => [
+			true,
+			Checkmark,
+			"Whether to have a color hightlight based on your last Judgement when hitting a note.",
+			NOT_FORCED
+		],
 		'Ghost Tapping' => [
 			true,
 			Checkmark,

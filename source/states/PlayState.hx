@@ -622,6 +622,7 @@ class PlayState extends MusicBeatState
 					preventScoring = true;
 					bfStrums.autoplay = !bfStrums.autoplay;
 					uiHUD.autoplayMark.visible = bfStrums.autoplay;
+					uiHUD.scoreBar.visible = !bfStrums.autoplay;
 				}
 			}
 
@@ -1235,6 +1236,7 @@ class PlayState extends MusicBeatState
 				Timings.perfectCombo = false;
 
 		displayScore(baseRating, timing);
+		uiHUD.colorHighlight(baseRating, Timings.perfectCombo);
 		Timings.updateAccuracy(Timings.judgementsMap.get(baseRating)[3]);
 
 		ratingScore = Std.int(Timings.judgementsMap.get(baseRating)[2]);
@@ -1269,6 +1271,7 @@ class PlayState extends MusicBeatState
 		{
 			// doesnt matter miss ratings dont have timings
 			displayScore("miss", 'late');
+			uiHUD.colorHighlight('miss', false);
 			healthCall(Timings.judgementsMap.get("miss")[3]);
 		}
 
@@ -1721,7 +1724,7 @@ class PlayState extends MusicBeatState
 
 		songMusic.volume = 0;
 		vocals.volume = 0;
-		if (SONG.validScore && !bfStrums.autoplay)
+		if (SONG.validScore && !preventScoring)
 			Highscore.saveScore(SONG.song, Timings.score, storyDifficulty);
 
 		deaths = 0;
@@ -1752,7 +1755,7 @@ class PlayState extends MusicBeatState
 				Main.switchState(this, new StoryMenu());
 
 				// save the week's score if the score is valid
-				if (SONG.validScore)
+				if (SONG.validScore && !preventScoring)
 					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 
 				// flush the save

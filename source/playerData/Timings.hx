@@ -94,17 +94,19 @@ class Timings
 			accuracy += (Math.max(0, judgement));
 		}
 		else
-		{
 			accuracy += (Math.max(0, judgement) / segmentCount);
-		}
 		trueAccuracy = (accuracy / notesHit);
 
 		// avoid over 100% accuracy bug;
 		if (trueAccuracy >= 100)
 			trueAccuracy = 100;
 
-		updateFCDisplay();
-		updateScoreRating();
+		// avoid increasing memory for updating the score bar text;
+		if (!isSustain)
+		{
+			updateFCDisplay();
+			updateScoreRating();
+		}
 	}
 
 	public static function updateFCDisplay()
