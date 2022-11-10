@@ -289,6 +289,7 @@ class Init extends FlxState
 
 		// initialize controls and highscore
 		PlayerSettings.init();
+		base.input.Controls.init();
 		Highscore.load();
 
 		loadSettings();
