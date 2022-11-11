@@ -5,5 +5,5 @@ That script contains information, such as: Animation Prefixes and Character Offs
 The image name by default should be the same as the character's folder name.
 
 That behavior can be overridden by using the function "setFrames" on a Character.
-
-e.g: setFrames("BOYFRIEND", "images/characters");
+e.g: 
+    setFrames("BOYFRIEND", "images/characters");
