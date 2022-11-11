@@ -374,7 +374,7 @@ class PlayState extends MusicBeatState
 		// initialize ui elements
 		startingSong = true;
 		startedCountdown = true;
-		//canPause = false;
+		// canPause = false;
 
 		//
 		var downscroll = Init.trueSettings.get('Downscroll');
@@ -482,7 +482,7 @@ class PlayState extends MusicBeatState
 	var keysHeld:Array<Bool> = [];
 
 	/*
-	* Main Input System Function
+	 * Main Input System Function
 	**/
 	public function inputHandler(key:Int, isPressed:Bool)
 	{
@@ -552,9 +552,11 @@ class PlayState extends MusicBeatState
 
 	public function onKeyPress(event:KeyboardEvent):Void
 	{
-		if (!bfStrums.autoplay && (FlxG.keys.checkStatus(event.keyCode, JUST_PRESSED)
-			|| Init.trueSettings.get('Controller Mode')) && (FlxG.keys.enabled)
-				&& !paused && (FlxG.state.active || FlxG.state.persistentUpdate))
+		if (!bfStrums.autoplay
+			&& (FlxG.keys.checkStatus(event.keyCode, JUST_PRESSED) || Init.trueSettings.get('Controller Mode'))
+			&& (FlxG.keys.enabled)
+			&& !paused
+			&& (FlxG.state.active || FlxG.state.persistentUpdate))
 		{
 			var key:Int = getKeyFromEvent(event.keyCode);
 			if (key >= 0)

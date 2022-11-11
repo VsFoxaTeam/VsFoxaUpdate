@@ -62,6 +62,7 @@ class MusicBeatState extends FNFUIState
 	}
 
 	public function keyEventPress(action:String, key:Int, state:KeyState) {}
+
 	public function keyEventRelease(action:String, key:Int, state:KeyState) {}
 
 	// class 'step' event
@@ -233,6 +234,7 @@ class MusicBeatSubState extends FlxSubState
 	}
 
 	public function keyEventPress(action:String, key:Int, state:KeyState) {}
+
 	public function keyEventRelease(action:String, key:Int, state:KeyState) {}
 
 	override function update(elapsed:Float)

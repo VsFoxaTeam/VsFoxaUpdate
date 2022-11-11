@@ -78,7 +78,7 @@ class Controls
 				for (key in catchKeys(event.keyCode))
 				{
 					keyEventPress.dispatch(key, event.keyCode, PRESSED);
-					//trace('Pressed Key: ' + key);
+					// trace('Pressed Key: ' + key);
 				}
 			}
 		}
@@ -97,7 +97,7 @@ class Controls
 				for (key in catchKeys(event.keyCode))
 				{
 					keyEventRelease.dispatch(key, event.keyCode, RELEASED);
-					//trace('Released Key: ' + key);
+					// trace('Released Key: ' + key);
 				}
 			}
 		}
@@ -159,7 +159,7 @@ class Controls
 		if (actions.exists(action))
 		{
 			actions.set(action, keys);
-			//trace('binded $action to ID $keys');
+			// trace('binded $action to ID $keys');
 		}
 	}
 
@@ -169,7 +169,7 @@ class Controls
 		if (actions.exists(action))
 		{
 			actions.get(action)[id] = key;
-			//trace(actions.get(action)[id]);
+			// trace(actions.get(action)[id]);
 		}
 	}
 }
