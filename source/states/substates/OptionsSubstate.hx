@@ -54,7 +54,7 @@ class OptionsSubstate extends MusicBeatSubState
 		submenuText.y -= 32;
 		submenuGroup.add(submenuText);
 
-		var submenuText2 = new Alphabet(0, 0, "Escape to Cancel", true, false);
+		var submenuText2 = new Alphabet(0, 0, "F10 to Cancel", true, false);
 		submenuText2.screenCenter();
 		submenuText2.y += 32;
 		submenuGroup.add(submenuText2);
@@ -336,7 +336,7 @@ class OptionsSubstate extends MusicBeatSubState
 		if (curSelection != keyOptions.length - 1)
 		{
 			// be able to close the submenu
-			if (FlxG.keys.justPressed.ESCAPE)
+			if (FlxG.keys.justPressed.F10)
 				closeSubmenu();
 			else if (FlxG.keys.justPressed.ANY)
 			{
