@@ -40,6 +40,10 @@ class MusicBeatState extends FNFUIState
 		if ((!Std.isOfType(this, states.PlayState)) && (!Std.isOfType(this, states.charting.OriginalChartingState)))
 			Paths.clearUnusedMemory();
 
+		// create controls event;
+		Controls.keyEventPress.add(keyEventPress);
+		Controls.keyEventRelease.add(keyEventRelease);
+
 		super.create();
 
 		// For debugging
@@ -47,6 +51,18 @@ class MusicBeatState extends FNFUIState
 		FlxG.watch.add(this, "curBeat");
 		FlxG.watch.add(this, "curStep");
 	}
+
+	override function destroy()
+	{
+		// destroy controls;
+		Controls.keyEventPress.remove(keyEventPress);
+		Controls.keyEventRelease.remove(keyEventRelease);
+
+		super.destroy();
+	}
+
+	public function keyEventPress(action:String, key:Int, state:KeyState) {}
+	public function keyEventRelease(action:String, key:Int, state:KeyState) {}
 
 	// class 'step' event
 	override function update(elapsed:Float)
@@ -197,6 +213,27 @@ class MusicBeatSubState extends FlxSubState
 
 	inline function get_controls():OldControls
 		return PlayerSettings.player1.controls;
+
+	override function create()
+	{
+		// create controls event;
+		Controls.keyEventPress.add(keyEventPress);
+		Controls.keyEventRelease.add(keyEventRelease);
+
+		super.create();
+	}
+
+	override function destroy()
+	{
+		// destroy controls;
+		Controls.keyEventPress.remove(keyEventPress);
+		Controls.keyEventRelease.remove(keyEventRelease);
+
+		super.destroy();
+	}
+
+	public function keyEventPress(action:String, key:Int, state:KeyState) {}
+	public function keyEventRelease(action:String, key:Int, state:KeyState) {}
 
 	override function update(elapsed:Float)
 	{

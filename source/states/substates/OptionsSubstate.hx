@@ -54,7 +54,7 @@ class OptionsSubstate extends MusicBeatSubState
 		submenuText.y -= 32;
 		submenuGroup.add(submenuText);
 
-		var submenuText2 = new Alphabet(0, 0, "F10 to Cancel", true, false);
+		var submenuText2 = new Alphabet(0, 0, "FTEN to Cancel", true, false);
 		submenuText2.screenCenter();
 		submenuText2.y += 32;
 		submenuGroup.add(submenuText2);
