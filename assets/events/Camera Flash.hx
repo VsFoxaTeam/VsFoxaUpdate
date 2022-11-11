@@ -5,7 +5,7 @@ function eventTrigger(params)
 		timer = 0.6;
 	if (params[0] == null)
 		params[0] = 'white';
-	FlxG.camera.flash(ForeverTools.returnColor('${params[0]}'), timer);
+	FlxG.camera.flash(ForeverTools.returnColor(params[0]), timer);
 }
 
 function returnDescription()
