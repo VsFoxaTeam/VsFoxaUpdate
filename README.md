@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://cdn.discordapp.com/attachments/930661629505466448/1040480858898976849/feather-logo.png" width="750"/></a>
+  <img src="https://cdn.discordapp.com/attachments/1038658718025404487/1040623966185857055/recentered-feather-logo.png" width="800"/></a>
   <h1 align="center">Forever Engine Feather</h1>
   <h2 align="center">An open-source, community driven Friday Night Funkin' mod engine, based on Forever Engine Legacy!</h2>
 </p>
