@@ -16,6 +16,9 @@ Forever Engine Feather is currently in a Work in Progress stage, maintained by t
 * Fully Softcoded [Game Weeks](/assets/weeks) and [Characters](/assets/characters).
 
 ----------------------------------------------
-## To see changes made to the engine, check out the CHANGELOG [here](/docs/CHANGELOG.md).
+### To see changes made to the engine, check out the CHANGELOG [here](/docs/CHANGELOG.md).
+
+### If you want to push out improvements to Feather faster, take a look at the TODO list [here](/TODO).
+We appreciate any and all help with these features. :]
 
 ----------------------------------------------
