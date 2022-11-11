@@ -5,17 +5,17 @@
 </p>
 
 ----------------------------------------------
-Forever Engine Feather is currently a work in progress project, managed by the main developers and contributors
+Forever Engine Feather is currently in a Work in Progress stage, maintained by the main developers and contributors.
 
 ----------------------------------------------
 # Features:
-* All of Forever Engine Legacy's Features;
-* a Scripting System based on HScript, [SScript](https://github.com/AltronMaxX/SScript);
+* All of [Forever Engine Legacy](https://github.com/Yoshubs/Forever-Engine-Legacy)'s Features;
+* A Scripting System based on HScript, [SScript](https://github.com/AltronMaxX/SScript);
 * Reorganized ``source/`` folder;
-* an [Events](/assets/events) System based on [Hypno's Lullaby](https://github.com/PopcornColonell/hypnosource)
-* Fully Softcoded [Game Weeks](/assets/weeks) and [Characters](/assets/characters)
+* An [Events](/assets/events) System based on [Hypno's Lullaby](https://github.com/PopcornColonell/hypnosource);
+* Fully Softcoded [Game Weeks](/assets/weeks) and [Characters](/assets/characters).
 
 ----------------------------------------------
-## To see changes made to the engine, check out the changelog [here](/docs/CHANGELOG.md)
+## To see changes made to the engine, check out the CHANGELOG [here](/docs/CHANGELOG.md).
 
 ----------------------------------------------
