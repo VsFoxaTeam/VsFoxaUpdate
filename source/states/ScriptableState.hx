@@ -121,6 +121,7 @@ class ScriptableState extends MusicBeatState
 		{
 			logTrace(text, time, onConsole, null);
 		});
+		scriptSet('openSubState', openSubState);
 	}
 
 	function scriptCall(funcName:String, params:Array<Dynamic>)
