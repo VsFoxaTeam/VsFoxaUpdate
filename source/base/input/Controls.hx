@@ -11,8 +11,8 @@ enum KeyState
 	RELEASED;
 }
 
-typedef KeyCall = (Int, KeyState) -> Void; // ID in Array, State;
-typedef BindCall = (String, Int, KeyState) -> Void; // Name, ID in Array, State;
+typedef KeyCall = (Int, KeyState) -> Void; // ID in Array, State -> Function;
+typedef BindCall = (String, Int, KeyState) -> Void; // Name, ID in Array, State -> Function;
 // for convenience;
 typedef Key = Null<Int>;
 
@@ -22,8 +22,8 @@ class Controls
 	public static var keyPressed:Event<KeyCall> = new Event<KeyCall>();
 	public static var keyReleased:Event<KeyCall> = new Event<KeyCall>();
 
-	public static var onKeyPressed:Event<BindCall> = new Event<BindCall>();
-	public static var onKeyReleased:Event<BindCall> = new Event<BindCall>();
+	public static var keyEventPress:Event<BindCall> = new Event<BindCall>();
+	public static var keyEventRelease:Event<BindCall> = new Event<BindCall>();
 
 	public static var actions:Map<String, Array<Key>> = [
 		// NOTE KEYS
@@ -60,32 +60,18 @@ class Controls
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 	}
 
-	public static function onActionTrigger(action:String):Bool
-	{
-		for (key in actions.get(action))
-		{
-			for (press in keysHeld)
-			{
-				if (key == press)
-					return true;
-			}
-		}
-		return false;
-	}
-
 	public static function onKeyPress(event:KeyboardEvent)
 	{
 		//
 		if (FlxG.keys.enabled && (FlxG.state.active || FlxG.state.persistentUpdate))
 		{
-			var keyCode:Int = event.keyCode;
-			if (!keysHeld.contains(keyCode))
+			if (!keysHeld.contains(event.keyCode))
 			{
-				keysHeld.push(keyCode);
-				keyPressed.dispatch(keyCode, PRESSED);
+				keysHeld.push(event.keyCode);
+				keyPressed.dispatch(event.keyCode, PRESSED);
 
-				for (key in getKeyFromEvent(keyCode))
-					onKeyPressed.dispatch(key, keyCode, PRESSED);
+				for (key in catchKeys(event.keyCode))
+					keyEventPress.dispatch(key, event.keyCode, PRESSED);
 			}
 		}
 	}
@@ -95,19 +81,18 @@ class Controls
 		//
 		if (FlxG.keys.enabled && (FlxG.state.active || FlxG.state.persistentUpdate))
 		{
-			var keyCode:Int = event.keyCode;
-			if (keysHeld.contains(keyCode))
+			if (keysHeld.contains(event.keyCode))
 			{
-				keysHeld.remove(keyCode);
-				keyReleased.dispatch(keyCode, RELEASED);
+				keysHeld.remove(event.keyCode);
+				keyReleased.dispatch(event.keyCode, RELEASED);
 
-				for (key in getKeyFromEvent(keyCode))
-					onKeyReleased.dispatch(key, keyCode, RELEASED);
+				for (key in catchKeys(event.keyCode))
+					keyEventRelease.dispatch(key, event.keyCode, RELEASED);
 			}
 		}
 	}
 
-	private static function getKeyFromEvent(key:Key):Array<String>
+	private static function catchKeys(key:Key):Array<String>
 	{
 		//
 		if (key == null)

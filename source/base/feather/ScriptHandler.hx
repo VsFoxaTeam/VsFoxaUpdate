@@ -51,6 +51,7 @@ class ScriptHandler extends SScript
 
 		// CLASSES (FEATHER);
 		set('ScriptableState', states.ScriptableState);
+		set('ScriptableSubstate', states.ScriptableState.ScriptableSubstate);
 		set('FeatherSprite', dependency.FeatherSprite);
 		set('Controls', base.input.Controls);
 

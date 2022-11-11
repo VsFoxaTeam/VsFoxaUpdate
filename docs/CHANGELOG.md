@@ -13,8 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Script Support;
 - Softcoded Characters with HScript;
 - Psych Character Support;
-- Autoplay can no longer Miss Notes;
-- Receptors can now be regenerated;
+- Receptors can now be regenerated via scripts;
 - Pausing should not lag anymore;
 - Icons are now stored inside the Character's *Folder*;
 - Characters now have fake miss animations (if real ones couldn't be found on offsets);
@@ -23,11 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 11/05/22
 
 - Receptors can now be manipulated (position, size, etc);
-- started working on notetypes (wip);
-- enabled hscriptPos for error handling on scripts;
+- Scripts now return the error and line properly;
 - Ghost Tapping is now enabled by default;
-- Note Splashes are now recycled sprites;
-- moved Player Highscore related variables to Timings;
 - added Character-specific Health Bar Colors;
 - added Character-specific Noteskins and Note Splashes;
 - UI Class is now a sprite group, meaning it can be manipulated (as in alpha, position, etc) similar to receptors;
@@ -35,19 +31,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 --------------------------
 11/06/22
 
-- updated default health bar for it to match Forever 1.0's;
 - Custom Game Over Variables for characters;
 - Softcoded Event Notes (with hardcoding still being possible);
 - Psych Engine Chart Support (for newer versions);
 - Chart Editor Shortcut on Freeplay;
 - Stages per Chart, rather than Hardcoded;
-- on-screen error log (by @superpowers04);
+- on-screen error log, enabled for debug mode users (by @superpowers04);
 - Week 6 fixes;
 
 --------------------------
 11/07/22
 
-- Fixed "Hey!" and "Play Animation" events crashing the game;
 - Unhardcoded "Change Character" event;
 - Added Personalization Options for Strumline and Hold Note Opacity;
 - Improved Selector Options Code;
@@ -57,8 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Week Characters are now separated on their own individual images, along with having a JSON file attached for customizzation;
 - Difficulty Images are now separated in individual files;
 - added an option to disable flashing lights;
-- Title Text is now hardcoded;
-- Game Logo on Titlescreen is now hardcoded;
 
 --------------------------
 11/08/22
@@ -74,7 +66,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Accuracy shouldn't go over 100% now
   * additionally, there shouldn't be a percentage symbol while accuracy is at "N/A";
 - Icons have infinite frames (to avoid issues with icons in the future);
-- It's no longer christmas in Fresh :(
 
 --------------------------
 11/09/22
@@ -84,9 +75,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minor UI Adjustments;
 
 --------------------------
-10/11/22
+11/10/22
 
 - Judgement and Combo Fade Animations are now bound to time;
   * additionally, they can (optionally) be recycled sprites rather than being added every note hit;
 - [DOCS]: began working on small bits of documentation which will be expanded and updated with time;
 - [WIP]: Mod Managment with **Polymod!**;
+
+--------------------------
+11/11/22
+
+- [WIP]: Rewritten Controls;

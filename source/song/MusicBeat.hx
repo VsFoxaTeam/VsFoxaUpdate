@@ -1,6 +1,7 @@
 package song;
 
-import base.Controls;
+import base.input.Controls;
+import base.Controls as OldControls;
 import dependency.FNFUIState;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -26,9 +27,9 @@ class MusicBeatState extends FNFUIState
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
 
-	public var controls(get, never):Controls;
+	public var controls(get, never):OldControls;
 
-	inline function get_controls():Controls
+	inline function get_controls():OldControls
 		return PlayerSettings.player1.controls;
 
 	// class create event
@@ -192,9 +193,9 @@ class MusicBeatSubState extends FlxSubState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
-	private var controls(get, never):Controls;
+	private var controls(get, never):OldControls;
 
-	inline function get_controls():Controls
+	inline function get_controls():OldControls
 		return PlayerSettings.player1.controls;
 
 	override function update(elapsed:Float)

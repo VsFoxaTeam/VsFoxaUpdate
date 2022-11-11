@@ -265,6 +265,8 @@ class PlayState extends MusicBeatState
 	{
 		super.create();
 
+		FlxG.mouse.visible = false;
+
 		main = this;
 
 		// reset any values and variables that are static
@@ -477,16 +479,16 @@ class PlayState extends MusicBeatState
 	}
 
 	var keysArray:Array<Dynamic>;
+	var keysHeld:Array<Bool> = [];
 
-	public function onKeyPress(event:KeyboardEvent):Void
+	/*
+	* Main Input System Function
+	**/
+	public function inputHandler(key:Int, isPressed:Bool)
 	{
-		var eventKey:FlxKey = event.keyCode;
-		var key:Int = getKeyFromEvent(eventKey);
+		keysHeld[key] = isPressed;
 
-		if ((key >= 0)
-			&& !bfStrums.autoplay
-			&& (FlxG.keys.checkStatus(eventKey, JUST_PRESSED) || Init.trueSettings.get('Controller Mode'))
-			&& (FlxG.keys.enabled && !paused && (FlxG.state.active || FlxG.state.persistentUpdate)))
+		if (isPressed)
 		{
 			if (generatedMusic)
 			{
@@ -540,22 +542,36 @@ class PlayState extends MusicBeatState
 			if (bfStrums.receptors.members[key] != null && bfStrums.receptors.members[key].animation.curAnim.name != 'confirm')
 				bfStrums.receptors.members[key].playAnim('pressed');
 		}
-
-		callFunc('onKeyPress', []);
-	}
-
-	public function onKeyRelease(event:KeyboardEvent):Void
-	{
-		var eventKey:FlxKey = event.keyCode;
-		var key:Int = getKeyFromEvent(eventKey);
-
-		if (FlxG.keys.enabled && !paused && (FlxG.state.active || FlxG.state.persistentUpdate))
+		else
 		{
 			// receptor reset
 			if (key >= 0 && bfStrums.receptors.members[key] != null)
 				bfStrums.receptors.members[key].playAnim('static');
 		}
-		callFunc('onKeyRelease', []);
+	}
+
+	public function onKeyPress(event:KeyboardEvent):Void
+	{
+		if (!bfStrums.autoplay && (FlxG.keys.checkStatus(event.keyCode, JUST_PRESSED)
+			|| Init.trueSettings.get('Controller Mode')) && (FlxG.keys.enabled)
+				&& !paused && (FlxG.state.active || FlxG.state.persistentUpdate))
+		{
+			var key:Int = getKeyFromEvent(event.keyCode);
+			if (key >= 0)
+				inputHandler(key, true);
+			callFunc('onKeyPress', [key]);
+		}
+	}
+
+	public function onKeyRelease(event:KeyboardEvent):Void
+	{
+		if (FlxG.keys.enabled && !paused && (FlxG.state.active || FlxG.state.persistentUpdate))
+		{
+			var key:Int = getKeyFromEvent(event.keyCode);
+			if (key >= 0)
+				inputHandler(key, false);
+			callFunc('onKeyRelease', [key]);
+		}
 	}
 
 	private function getKeyFromEvent(key:FlxKey):Int
@@ -1011,11 +1027,10 @@ class PlayState extends MusicBeatState
 		}
 
 		// reset bf's animation
-		var holdControls:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
 		for (boyfriend in bfStrums.characters)
 		{
 			if ((boyfriend != null && boyfriend.animation != null)
-				&& (boyfriend.holdTimer > Conductor.stepCrochet * (4 / 1000) && (!holdControls.contains(true) || bfStrums.autoplay)))
+				&& (boyfriend.holdTimer > Conductor.stepCrochet * (4 / 1000) && (!keysHeld.contains(true) || bfStrums.autoplay)))
 			{
 				if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 					boyfriend.dance();
@@ -1183,11 +1198,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		var holdControls:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
 		if (!strumline.autoplay)
 		{
 			// check if anything is held
-			if (holdControls.contains(true))
+			if (keysHeld.contains(true))
 			{
 				// check notes that are alive
 				strumline.allNotes.forEachAlive(function(coolNote:Note)
@@ -1197,7 +1211,7 @@ class PlayState extends MusicBeatState
 						&& coolNote.mustPress
 						&& !coolNote.tooLate
 						&& coolNote.isSustainNote
-						&& holdControls[coolNote.noteData])
+						&& keysHeld[coolNote.noteData])
 						goodNoteHit(coolNote, strumline);
 				});
 			}

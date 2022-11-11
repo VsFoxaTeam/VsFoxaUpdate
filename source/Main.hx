@@ -2,6 +2,7 @@ package;
 
 import base.*;
 import base.Overlay.Console;
+import base.input.Controls;
 import dependency.Discord;
 import dependency.FNFTransition;
 import dependency.FNFUIState;
@@ -137,9 +138,7 @@ class Main extends Sprite
 	// be sure to mess around with these if you'd like.
 
 	public static function main():Void
-	{
 		Lib.current.addChild(new Main());
-	}
 
 	// calls a function to set the game up
 	public function new()
@@ -180,6 +179,9 @@ class Main extends Sprite
 		var gameCreate:FlxGame;
 		gameCreate = new FlxGame(gameWidth, gameHeight, Init, #if (flixel < "5.0.0") zoom, #end framerate, framerate, skipSplash);
 		addChild(gameCreate); // and create it afterwards
+
+		// initialize the game controls;
+		Controls.init();
 
 		// begin the discord rich presence
 		#if DISCORD_RPC
