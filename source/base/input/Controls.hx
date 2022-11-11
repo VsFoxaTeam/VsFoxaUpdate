@@ -25,7 +25,7 @@ class Controls
 	public static var keyEventPress:Event<BindCall> = new Event<BindCall>();
 	public static var keyEventRelease:Event<BindCall> = new Event<BindCall>();
 
-	public static var actions:Map<String, Array<Key>> = [
+	public static var defaultActions:Map<String, Array<Key>> = [
 		// NOTE KEYS
 		"left" => [Keyboard.LEFT, Keyboard.D],
 		"down" => [Keyboard.DOWN, Keyboard.F],
@@ -42,9 +42,11 @@ class Controls
 		// MISC GAME KEYS
 		"reset" => [Keyboard.R, Keyboard.END],
 		"autoplay" => [Keyboard.NUMBER_6],
-		"skipDiag" => [Keyboard.SHIFT, Keyboard.END],
+		"skip" => [Keyboard.SHIFT, Keyboard.END],
 		"debug" => [Keyboard.NUMBER_7, Keyboard.NUMBER_8],
 	];
+
+	public static var actions:Map<String, Array<Key>> = [];
 
 	public static var keysHeld:Array<Key> = [];
 
@@ -52,6 +54,9 @@ class Controls
 	{
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
+
+		if (FlxG.save.data.actionBinds == null)
+			actions = defaultActions;
 	}
 
 	public static function destroy()
@@ -71,7 +76,10 @@ class Controls
 				keyPressed.dispatch(event.keyCode, PRESSED);
 
 				for (key in catchKeys(event.keyCode))
+				{
 					keyEventPress.dispatch(key, event.keyCode, PRESSED);
+					//trace('Pressed Key: ' + key);
+				}
 			}
 		}
 	}
@@ -87,7 +95,10 @@ class Controls
 				keyReleased.dispatch(event.keyCode, RELEASED);
 
 				for (key in catchKeys(event.keyCode))
+				{
 					keyEventRelease.dispatch(key, event.keyCode, RELEASED);
+					//trace('Released Key: ' + key);
+				}
 			}
 		}
 	}
@@ -148,7 +159,7 @@ class Controls
 		if (actions.exists(action))
 		{
 			actions.set(action, keys);
-			trace('binded $action to ID $keys');
+			//trace('binded $action to ID $keys');
 		}
 	}
 
@@ -158,7 +169,7 @@ class Controls
 		if (actions.exists(action))
 		{
 			actions.get(action)[id] = key;
-			trace(actions.get(action)[id]);
+			//trace(actions.get(action)[id]);
 		}
 	}
 }

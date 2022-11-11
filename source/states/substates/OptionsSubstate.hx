@@ -347,7 +347,10 @@ class OptionsSubstate extends MusicBeatSubState
 				Init.gameControls.get(keyOptions.members[curSelection].text)[0][curHorizontalSelection] = checkKey;
 				otherKeys.members[(curSelection * 2) + curHorizontalSelection].text = getStringKey(checkKey);
 
-				//Controls.setActionKey(keyOptions.members[curSelection].text.toLowerCase(), curHorizontalSelection, 0);
+				var keyText:String = keyOptions.members[curSelection].text.toLowerCase();
+
+				// set the new key for the selected action;
+				Controls.setActionKey(keyText, curHorizontalSelection, checkKey);
 
 				// refresh keys
 				controls.setKeyboardScheme(None, false);

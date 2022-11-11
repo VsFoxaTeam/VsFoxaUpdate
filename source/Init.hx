@@ -1,5 +1,6 @@
 import base.CoolUtil;
 import base.Overlay;
+import base.input.Controls;
 import dependency.Discord;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -54,7 +55,7 @@ class Init extends FlxState
 			false,
 			Checkmark,
 			'Whether to use a controller instead of a keyboard to play.',
-			NOT_FORCED
+			FORCED
 		],
 		'Auto Pause' => [
 			true,
@@ -239,14 +240,17 @@ class Init extends FlxState
 		'DOWN' => [[FlxKey.DOWN, S], 1],
 		'UP' => [[FlxKey.UP, W], 2],
 		'RIGHT' => [[FlxKey.RIGHT, D], 3],
-		'ACCEPT' => [[FlxKey.SPACE, Z, FlxKey.ENTER], 4],
-		'BACK' => [[FlxKey.BACKSPACE, X, FlxKey.ESCAPE], 5],
-		'PAUSE' => [[FlxKey.ENTER, P], 6],
+		'UI_UP' => [[FlxKey.UP, W], 5],
+		'UI_DOWN' => [[FlxKey.DOWN, S], 6],
+		'UI_LEFT' => [[FlxKey.LEFT, A], 7],
+		'UI_RIGHT' => [[FlxKey.RIGHT, D], 8],
+		'ACCEPT' => [[FlxKey.SPACE, Z, FlxKey.ENTER], 10],
+		'BACK' => [[FlxKey.BACKSPACE, X, FlxKey.ESCAPE], 11],
+		'PAUSE' => [[FlxKey.ENTER, P], 12],
 		'RESET' => [[R, R], 13],
-		'UI_UP' => [[FlxKey.UP, W], 8],
-		'UI_DOWN' => [[FlxKey.DOWN, S], 9],
-		'UI_LEFT' => [[FlxKey.LEFT, A], 10],
-		'UI_RIGHT' => [[FlxKey.RIGHT, D], 11],
+		'AUTOPLAY' => [[SIX, NUMPADSIX], 14],
+		'DEBUG' => [[SEVEN, EIGHT], 15],
+		'SKIP' => [[SHIFT, END], 16],
 	];
 
 	public static var filters:Array<BitmapFilter> = []; // the filters the game has active
@@ -285,14 +289,14 @@ class Init extends FlxState
 
 	override public function create():Void
 	{
-		FlxG.save.bind('foreverengine-options');
+		FlxG.save.bind('gameSettings', "Feather");
 
 		// initialize controls and highscore
 		PlayerSettings.init();
 		Highscore.load();
+		loadControls();
 
 		loadSettings();
-		loadControls();
 
 		Main.updateFramerate(trueSettings.get("Framerate Cap"));
 
@@ -311,6 +315,8 @@ class Init extends FlxState
 
 	public static function loadSettings():Void
 	{
+		FlxG.save.bind('gameSettings', "Feather");
+
 		// set the true settings array
 		// only the first variable will be saved! the rest are for the menu stuffs
 
@@ -354,8 +360,13 @@ class Init extends FlxState
 
 	public static function loadControls():Void
 	{
+		FlxG.save.bind('gameControls', "Feather");
+
 		if ((FlxG.save.data.gameControls != null) && (Lambda.count(FlxG.save.data.gameControls) == Lambda.count(gameControls)))
 			gameControls = FlxG.save.data.gameControls;
+
+		if (FlxG.save.data.actionBinds != null)
+			Controls.actions = FlxG.save.data.actionBinds;
 
 		saveControls();
 	}
@@ -363,6 +374,7 @@ class Init extends FlxState
 	public static function saveSettings():Void
 	{
 		// ez save lol
+		FlxG.save.bind('gameSettings', "Feather");
 		FlxG.save.data.settings = trueSettings;
 		FlxG.save.flush();
 
@@ -371,7 +383,9 @@ class Init extends FlxState
 
 	public static function saveControls():Void
 	{
+		FlxG.save.bind('gameControls', "Feather");
 		FlxG.save.data.gameControls = gameControls;
+		FlxG.save.data.actionBinds = Controls.actions;
 		FlxG.save.flush();
 	}
 

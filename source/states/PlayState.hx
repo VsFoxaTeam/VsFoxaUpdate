@@ -646,7 +646,7 @@ class PlayState extends MusicBeatState
 		if (dialogueBox != null && dialogueBox.alive)
 		{
 			// wheee the shift closes the dialogue
-			if (Controls.getPressEvent("skipDiag"))
+			if (Controls.getPressEvent("skip"))
 				dialogueBox.closeDialog();
 
 			// the change I made was just so that it would only take accept inputs
