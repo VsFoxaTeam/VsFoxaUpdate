@@ -49,9 +49,9 @@ class Paths
 	}
 
 	public static var dumpExclusions:Array<String> = [
-		'assets/music/freakyMenu.$SOUND_EXT',
-		'assets/music/foreverMenu.$SOUND_EXT',
-		'assets/music/breakfast.$SOUND_EXT',
+		getSound('music/freakyMenu'),
+		getSound('music/foreverMenu'),
+		getSound('music/breakfast'),
 	];
 
 	/// haya I love you for the base cache dump I took to the max
@@ -173,11 +173,41 @@ class Paths
 	{
 		// I hate this so god damn much
 		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
-		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
+		var extensionPath = getSound('$path/$key');
+
+		if (FileSystem.exists(extensionPath))
+			gottenPath = extensionPath;
+
+		//gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 		if (!currentTrackedSounds.exists(gottenPath))
 			currentTrackedSounds.set(gottenPath, Sound.fromFile(gottenPath));
 		localTrackedAssets.push(key);
 		return currentTrackedSounds.get(gottenPath);
+	}
+
+	// kind of an afterthought, I don't think i'm gonna clean this up and make it an actual feature until I rework this class or something;
+	public static function getSound(path:String, ?library:String)
+	{
+		var returnExtension:String = SOUND_EXT; // defaults to "ogg";
+		var SOUND_EXTS:Array<String> = [".mp3", ".ogg", ".wav", ".flac"];
+
+		for (i in 0...SOUND_EXTS.length)
+		{
+			var caughtExtension:String = null;
+			if (SOUND_EXTS != null)
+			{
+				if (FileSystem.exists(getPath(path + SOUND_EXTS[i], SOUND, library)))
+					caughtExtension = SOUND_EXTS[i];
+			}
+			// return it;
+			if (caughtExtension != null)
+			{
+				// trace('returning $caughtExtension for $path');
+				return path + caughtExtension;
+			}
+		}
+		// trace('returning $returnExtension for $path');
+		return path + returnExtension;
 	}
 
 	//
