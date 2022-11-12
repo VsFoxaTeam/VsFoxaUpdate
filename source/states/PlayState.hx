@@ -536,7 +536,7 @@ class PlayState extends MusicBeatState
 
 	public function keyEventTrigger(action:String, key:Int, state:KeyState)
 	{
-		if (paused || bfStrums.autoplay)
+		if (paused || inCutscene || bfStrums.autoplay)
 			return;
 
 		switch (action)
