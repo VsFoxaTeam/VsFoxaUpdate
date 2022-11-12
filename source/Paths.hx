@@ -18,6 +18,8 @@ import openfl.utils.Assets as OpenFlAssets;
 import sys.FileSystem;
 import sys.io.File;
 
+using StringTools;
+
 class Paths
 {
 	// Here we set up the paths class. This will be used to
@@ -296,9 +298,28 @@ class Paths
 		return returnAsset;
 	}
 
-	inline static public function font(key:String)
+	public static function font(key:String, ?library:String)
 	{
-		return getPath('fonts/$key', TEXT);
+		var font:String = getPath('fonts/$key.ttf', TEXT, library);
+		var extensions:Array<String> = ['.ttf', '.otf'];
+
+		for (extension in extensions)
+		{
+			var newPath:String = getPath('fonts/$key$extension', TEXT, library);
+			if (FileSystem.exists(newPath))
+			{
+				/*
+					clear any dots, means that something like "vcr.tff" would become "vcr";
+					we are doing this because we already added an extension earlier;
+					EDIT: does this even work?;
+				 */
+				if (key.contains('.'))
+					key.substring(0, key.indexOf('.'));
+				return newPath;
+			}
+		}
+
+		return font; // fallback in case the font or path doesn't exist;
 	}
 
 	inline static public function getSparrowAtlas(key:String, folder:String = 'images', ?library:String)
