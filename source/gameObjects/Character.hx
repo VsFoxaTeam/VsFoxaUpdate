@@ -139,19 +139,20 @@ class Character extends FNFSprite
 				characterData.healthColor = [161, 161, 161];
 
 			default:
-				if (characterType == PSYCH_ENGINE)
-					generatePsychChar(character);
-				else
+				switch (characterType)
 				{
-					try
-					{
-						generateChar(character); // old system, for now i guess;
-					}
-					catch (e)
-					{
-						trace('$character is/was null');
-						return setCharacter(x, y, 'placeholder');
-					}
+					case PSYCH_ENGINE:
+						generatePsychChar(character);
+					default:
+						try
+						{
+							generateChar(character);
+						}
+						catch (e)
+						{
+							trace('$character is/was null');
+							return setCharacter(x, y, 'placeholder');
+						}
 				}
 		}
 
