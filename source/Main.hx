@@ -201,12 +201,17 @@ class Main extends Sprite
 
 		FlxG.stage.application.window.onClose.add(function()
 		{
-			#if DISCORD_RPC
-			Discord.shutdownRPC();
-			#end
-			Sys.exit(1);
-			base.Controls.destroy();
+			destroyGame();
 		});
+	}
+
+	function destroyGame()
+	{
+		#if DISCORD_RPC
+		Discord.shutdownRPC();
+		#end
+		Sys.exit(1);
+		base.Controls.destroy();
 	}
 
 	public static function framerateAdjust(input:Float)
@@ -304,5 +309,7 @@ class Main extends Sprite
 			Sys.println("No crash dialog found! Making a simple alert instead...");
 			Application.current.window.alert(errMsg, "Error!");
 		}
+
+		destroyGame();
 	}
 }
