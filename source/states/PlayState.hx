@@ -25,7 +25,6 @@ import flixel.util.FlxTimer;
 import gameObjects.*;
 import gameObjects.Strumline.Receptor;
 import gameObjects.userInterface.*;
-import openfl.events.KeyboardEvent;
 import playerData.Highscore;
 import playerData.Timings;
 import song.ChartParser;
