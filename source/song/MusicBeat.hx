@@ -1,6 +1,6 @@
 package song;
 
-import base.input.Controls;
+import base.Controls;
 import dependency.FNFUIState;
 import flixel.FlxCamera;
 import flixel.FlxG;

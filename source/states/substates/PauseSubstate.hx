@@ -14,7 +14,7 @@ import song.MusicBeat.MusicBeatSubState;
 import states.menus.*;
 import sys.thread.Mutex;
 import sys.thread.Thread;
-import base.input.Controls;
+import base.Controls;
 
 class PauseSubstate extends MusicBeatSubState
 {

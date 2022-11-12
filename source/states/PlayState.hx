@@ -36,7 +36,7 @@ import song.SongFormat.SwagSong;
 import song.SongFormat.TimedEvent;
 import states.menus.*;
 import states.substates.GameOverSubstate;
-import base.input.Controls;
+import base.Controls;
 
 using StringTools;
 
@@ -545,24 +545,6 @@ class PlayState extends MusicBeatState
 			case "reset":
 				if (!startingSong && !isStoryMode)
 					health = 0;
-			case "autoplay":
-				if (!isStoryMode)
-				{
-					PlayState.SONG.validScore = false;
-					bfStrums.autoplay = !bfStrums.autoplay;
-					uiHUD.autoplayMark.visible = bfStrums.autoplay;
-					uiHUD.scoreBar.visible = !bfStrums.autoplay;
-				}
-			case "debug":
-				if (!isStoryMode && !startingSong)
-				{
-					resetMusic();
-					if (FlxG.keys.pressed.SHIFT)
-						Main.switchState(this, new states.charting.ChartingState());
-					else
-						Main.switchState(this, new states.charting.OriginalChartingState());
-					PlayState.SONG.validScore = false;
-				}
 			case "left" | "down" | "up" | "right":
 				var actions = ["left", "down", "up", "right"];
 				var index = actions.indexOf(action);
@@ -642,6 +624,27 @@ class PlayState extends MusicBeatState
 				stopTimers();
 				// open pause substate
 				openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+			}
+
+			if (!isStoryMode && startedCountdown)
+			{
+				if (Controls.getPressEvent("autoplay"))
+				{
+					PlayState.SONG.validScore = false;
+					bfStrums.autoplay = !bfStrums.autoplay;
+					uiHUD.autoplayMark.visible = bfStrums.autoplay;
+					uiHUD.scoreBar.visible = !bfStrums.autoplay;
+				}
+
+				if (Controls.getPressEvent("debug"))
+				{
+					resetMusic();
+					if (FlxG.keys.pressed.SHIFT)
+						Main.switchState(this, new states.charting.ChartingState());
+					else
+						Main.switchState(this, new states.charting.OriginalChartingState());
+					PlayState.SONG.validScore = false;
+				}
 			}
 
 			Conductor.songPosition += elapsed * 1000;

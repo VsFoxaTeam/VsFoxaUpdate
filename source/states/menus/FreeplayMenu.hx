@@ -20,7 +20,7 @@ import song.SongFormat.SwagSong;
 import sys.FileSystem;
 import sys.thread.Mutex;
 import sys.thread.Thread;
-import base.input.Controls;
+import base.Controls;
 
 using StringTools;
 

@@ -2,7 +2,7 @@ package;
 
 import base.*;
 import base.Overlay.Console;
-import base.input.Controls;
+import base.Controls;
 import dependency.Discord;
 import dependency.FNFTransition;
 import dependency.FNFUIState;
@@ -205,7 +205,7 @@ class Main extends Sprite
 			Discord.shutdownRPC();
 			#end
 			Sys.exit(1);
-			base.input.Controls.destroy();
+			base.Controls.destroy();
 		});
 	}
 

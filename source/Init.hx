@@ -1,6 +1,6 @@
 import base.CoolUtil;
 import base.Overlay;
-import base.input.Controls;
+import base.Controls;
 import dependency.Discord;
 import flixel.FlxG;
 import flixel.FlxState;

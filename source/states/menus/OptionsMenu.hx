@@ -15,7 +15,7 @@ import gameObjects.userInterface.menu.Checkmark;
 import gameObjects.userInterface.menu.Selector;
 import song.MusicBeat.MusicBeatState;
 import states.substates.OptionsSubstate;
-import base.input.Controls;
+import base.Controls;
 
 /**
 	Options menu rewrite because I'm unhappy with how it was done previously

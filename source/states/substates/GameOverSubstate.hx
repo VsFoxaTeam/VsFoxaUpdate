@@ -7,7 +7,7 @@ import flixel.util.FlxTimer;
 import gameObjects.Boyfriend;
 import song.Conductor;
 import song.MusicBeat.MusicBeatSubState;
-import base.input.Controls;
+import base.Controls;
 
 class GameOverSubstate extends MusicBeatSubState
 {

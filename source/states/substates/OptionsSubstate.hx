@@ -10,7 +10,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import gameObjects.gameFonts.Alphabet;
 import song.MusicBeat.MusicBeatSubState;
-import base.input.Controls;
+import base.Controls;
 
 using StringTools;
 

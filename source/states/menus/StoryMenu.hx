@@ -1,6 +1,6 @@
 package states.menus;
 
-import base.input.Controls;
+import base.Controls;
 import base.CoolUtil;
 import dependency.Discord;
 import flixel.FlxG;
