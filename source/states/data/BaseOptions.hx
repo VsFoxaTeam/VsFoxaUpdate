@@ -10,10 +10,11 @@ import gameObjects.userInterface.menu.Selector;
 import states.MusicBeatState;
 
 /**
- * The Options Data class manages Option Attachements;
+ * The Base Options class manages Option Attachements;
+ * among some useful functions for the main options menu;
  *
  * simply put, it initializes elements like Checkmarks and Selectors;
- * for them to be used with the Options Menu;
+ * along with having neat little functions to go from a section to another;
  */
 class BaseOptions extends MusicBeatState
 {

@@ -8,6 +8,7 @@ typedef GroupData =
 
 /**
  * Stores Option Category Contents;
+ * and data associated with it;
  */
 class OptionsData
 {
