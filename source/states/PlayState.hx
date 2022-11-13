@@ -1829,7 +1829,7 @@ class PlayState extends MusicBeatState
 			return true;
 
 		return false;
-	}	
+	}
 
 	public function callTextbox()
 	{
