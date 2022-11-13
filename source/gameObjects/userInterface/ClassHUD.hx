@@ -1,6 +1,5 @@
 package gameObjects.userInterface;
 
-import base.CoolUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;

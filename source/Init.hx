@@ -1,6 +1,4 @@
-import base.CoolUtil;
 import base.Overlay;
-import base.Controls;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;

@@ -5,7 +5,7 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
-import song.MusicBeat.MusicBeatState;
+import states.MusicBeatState;
 
 /**
 	This is just code I stole from gedehari, he's a really cool guy. Here's a link to the source.

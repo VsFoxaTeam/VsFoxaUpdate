@@ -1,6 +1,5 @@
 package states;
 
-import base.*;
 import base.feather.*;
 import dependency.FNFSprite;
 import flixel.FlxBasic;
@@ -29,13 +28,11 @@ import playerData.Highscore;
 import playerData.Timings;
 import song.ChartParser;
 import song.Conductor;
-import song.MusicBeat;
 import song.Song;
 import song.SongFormat.SwagSong;
 import song.SongFormat.TimedEvent;
 import states.menus.*;
 import states.substates.GameOverSubstate;
-import base.Controls;
 
 using StringTools;
 

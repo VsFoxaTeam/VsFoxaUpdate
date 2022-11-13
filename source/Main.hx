@@ -2,7 +2,6 @@ package;
 
 import base.*;
 import base.Overlay.Console;
-import base.Controls;
 import dependency.Discord;
 import dependency.FNFTransition;
 import flixel.FlxG;

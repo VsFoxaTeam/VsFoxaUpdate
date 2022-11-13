@@ -1,6 +1,5 @@
 package states.menus;
 
-import base.CoolUtil;
 import dependency.Discord;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -13,13 +12,12 @@ import gameObjects.gameFonts.Alphabet;
 import gameObjects.userInterface.HealthIcon;
 import openfl.media.Sound;
 import playerData.Highscore;
-import song.MusicBeat.MusicBeatState;
+import states.MusicBeatState;
 import song.Song;
 import song.SongFormat.SwagSong;
 import sys.FileSystem;
 import sys.thread.Mutex;
 import sys.thread.Thread;
-import base.Controls;
 
 using StringTools;
 
@@ -354,6 +352,9 @@ class FreeplayMenu extends MusicBeatState
 			}
 		}
 		//
+
+		if (lastDifficulty == "NORMAL")
+			curDifficulty = 0;
 
 		changeDiff();
 		changeSongPlaying();
