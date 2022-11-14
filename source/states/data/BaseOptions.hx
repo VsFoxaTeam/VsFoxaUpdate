@@ -156,7 +156,20 @@ class BaseOptions extends MusicBeatState
 
 			if (item.targetY == 0)
 				item.alpha = 1;
+
+			if (attachmentsMap != null)
+				setAttachmentAlpha(attachmentsMap.get(item), item.alpha);
 		}
+	}
+
+	function setAttachmentAlpha(attachment:flixel.FlxSprite, newAlpha:Float)
+	{
+		// oddly enough, you can't set alphas of objects that arent directly and inherently defined as a value.
+		// ya flixel is weird lmao
+		if (attachment != null)
+			attachment.alpha = newAlpha;
+		// therefore, I made a script to circumvent this by defining the attachment with the `attachment` variable!
+		// pretty neat, huh?
 	}
 
 	public function generateOptions(groupArray:Array<GroupData>)
