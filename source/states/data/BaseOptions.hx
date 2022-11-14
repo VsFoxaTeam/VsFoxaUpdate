@@ -2,7 +2,6 @@ package states.data;
 
 import flixel.FlxBasic;
 import states.data.OptionsData.GroupData;
-import flixel.FlxSubState;
 import gameObjects.gameFonts.Alphabet;
 import dependency.Discord;
 import flixel.FlxG;
@@ -38,7 +37,7 @@ class BaseOptions extends MusicBeatState
 		options for subgroups can be set in the OptionsData class
 
 		options - your usual options, can be toggled on or off, or sometimes can have different values set by you;
-		options can be set in the Init class
+		options can be created in the Init class, and can be added to this menu with the OptionsData class
 
 		divider - an unselectable option, can be used as a category name of sorts;
 
@@ -46,17 +45,18 @@ class BaseOptions extends MusicBeatState
 	 */
 	public var categoriesMap:Map<String, Array<GroupData>> = [
 		"main" => [
-			{name: "preferences", type: "subgroup"},
-			{name: "accessibility", type: "subgroup"},
-			{name: "visuals", type: "subgroup"},
-			{name: "keybinds", type: "keybinds"}
+			{name: "preferences", type: "subgroup", description: "Define your Game Preferences."},
+			{name: "accessibility", type: "subgroup", description: "Make the game more accessible for yourself."},
+			{name: "visuals", type: "subgroup", description: "Define your Visuals, such as Note Skins or Judgements!"},
+			{name: "keybinds", type: "keybinds", description: "Define your preferred keys for use during Gameplay."}
 		],
 	];
 
 	public var alphabetGroup:FlxTypedGroup<Alphabet>;
-
 	public var attachmentsGroup:FlxTypedGroup<FlxBasic>;
 	public var attachmentsMap:Map<Alphabet, Dynamic>;
+
+	public var aboveGroup:FlxTypedGroup<FlxBasic>;
 
 	public var activeGroup:Array<GroupData> = [];
 
@@ -146,6 +146,16 @@ class BaseOptions extends MusicBeatState
 		else if (curSelected >= activeGroup.length)
 			curSelected = 0;
 
+		// define the description;
+		if (Init.gameSettings.get(alphabetGroup.members[curSelected].text) != null)
+		{
+			var currentSetting = Init.gameSettings.get(alphabetGroup.members[curSelected].text);
+			var textValue = currentSetting[2];
+
+			if (activeGroup[curSelected].description == null)
+				activeGroup[curSelected].description = textValue == null ? '' : textValue;
+		}
+
 		var bullShit:Int = 0;
 		for (item in alphabetGroup)
 		{
@@ -177,10 +187,13 @@ class BaseOptions extends MusicBeatState
 		activeGroup = groupArray;
 
 		if (alphabetGroup != null)
+		{
+			alphabetGroup.clear();
+			alphabetGroup.kill();
 			remove(alphabetGroup);
+		}
 
 		alphabetGroup = new FlxTypedGroup<Alphabet>();
-		add(alphabetGroup);
 
 		for (i in 0...groupArray.length)
 		{
@@ -194,7 +207,7 @@ class BaseOptions extends MusicBeatState
 				thisOption.y += 75; // probably shouldn't do this but yeah;
 				thisOption.targetY = i;
 				thisOption.disableX = true;
-				// hardcoded main so it doesnt have scroll
+				// the main category shouldn't scroll;
 				if (curCategory != 'main')
 					thisOption.isMenuItem = true;
 				thisOption.alpha = 0.6;
@@ -204,6 +217,19 @@ class BaseOptions extends MusicBeatState
 
 		// call the attachments
 		callAttachments();
+
+		add(alphabetGroup);
+
+		// add group that goes over attachments;
+		if (aboveGroup != null)
+		{
+			aboveGroup.clear();
+			aboveGroup.kill();
+			remove(aboveGroup);
+		}
+
+		aboveGroup = new FlxTypedGroup<FlxBasic>();
+		add(aboveGroup);
 	}
 
 	public function generateAttachments(alpha:FlxTypedGroup<Alphabet>)
