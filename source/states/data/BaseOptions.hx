@@ -1,5 +1,7 @@
 package states.data;
 
+import flixel.FlxBasic;
+import states.data.OptionsData.GroupData;
 import flixel.FlxSubState;
 import gameObjects.gameFonts.Alphabet;
 import dependency.Discord;
@@ -10,7 +12,7 @@ import gameObjects.userInterface.menu.Selector;
 import states.MusicBeatState;
 
 /**
- * The Base Options class manages Option Attachements;
+ * The Base Options class manages Option Attachments;
  * among some useful functions for the main options menu;
  *
  * simply put, it initializes elements like Checkmarks and Selectors;
@@ -18,13 +20,45 @@ import states.MusicBeatState;
  */
 class BaseOptions extends MusicBeatState
 {
-	// category name - [category options],
-	public var categoriesMap:Map<String, Array<String>> = ["main" => ["preferences", "accessibility", "visuals", "controls"],];
+	/*
+		== OPTIONS MENU DOCUMENTATION ==
+
+		to set up a category, add to the categoriesMap
+		format should be this;
+
+		"categoryName" => [
+			{name: "option name", type: "option type"}
+		]
+
+		type may be: "option", "subgroup", or "divider";
+		additionally, you can create your own types by adding
+		an action to a specific type;
+
+		subgroups - create a new category and sets options for them;
+		options for subgroups can be set in the OptionsData class
+
+		options - your usual options, can be toggled on or off, or sometimes can have different values set by you;
+		options can be set in the Init class
+
+		divider - an unselectable option, can be used as a category name of sorts;
+
+		keybinds - triggers the "Controls" Menu;
+	 */
+	public var categoriesMap:Map<String, Array<GroupData>> = [
+		"main" => [
+			{name: "preferences", type: "subgroup"},
+			{name: "accessibility", type: "subgroup"},
+			{name: "visuals", type: "subgroup"},
+			{name: "keybinds", type: "keybinds"}
+		],
+	];
 
 	public var alphabetGroup:FlxTypedGroup<Alphabet>;
-	public var attachmentsGroup:FlxTypedGroup<Dynamic>;
 
-	public var activeGroup:Array<String> = [];
+	public var attachmentsGroup:FlxTypedGroup<FlxBasic>;
+	public var attachmentsMap:Map<Alphabet, Dynamic>;
+
+	public var activeGroup:Array<GroupData> = [];
 
 	public var lockedMovement:Bool = false;
 
@@ -43,6 +77,28 @@ class BaseOptions extends MusicBeatState
 		updateDiscord();
 	}
 
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		if (attachmentsGroup != null)
+			repositionAttachments();
+	}
+
+	function repositionAttachments()
+	{
+		// move the attachments if there are any
+		for (setting in attachmentsMap.keys())
+		{
+			if ((setting != null) && (attachmentsMap.get(setting) != null))
+			{
+				var thisAttachment = attachmentsMap.get(setting);
+				thisAttachment.x = setting.x - 100;
+				thisAttachment.y = setting.y - 50;
+			}
+		}
+	}
+
 	public function updateDiscord(?forcedPresence:String)
 	{
 		var myPresence:String = curCategory == 'main' ? 'Navigating through Categories' : 'Changing $curCategory';
@@ -53,15 +109,21 @@ class BaseOptions extends MusicBeatState
 		#end
 	}
 
-	public function callGroups()
+	public function callAttachments()
 	{
 		// destroy existing instances of groups;
 		if (attachmentsGroup != null)
 			remove(attachmentsGroup);
 
 		// re-add
-		attachmentsGroup = new FlxTypedGroup<Dynamic>();
+		attachmentsMap = generateAttachments(alphabetGroup);
+		attachmentsGroup = new FlxTypedGroup<FlxBasic>();
+		for (setting in alphabetGroup)
+			if (attachmentsMap.get(setting) != null)
+				attachmentsGroup.add(attachmentsMap.get(setting));
 		add(attachmentsGroup);
+
+		repositionAttachments();
 	}
 
 	public function switchCategory(newCategory:String)
@@ -69,16 +131,35 @@ class BaseOptions extends MusicBeatState
 		curCategory = newCategory;
 		updateDiscord();
 
-		// reload groups
-		callGroups();
-
-		generateAlphabet(categoriesMap.get(newCategory));
+		generateOptions(categoriesMap.get(newCategory));
 
 		// reset selection;
 		curSelected = 0;
 	}
 
-	public function generateAlphabet(groupArray:Array<String>)
+	public function updateSelections(newSelection:Int = 0)
+	{
+		curSelected += newSelection;
+
+		if (curSelected < 0)
+			curSelected = activeGroup.length - 1;
+		else if (curSelected >= activeGroup.length)
+			curSelected = 0;
+
+		var bullShit:Int = 0;
+		for (item in alphabetGroup)
+		{
+			item.targetY = bullShit - curSelected;
+			bullShit++;
+
+			item.alpha = 0.6;
+
+			if (item.targetY == 0)
+				item.alpha = 1;
+		}
+	}
+
+	public function generateOptions(groupArray:Array<GroupData>)
 	{
 		activeGroup = groupArray;
 
@@ -88,39 +169,33 @@ class BaseOptions extends MusicBeatState
 		alphabetGroup = new FlxTypedGroup<Alphabet>();
 		add(alphabetGroup);
 
-		generateAttachements(alphabetGroup);
-
 		for (i in 0...groupArray.length)
 		{
-			var thisOption:Alphabet = new Alphabet(0, 0, groupArray[i], true, false);
-			thisOption.screenCenter();
-			thisOption.y += (125 * (i - Math.floor(groupArray.length / 2)));
-			thisOption.y += 75; // probably shouldn't do this but yeah;
-			thisOption.targetY = i;
-			thisOption.disableX = true;
-			// hardcoded main so it doesnt have scroll
-			if (curCategory != 'main')
-			{
-				thisOption.x += 100;
-				thisOption.isMenuItem = true;
-			}
-			thisOption.alpha = 0.6;
-			alphabetGroup.add(thisOption);
+			var option = groupArray[i];
 
-			// eh, no.
-			// alphabetGroup.members[i].xTo = 200 + ((i - curSelected) * 25);
-
-			if (attachmentsGroup != null && attachmentsGroup.members[curSelected] != null)
+			if (option.type != null && (Init.gameSettings.get(option.name) == null || Init.gameSettings.get(option.name) != Init.FORCED))
 			{
-				var thisAttachment = attachmentsGroup.members[i];
-				thisAttachment.x = alphabetGroup.members[i].x - 100;
-				thisAttachment.y = alphabetGroup.members[i].y - 50;
+				var thisOption:Alphabet = new Alphabet(160, 0, option.name, true, false);
+				thisOption.screenCenter();
+				thisOption.y += (125 * (i - Math.floor(groupArray.length / 2)));
+				thisOption.y += 75; // probably shouldn't do this but yeah;
+				thisOption.targetY = i;
+				thisOption.disableX = true;
+				// hardcoded main so it doesnt have scroll
+				if (curCategory != 'main')
+					thisOption.isMenuItem = true;
+				thisOption.alpha = 0.6;
+				alphabetGroup.add(thisOption);
 			}
 		}
+
+		// call the attachments
+		callAttachments();
 	}
 
-	public function generateAttachements(alpha:FlxTypedGroup<Alphabet>)
+	public function generateAttachments(alpha:FlxTypedGroup<Alphabet>)
 	{
+		var tempMap:Map<Alphabet, Dynamic> = new Map<Alphabet, Dynamic>();
 		for (option in alpha)
 		{
 			if (Init.gameSettings.get(option.text) != null)
@@ -131,17 +206,19 @@ class BaseOptions extends MusicBeatState
 						// checkmark
 						var checkmark = ForeverAssets.generateCheckmark(10, option.y, 'checkboxThingie', 'base', 'default', 'UI');
 						checkmark.playAnim(Std.string(Init.trueSettings.get(option.text)) + ' finished');
-						attachmentsGroup.add(checkmark);
+						tempMap.set(option, checkmark);
 					case Init.SettingTypes.Selector:
 						// selector
 						var selector:Selector = new Selector(10, option.y, option.text, Init.gameSettings.get(option.text)[4]);
-						attachmentsGroup.add(selector);
+						tempMap.set(option, selector);
 					default:
 						// dont do ANYTHING
 				}
 				//
 			}
 		}
+
+		return tempMap;
 	}
 
 	/*
@@ -153,17 +230,14 @@ class BaseOptions extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('base/menus/scrollMenu'));
 
-			if (attachmentsGroup != null && attachmentsGroup.members[curSelected] != null)
-			{
-				if (Init.trueSettings.get(alphabetGroup.members[curSelected].text) != null)
-					Init.trueSettings.set(alphabetGroup.members[curSelected].text, !Init.trueSettings.get(alphabetGroup.members[curSelected].text));
+			if (Init.trueSettings.get(alphabetGroup.members[curSelected].text) != null)
+				Init.trueSettings.set(alphabetGroup.members[curSelected].text, !Init.trueSettings.get(alphabetGroup.members[curSelected].text));
 
-				attachmentsGroup.members[curSelected].playAnim(Std.string(Init.trueSettings.get(alphabetGroup.members[curSelected].text)));
-				trace('${alphabetGroup.members[curSelected].text} is: ${Init.trueSettings.get(alphabetGroup.members[curSelected].text)}');
+			attachmentsMap.get(alphabetGroup.members[curSelected]).playAnim(Std.string(Init.trueSettings.get(alphabetGroup.members[curSelected].text)));
+			// trace('${alphabetGroup.members[curSelected].text} is: ${Init.trueSettings.get(alphabetGroup.members[curSelected].text)}');
 
-				// save the setting
-				Init.saveSettings();
-			}
+			// save the setting
+			Init.saveSettings();
 		}
 	}
 
@@ -173,20 +247,17 @@ class BaseOptions extends MusicBeatState
 	public function updateSelectors()
 	{
 		//
-		if (attachmentsGroup != null && attachmentsGroup.members[curSelected] != null)
-		{
-			var selector:Selector = attachmentsGroup.members[curSelected];
+		var selector:Selector = attachmentsMap.get(alphabetGroup.members[curSelected]);
 
-			if (!Controls.getPressEvent("ui_left", "pressed"))
-				selector.selectorPlay('left');
-			if (!Controls.getPressEvent("ui_right", "pressed"))
-				selector.selectorPlay('right');
+		if (!Controls.getPressEvent("ui_left", "pressed"))
+			selector.selectorPlay('left');
+		if (!Controls.getPressEvent("ui_right", "pressed"))
+			selector.selectorPlay('right');
 
-			if (Controls.getPressEvent("ui_left"))
-				updateSelector(selector, -1);
-			if (Controls.getPressEvent("ui_right"))
-				updateSelector(selector, 1);
-		}
+		if (Controls.getPressEvent("ui_left"))
+			updateSelector(selector, -1);
+		if (Controls.getPressEvent("ui_right"))
+			updateSelector(selector, 1);
 	}
 
 	public function updateSelector(selector:Selector, updateBy:Int)
@@ -237,7 +308,7 @@ class BaseOptions extends MusicBeatState
 			Init.trueSettings.set(selector.name, selector.chosenOptionString);
 			Init.saveSettings();
 
-			trace('${selector.name} is: ${selector.chosenOptionString}');
+			// trace('${selector.name} is: ${selector.chosenOptionString}');
 		}
 	}
 
