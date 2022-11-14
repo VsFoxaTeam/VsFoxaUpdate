@@ -69,6 +69,9 @@ class BaseOptions extends MusicBeatState
 	{
 		super.create();
 
+		// make sure the music is playing
+		ForeverTools.resetMenuMusic();
+
 		// set up category contents;
 		categoriesMap.set("preferences", OptionsData.preferences);
 		categoriesMap.set("accessibility", OptionsData.accessibility);
