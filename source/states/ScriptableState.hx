@@ -1,7 +1,7 @@
 package states;
 
 import states.MusicBeatState.MusicBeatSubstate;
-import base.feather.ScriptHandler;
+import base.FeatherDependencies.ScriptHandler;
 import states.MusicBeatState;
 import flixel.FlxBasic;
 import flixel.FlxSubState;

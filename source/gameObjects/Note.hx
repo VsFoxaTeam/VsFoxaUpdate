@@ -1,6 +1,6 @@
 package gameObjects;
 
-import base.feather.ScriptHandler;
+import base.FeatherDependencies.ScriptHandler;
 import dependency.FNFSprite;
 import flixel.FlxSprite;
 import gameObjects.Strumline.Receptor;

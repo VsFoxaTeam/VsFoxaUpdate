@@ -1,6 +1,6 @@
 package states.editors;
 
-import base.feather.Events;
+import base.FeatherDependencies.Events;
 import dependency.Discord;
 import flixel.FlxCamera;
 import flixel.FlxG;

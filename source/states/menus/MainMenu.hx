@@ -1,6 +1,6 @@
 package states.menus;
 
-import base.feather.ScriptHandler;
+import base.FeatherDependencies.ScriptHandler;
 import dependency.Discord;
 import flixel.FlxBasic;
 import flixel.FlxCamera;

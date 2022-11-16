@@ -1,7 +1,7 @@
 package gameObjects;
 
 import base.compatibility.PsychChar;
-import base.feather.ScriptHandler;
+import base.FeatherDependencies.ScriptHandler;
 import dependency.FNFSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;

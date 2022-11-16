@@ -1,7 +1,8 @@
 package states;
 
 import states.editors.CharacterOffsetEditor;
-import base.feather.*;
+import base.FeatherDependencies.ScriptHandler;
+import base.FeatherDependencies.Events;
 import dependency.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -1906,7 +1907,7 @@ class PlayState extends MusicBeatState
 	public function startCountdown():Void
 	{
 		inCutscene = false;
-		Conductor.songPosition = -(Conductor.crochet * 5);
+		Conductor.songPosition = -(Conductor.crochet * 4);
 
 		countdownPos = 0;
 
