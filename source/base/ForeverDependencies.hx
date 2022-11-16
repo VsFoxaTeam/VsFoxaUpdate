@@ -1,10 +1,9 @@
 package base;
 
-/**
-    Forever Dependencies is a way to unify both ForeverAssets and ForeverTools;
-    it contains data for custom asset skins and generation scripts for asset types;
-**/
-
+/*
+	Forever Dependencies is a way to unify both ForeverAssets and ForeverTools;
+	it contains data for custom asset skins and generation scripts for asset types;
+ */
 import dependency.FNFSprite;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;

@@ -334,6 +334,9 @@ class PlayState extends MusicBeatState
 			assetModifier = SONG.assetModifier;
 		changeableSkin = Init.trueSettings.get("UI Skin");
 
+		// set song position before beginning
+		Conductor.songPosition = -(Conductor.crochet * 4);
+
 		// EVERYTHING SHOULD GO UNDER THIS, IF YOU PLAN ON SPAWNING SOMETHING LATER ADD IT TO STAGEBUILD OR FOREGROUND
 		// darken everything but the arrows and ui via a flxsprite
 		var darknessBG:FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
@@ -732,6 +735,14 @@ class PlayState extends MusicBeatState
 			}
 
 			Conductor.songPosition += elapsed * 1000;
+
+			if (Conductor.songPosition >= 0)
+			{
+				Conductor.shouldStartSong = true;
+
+				if (keepScore)
+					Conductor.songPosition = Conductor.lastPosition;
+			}
 
 			if (startingSong && startedCountdown && Conductor.shouldStartSong)
 				startSong();
@@ -1907,7 +1918,7 @@ class PlayState extends MusicBeatState
 	public function startCountdown():Void
 	{
 		inCutscene = false;
-		Conductor.songPosition = -(Conductor.crochet * 4);
+		Conductor.songPosition = -(Conductor.crochet * 5);
 
 		countdownPos = 0;
 
@@ -1963,14 +1974,6 @@ class PlayState extends MusicBeatState
 					if (introSounds[countdownPos] != null)
 						FlxG.sound.play(introSounds[countdownPos], 0.6);
 					Conductor.songPosition = -(Conductor.crochet * songPosCount);
-
-					if (Conductor.songPosition == -1)
-					{
-						Conductor.shouldStartSong = true;
-
-						if (keepScore)
-							Conductor.songPosition = Conductor.lastPosition;
-					}
 
 					// bop with countdown;
 					charactersDance(curBeat);

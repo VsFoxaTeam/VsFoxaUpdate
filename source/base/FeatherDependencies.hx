@@ -1,12 +1,11 @@
 package base;
 
-/**
-    Feather Dependencies unifies ScriptHandler and Events into a single class;
-    both handle Script-related things and can be modified as you wish;
-    
-    this class is subjective of change;
-**/
+/*
+	Feather Dependencies unifies ScriptHandler and Events into a single class;
+	both handle Script-related things and can be modified as you wish;
 
+	this class is subjective of change;
+ */
 using StringTools;
 
 class ScriptHandler extends SScript
