@@ -404,17 +404,17 @@ class CharacterOffsetEditor extends MusicBeatState
 		if (curCharacter.startsWith('gf'))
 			genOffset.set(300, 100);
 
-        if (!isGhost)
-        {
-            if (char != null)
-                remove(char);
-            char = new Character(!isDad);
+		if (!isGhost)
+		{
+			if (char != null)
+				remove(char);
+			char = new Character(!isDad);
 			char.setCharacter(genOffset.x, genOffset.y, curCharacter);
-            char.debugMode = true;
-            add(char);
-        }
-        else
-        {
+			char.debugMode = true;
+			add(char);
+		}
+		else
+		{
 			if (ghost != null)
 				remove(ghost);
 			ghost = new Character(!isDad);
@@ -423,7 +423,7 @@ class CharacterOffsetEditor extends MusicBeatState
 			ghost.visible = false;
 			ghost.color = 0xFF666688;
 			add(ghost);
-        }
+		}
 
 		#if DISCORD_RPC
 		Discord.changePresence('OFFSET EDITOR', 'Editing: ' + curCharacter);
