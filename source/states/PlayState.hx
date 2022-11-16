@@ -589,16 +589,13 @@ class PlayState extends MusicBeatState
 		return cast songSpeed = value;
 	}
 
-	public function updateSectionCamera(char:Character)
+	public function updateSectionCamera(char:Character, isPlayer:Bool = false)
 	{
-		var getCenterX = char.getMidpoint().x + 100;
+		var getCenterX = isPlayer ? char.getMidpoint().x - 100 : char.getMidpoint().x + 100;
 		var getCenterY = char.getMidpoint().y - 100;
 
-		if (char == boyfriend)
+		if (isPlayer)
 		{
-			getCenterX = char.getMidpoint().x - 100;
-			getCenterY = char.getMidpoint().y - 100;
-
 			switch (curStage)
 			{
 				case 'limo':
@@ -712,12 +709,12 @@ class PlayState extends MusicBeatState
 					case "center":
 						updateSectionCamera(gf);
 					case "bf":
-						updateSectionCamera(boyfriend);
+						updateSectionCamera(boyfriend, true);
 					default:
 						if (!PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 							updateSectionCamera(opponent);
 						else
-							updateSectionCamera(boyfriend);
+							updateSectionCamera(boyfriend, true);
 				}
 			}
 
@@ -1248,8 +1245,8 @@ class PlayState extends MusicBeatState
 			if (Timings.perfectCombo)
 				Timings.perfectCombo = false;
 
-		displayScore(baseRating, timing);
-		uiHUD.colorHighlight(baseRating, Timings.perfectCombo);
+		displayScore(strumline.autoplay ? "sick" : baseRating, timing);
+		uiHUD.colorHighlight(strumline.autoplay ? "sick" : baseRating, Timings.perfectCombo);
 		Timings.updateAccuracy(Timings.judgementsMap.get(baseRating)[3]);
 
 		ratingScore = Std.int(Timings.judgementsMap.get(baseRating)[2]);
