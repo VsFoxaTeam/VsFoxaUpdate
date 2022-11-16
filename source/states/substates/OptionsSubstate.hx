@@ -58,25 +58,25 @@ class OptionsSubstate extends MusicBeatSubstate
 
 		// submenuoffset group
 		// this code by codist
-		var submenuResetText = new Alphabet(0, 0, "Left or Right to edit", true, false);
-		submenuResetText.screenCenter();
-		submenuResetText.y -= 144;
-		submenuoffsetGroup.add(submenuResetText);
+		var submenuOffsetText = new Alphabet(0, 0, "Left or Right to edit", true, false);
+		submenuOffsetText.screenCenter();
+		submenuOffsetText.y -= 144;
+		submenuoffsetGroup.add(submenuOffsetText);
 
-		var submenuResetText2 = new Alphabet(0, 0, "Negative is Late", true, false);
-		submenuResetText2.screenCenter();
-		submenuResetText2.y -= 100;
-		submenuoffsetGroup.add(submenuResetText2);
+		var submenuOffsetText2 = new Alphabet(0, 0, "Negative is Late", true, false);
+		submenuOffsetText2.screenCenter();
+		submenuOffsetText2.y -= 100;
+		submenuoffsetGroup.add(submenuOffsetText2);
 
-		var submenuResetText3 = new Alphabet(0, 0, "Escape to Cancel", true, false);
-		submenuResetText3.screenCenter();
-		submenuResetText3.y += 102;
-		submenuoffsetGroup.add(submenuResetText3);
+		var submenuOffsetText3 = new Alphabet(0, 0, "Escape to Cancel", true, false);
+		submenuOffsetText3.screenCenter();
+		submenuOffsetText3.y += 102;
+		submenuoffsetGroup.add(submenuOffsetText3);
 
-		var submenuResetText4 = new Alphabet(0, 0, "Enter to Save", true, false);
-		submenuResetText4.screenCenter();
-		submenuResetText4.y += 204;
-		submenuoffsetGroup.add(submenuResetText4);
+		var submenuOffsetText4 = new Alphabet(0, 0, "Enter to Save", true, false);
+		submenuOffsetText4.screenCenter();
+		submenuOffsetText4.y += 204;
+		submenuoffsetGroup.add(submenuOffsetText4);
 
 		var submenuOffsetValue:FlxText = new FlxText(0, 0, 0, "< 0ms >", 50, false);
 		submenuOffsetValue.screenCenter();
