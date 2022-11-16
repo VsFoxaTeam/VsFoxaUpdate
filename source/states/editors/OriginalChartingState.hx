@@ -1,4 +1,4 @@
-package states.charting;
+package states.editors;
 
 import base.feather.Events;
 import dependency.Discord;

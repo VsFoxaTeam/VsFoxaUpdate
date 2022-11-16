@@ -1,4 +1,4 @@
-package states.charting;
+package states.editors;
 
 import dependency.Discord;
 import flixel.FlxBasic;

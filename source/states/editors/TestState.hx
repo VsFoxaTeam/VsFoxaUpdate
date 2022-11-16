@@ -1,4 +1,4 @@
-package states.charting;
+package states.editors;
 
 import flixel.FlxG;
 import flixel.addons.display.FlxBackdrop;

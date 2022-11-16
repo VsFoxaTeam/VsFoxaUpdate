@@ -1,5 +1,6 @@
 package states;
 
+import states.editors.CharacterOffsetEditor;
 import base.feather.*;
 import dependency.FNFSprite;
 import flixel.FlxBasic;
@@ -686,14 +687,20 @@ class PlayState extends MusicBeatState
 					uiHUD.scoreBar.visible = !bfStrums.autoplay;
 				}
 
-				if (Controls.getPressEvent("debug"))
+				if (FlxG.keys.justPressed.SEVEN)
 				{
 					resetMusic();
 					if (FlxG.keys.pressed.SHIFT)
-						Main.switchState(this, new states.charting.ChartingState());
+						Main.switchState(this, new states.editors.ChartingState());
 					else
-						Main.switchState(this, new states.charting.OriginalChartingState());
+						Main.switchState(this, new states.editors.OriginalChartingState());
 					PlayState.SONG.validScore = false;
+				}
+
+				if (FlxG.keys.justPressed.EIGHT)
+				{
+					resetMusic();
+					Main.switchState(this, new states.editors.CharacterOffsetEditor());
 				}
 			}
 
@@ -1455,7 +1462,7 @@ class PlayState extends MusicBeatState
 		if (!paused)
 		{
 			songMusic.play();
-			songMusic.onComplete = endSong;
+			songMusic.onComplete = finishSong;
 			vocals.play();
 
 			resyncVocals();
@@ -1725,6 +1732,17 @@ class PlayState extends MusicBeatState
 	/// song end function at the end of the playstate lmao ironic I guess
 	private var endSongEvent:Bool = false;
 
+	function finishSong():Void
+	{
+		var onFinish:Void->Void = endSong;
+
+		songMusic.volume = 0;
+		vocals.volume = 0;
+		vocals.pause();
+
+		onFinish();
+	}
+
 	function endSong():Void
 	{
 		callFunc('endSong', []);
@@ -1732,8 +1750,6 @@ class PlayState extends MusicBeatState
 		canPause = false;
 		endingSong = true;
 
-		songMusic.volume = 0;
-		vocals.volume = 0;
 		if (SONG.validScore)
 			Highscore.saveScore(SONG.song, Timings.score, storyDifficulty);
 

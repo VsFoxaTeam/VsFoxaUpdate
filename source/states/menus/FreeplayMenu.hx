@@ -263,7 +263,7 @@ class FreeplayMenu extends MusicBeatState
 			if (FlxG.keys.pressed.SHIFT)
 			{
 				PlayState.SONG.validScore = false;
-				Main.switchState(this, new states.charting.OriginalChartingState());
+				Main.switchState(this, new states.editors.OriginalChartingState());
 			}
 			else
 				Main.switchState(this, new PlayState());

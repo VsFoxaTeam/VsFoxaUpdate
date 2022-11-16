@@ -27,17 +27,22 @@ class MusicBeatState extends FNFUIState
 	public var curBeat:Int = 0;
 	public var curSection:Int = 0;
 
+	// fixes a bug with FlxUITabMenu where it wouldn't respect the current camera zoom
+	public var camBeat:FlxCamera;
+
 	// class create event
 	override function create()
 	{
 		// dump
 		Paths.clearStoredMemory();
-		if ((!Std.isOfType(this, states.PlayState)) && (!Std.isOfType(this, states.charting.OriginalChartingState)))
+		if ((!Std.isOfType(this, states.PlayState)) && (!Std.isOfType(this, states.editors.OriginalChartingState)))
 			Paths.clearUnusedMemory();
 
 		// create controls event;
 		Controls.keyEventPress.add(keyEventPress);
 		Controls.keyEventRelease.add(keyEventRelease);
+
+		camBeat = FlxG.camera;
 
 		super.create();
 

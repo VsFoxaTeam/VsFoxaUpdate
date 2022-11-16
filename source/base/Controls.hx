@@ -45,8 +45,7 @@ class Controls
 		// MISC GAME KEYS
 		"reset" => [Keyboard.R, Keyboard.END],
 		"autoplay" => [Keyboard.NUMBER_6],
-		"skip" => [Keyboard.SHIFT, Keyboard.END],
-		"debug" => [Keyboard.NUMBER_7, Keyboard.NUMBER_8],
+		"skip" => [Keyboard.SHIFT, Keyboard.END]
 	];
 
 	// thing to sort by key ID idk i'm a dummy -gabi
@@ -65,10 +64,9 @@ class Controls
 		"pause" => 11,
 		"back" => 12,
 		// MISC GAME KEYS
-		"reset" => 13,
-		"autoplay" => 14,
-		"skip" => 15,
-		"debug" => 16,
+		"reset" => 14,
+		"autoplay" => 15,
+		"skip" => 16
 	];
 
 	public static var actions:Map<String, Array<Key>> = [];
