@@ -122,6 +122,8 @@ class PlayState extends MusicBeatState
 	public static var defaultCamZoom:Float = 1.05;
 	public static var forceZoom:Array<Float>;
 
+	public static var cameraBumpSpeed:Float = 4;
+
 	// User Interface and Objects
 	public static var uiHUD:ClassHUD;
 	public static var daPixelZoom:Float = 6;
@@ -585,6 +587,42 @@ class PlayState extends MusicBeatState
 		return cast songSpeed = value;
 	}
 
+	public function updateSectionCamera(char:Character)
+	{
+		var getCenterX = char.getMidpoint().x + 100;
+		var getCenterY = char.getMidpoint().y - 100;
+
+		if (char == boyfriend)
+		{
+			getCenterX = char.getMidpoint().x - 100;
+			getCenterY = char.getMidpoint().y - 100;
+
+			switch (curStage)
+			{
+				case 'limo':
+					getCenterX = char.getMidpoint().x - 300;
+				case 'mall':
+					getCenterY = char.getMidpoint().y - 200;
+				case 'school':
+					getCenterX = char.getMidpoint().x - 200;
+					getCenterY = char.getMidpoint().y - 200;
+				case 'schoolEvil':
+					getCenterX = char.getMidpoint().x - 200;
+					getCenterY = char.getMidpoint().y - 200;
+			}
+		}
+
+		camFollow.setPosition(getCenterX
+			+ camDisplaceX
+			+ char.characterData.camOffsets[0],
+			getCenterY
+			+ camDisplaceY
+			+ char.characterData.camOffsets[1]);
+
+		if (char.curCharacter == 'mom')
+			vocals.volume = 1;
+	}
+
 	override public function update(elapsed:Float)
 	{
 		callFunc('update', [elapsed]);
@@ -665,49 +703,19 @@ class PlayState extends MusicBeatState
 					lastSection = Std.int(curStep / 16);
 				}
 
-				if (!PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
+				switch (Init.trueSettings.get('Camera Position'))
 				{
-					var char = opponent;
-
-					var getCenterX = char.getMidpoint().x + 100;
-					var getCenterY = char.getMidpoint().y - 100;
-
-					camFollow.setPosition(getCenterX
-						+ camDisplaceX
-						+ char.characterData.camOffsets[0],
-						getCenterY
-						+ camDisplaceY
-						+ char.characterData.camOffsets[1]);
-
-					if (char.curCharacter == 'mom')
-						vocals.volume = 1;
-				}
-				else
-				{
-					var char = boyfriend;
-
-					var getCenterX = char.getMidpoint().x - 100;
-					var getCenterY = char.getMidpoint().y - 100;
-					switch (curStage)
-					{
-						case 'limo':
-							getCenterX = char.getMidpoint().x - 300;
-						case 'mall':
-							getCenterY = char.getMidpoint().y - 200;
-						case 'school':
-							getCenterX = char.getMidpoint().x - 200;
-							getCenterY = char.getMidpoint().y - 200;
-						case 'schoolEvil':
-							getCenterX = char.getMidpoint().x - 200;
-							getCenterY = char.getMidpoint().y - 200;
-					}
-
-					camFollow.setPosition(getCenterX
-						+ camDisplaceX
-						- char.characterData.camOffsets[0],
-						getCenterY
-						+ camDisplaceY
-						+ char.characterData.camOffsets[1]);
+					case "dad":
+						updateSectionCamera(opponent);
+					case "center":
+						updateSectionCamera(gf);
+					case "bf":
+						updateSectionCamera(boyfriend);
+					default:
+						if (!PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
+							updateSectionCamera(opponent);
+						else
+							updateSectionCamera(boyfriend);
 				}
 			}
 
@@ -1599,7 +1607,7 @@ class PlayState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if ((FlxG.camera.zoom < 1.35 && curBeat % 4 == 0) && (!Init.trueSettings.get('Reduced Movements')))
+		if ((FlxG.camera.zoom < 1.35 && curBeat % cameraBumpSpeed == 0) && (!Init.trueSettings.get('Reduced Movements')))
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.05;

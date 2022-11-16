@@ -223,6 +223,13 @@ class Init extends FlxState
 			"Recycles judgements and combo rather than adding one every note hit, may cause layering issues.",
 			NOT_FORCED
 		],
+		"Camera Position" => [
+			'none',
+			Selector,
+			"Chooses where the camera should stay; None = move depending on sections.",
+			NOT_FORCED,
+			['none', 'bf', 'center', 'dad']
+		],
 	];
 
 	public static var trueSettings:Map<String, Dynamic> = [];

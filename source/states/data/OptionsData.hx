@@ -44,6 +44,7 @@ class OptionsData
 		//
 		{name: "Motion Settings", type: "divider"},
 		//
+		{name: "Camera Position", type: "option"},
 		{name: "No Camera Note Movement", type: "option"},
 		{name: "Reduced Movements", type: "option"},
 		//
