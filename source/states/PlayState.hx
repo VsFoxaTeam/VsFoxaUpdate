@@ -628,8 +628,7 @@ class PlayState extends MusicBeatState
 
 		camFollow.setPosition(getCenterX
 			+ camDisplaceX
-			+ char.characterData.camOffsets[0],
-			getCenterY
+			+ char.characterData.camOffsets[0], getCenterY
 			+ camDisplaceY
 			+ char.characterData.camOffsets[1]);
 
@@ -1096,8 +1095,7 @@ class PlayState extends MusicBeatState
 		// I tried doing xor and it didnt work lollll
 		if (coolNote.noteAlt > 0)
 			altString = '-alt';
-		if (((SONG.notes[curSection] != null) && (SONG.notes[curSection].altAnim))
-			&& (character.animOffsets.exists(baseString + '-alt')))
+		if (((SONG.notes[curSection] != null) && (SONG.notes[curSection].altAnim)) && (character.animOffsets.exists(baseString + '-alt')))
 		{
 			if (altString != '-alt')
 				altString = '-alt';
@@ -1645,37 +1643,6 @@ class PlayState extends MusicBeatState
 		}
 
 		callFunc('beatHit', [curBeat]);
-
-		if (SONG.song.toLowerCase() == 'bopeebo')
-		{
-			switch (curBeat)
-			{
-				case 128, 129, 130:
-					vocals.volume = 0;
-			}
-		}
-
-		if (SONG.song.toLowerCase() == 'fresh')
-		{
-			switch (curBeat)
-			{
-				case 16 | 80:
-					gfSpeed = 2;
-				case 48 | 112:
-					gfSpeed = 1;
-			}
-		}
-
-		if (SONG.song.toLowerCase() == 'milf'
-			&& curBeat >= 168
-			&& curBeat < 200
-			&& !Init.trueSettings.get('Reduced Movements')
-			&& FlxG.camera.zoom < 1.35)
-		{
-			FlxG.camera.zoom += 0.015;
-			for (hud in allUIs)
-				hud.zoom += 0.03;
-		}
 	}
 
 	override function sectionHit()
