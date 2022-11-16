@@ -128,6 +128,7 @@ class PauseSubstate extends MusicBeatSubstate
 					Main.switchState(this, new PlayState());
 				case "Exit to options":
 					toOptions = true;
+					// PlayState.keepScore = true;
 					Main.switchState(this, new OptionsMenu());
 				case "Exit to menu":
 					PlayState.resetMusic();

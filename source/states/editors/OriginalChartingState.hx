@@ -287,6 +287,7 @@ class OriginalChartingState extends MusicBeatState
 				_song.player1 = characters[Std.parseInt(character)];
 				updateHeads(true);
 			});
+		player1DropDown.dropDirection = Down;
 		player1DropDown.selectedLabel = _song.player1;
 		blockPressScrolling.push(player1DropDown);
 
@@ -296,7 +297,9 @@ class OriginalChartingState extends MusicBeatState
 				_song.gfVersion = characters[Std.parseInt(character)];
 				updateHeads();
 			});
+		gfVersionDropDown.dropDirection = Down;
 		gfVersionDropDown.selectedLabel = _song.gfVersion;
+		blockPressScrolling.push(gfVersionDropDown);
 
 		var player2DropDown = new FlxUIDropDownMenu(player1DropDown.x, gfVersionDropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true),
 			function(character:String)
@@ -304,14 +307,16 @@ class OriginalChartingState extends MusicBeatState
 				_song.player2 = characters[Std.parseInt(character)];
 				updateHeads(true);
 			});
+		player2DropDown.dropDirection = Down;
 		player2DropDown.selectedLabel = _song.player2;
-		blockPressScrolling.push(gfVersionDropDown);
+		blockPressScrolling.push(player2DropDown);
 
 		var stageDropDown = new FlxUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true),
 			function(stage:String)
 			{
 				_song.stage = stages[Std.parseInt(stage)];
 			});
+		stageDropDown.dropDirection = Down;
 		stageDropDown.selectedLabel = _song.stage;
 		blockPressScrolling.push(stageDropDown);
 
@@ -320,6 +325,7 @@ class OriginalChartingState extends MusicBeatState
 			{
 				_song.assetModifier = assetModifiers[Std.parseInt(asset)];
 			});
+		assetModifierDropDown.dropDirection = Down;
 		assetModifierDropDown.selectedLabel = _song.assetModifier;
 		blockPressScrolling.push(assetModifierDropDown);
 
@@ -404,6 +410,7 @@ class OriginalChartingState extends MusicBeatState
 
 			descText.text = Events.returnEventDescription(Events.eventArray[selectedEvent]);
 		});
+		eventDropDown.dropDirection = Down;
 		blockPressScrolling.push(eventDropDown);
 
 		var text:FlxText = new FlxText(20, 90, 0, "Value 1:");

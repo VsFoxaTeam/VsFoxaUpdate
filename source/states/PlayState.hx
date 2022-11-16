@@ -160,17 +160,22 @@ class PlayState extends MusicBeatState
 
 	function resetStatics()
 	{
-		Timings.resetAccuracy();
 		GameOverSubstate.resetDeathVariables();
 		Events.getScriptEvents();
 
-		deaths = 0;
-		health = 1;
+		if (!keepScore)
+		{
+			Timings.resetAccuracy();
+			PlayState.SONG.validScore = true;
+			deaths = 0;
+			health = 1;
+		}
 
 		timedEvents = [];
 		moduleArray = [];
 		lastCombo = [];
 
+		Conductor.shouldStartSong = false;
 		defaultCamZoom = 1.05;
 		cameraBumpSpeed = 4;
 		cameraSpeed = 1;
@@ -180,7 +185,7 @@ class PlayState extends MusicBeatState
 		assetModifier = 'base';
 		changeableSkin = 'default';
 
-		PlayState.SONG.validScore = true;
+		keepScore = false;
 	}
 
 	function checkTween(isDad:Bool = false):Bool
@@ -327,9 +332,6 @@ class PlayState extends MusicBeatState
 		if (SONG.assetModifier != null && SONG.assetModifier.length > 1)
 			assetModifier = SONG.assetModifier;
 		changeableSkin = Init.trueSettings.get("UI Skin");
-
-		// set song position before beginning
-		Conductor.songPosition = -(Conductor.crochet * 4);
 
 		// EVERYTHING SHOULD GO UNDER THIS, IF YOU PLAN ON SPAWNING SOMETHING LATER ADD IT TO STAGEBUILD OR FOREGROUND
 		// darken everything but the arrows and ui via a flxsprite
@@ -729,8 +731,15 @@ class PlayState extends MusicBeatState
 			}
 
 			Conductor.songPosition += elapsed * 1000;
-			if (startingSong && startedCountdown && Conductor.songPosition >= 0)
+
+			if (startingSong && startedCountdown && Conductor.shouldStartSong)
 				startSong();
+
+			if (!startingSong)
+			{
+				if (Conductor.songPosition >= Conductor.lastPosition)
+					Conductor.lastPosition = Conductor.songPosition;
+			}
 
 			var lerpVal = (elapsed * 2.4) * cameraSpeed;
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
@@ -1462,8 +1471,9 @@ class PlayState extends MusicBeatState
 		if (!paused)
 		{
 			songMusic.play();
-			songMusic.onComplete = finishSong;
 			vocals.play();
+
+			songMusic.onComplete = finishSong;
 
 			resyncVocals();
 
@@ -1562,12 +1572,15 @@ class PlayState extends MusicBeatState
 
 	function resyncVocals():Void
 	{
-		songMusic.pause();
-		vocals.pause();
-		Conductor.songPosition = songMusic.time;
-		vocals.time = Conductor.songPosition;
-		songMusic.play();
-		vocals.play();
+		if (!endingSong)
+		{
+			songMusic.pause();
+			vocals.pause();
+			Conductor.songPosition = songMusic.time;
+			vocals.time = Conductor.songPosition;
+			songMusic.play();
+			vocals.play();
+		}
 	}
 
 	override function stepHit()
@@ -1950,6 +1963,14 @@ class PlayState extends MusicBeatState
 						FlxG.sound.play(introSounds[countdownPos], 0.6);
 					Conductor.songPosition = -(Conductor.crochet * songPosCount);
 
+					if (Conductor.songPosition == -1)
+					{
+						Conductor.shouldStartSong = true;
+
+						if (keepScore)
+							Conductor.songPosition = Conductor.lastPosition;
+					}
+
 					// bop with countdown;
 					charactersDance(curBeat);
 				}
@@ -1960,9 +1981,16 @@ class PlayState extends MusicBeatState
 				callFunc('countdownTick', [countdownPos]);
 			}
 			else
+			{
 				Conductor.songPosition = -(Conductor.crochet * 1);
+				Conductor.shouldStartSong = true;
+				if (keepScore)
+					Conductor.songPosition = Conductor.lastPosition;
+			}
 		}, 5);
 	}
+
+	public static var keepScore:Bool = false; // used to keep your last score info;
 
 	override function add(Object:FlxBasic):FlxBasic
 	{
