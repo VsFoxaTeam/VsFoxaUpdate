@@ -1582,7 +1582,6 @@ class PlayState extends MusicBeatState
 		}
 
 		callFunc('stepHit', [curStep]);
-		setVar('curStep', curStep);
 	}
 
 	private function charactersDance(curBeat:Int)
@@ -1646,7 +1645,6 @@ class PlayState extends MusicBeatState
 		}
 
 		callFunc('beatHit', [curBeat]);
-		setVar('curBeat', curBeat);
 
 		if (SONG.song.toLowerCase() == 'bopeebo')
 		{
@@ -1695,8 +1693,6 @@ class PlayState extends MusicBeatState
 		}
 
 		callFunc('sectionHit', [curSection]);
-		setVar('curSection', curSection);
-		setVar('lastSection', lastSection);
 	}
 
 	/* ====== substate stuffs ====== */
@@ -2105,6 +2101,11 @@ class PlayState extends MusicBeatState
 		setVar('misses', Timings.misses);
 		setVar('health', health);
 		setVar('deaths', deaths);
+
+		setVar('curBeat', curBeat);
+		setVar('curStep', curStep);
+		setVar('curSection', curSection);
+		setVar('lastSection', lastSection);
 
 		setVar('set', function(key:String, value:Dynamic)
 		{
