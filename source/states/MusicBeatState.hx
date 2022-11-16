@@ -20,9 +20,11 @@ class MusicBeatState extends FNFUIState
 	// original variables extended from original game source
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
+	public var lastSection:Float = 0;
 
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
+	public var curSection:Int = 0;
 
 	// class create event
 	override function create()
@@ -42,6 +44,7 @@ class MusicBeatState extends FNFUIState
 		FlxG.watch.add(Conductor, "songPosition");
 		FlxG.watch.add(this, "curBeat");
 		FlxG.watch.add(this, "curStep");
+		FlxG.watch.add(this, "curSection");
 	}
 
 	override function destroy()
@@ -68,7 +71,9 @@ class MusicBeatState extends FNFUIState
 	public function updateContents()
 	{
 		updateCurStep();
-		updateBeat();
+
+		curBeat = Math.floor(curStep / 4);
+		curSection = Math.floor(curStep / 16);
 
 		// delta time bullshit
 		var trueStep:Int = curStep;
@@ -98,11 +103,6 @@ class MusicBeatState extends FNFUIState
 	var storedSteps:Array<Int> = [];
 	var skippedSteps:Array<Int> = [];
 
-	public function updateBeat():Void
-	{
-		curBeat = Math.floor(curStep / 4);
-	}
-
 	public function updateCurStep():Void
 	{
 		var lastChange:BPMChangeEvent = {
@@ -130,7 +130,13 @@ class MusicBeatState extends FNFUIState
 
 	public function beatHit():Void
 	{
-		// used for updates when beats are hit in classes that extend this one
+		// trace('Section: ' + curSection + ' Last: ' + lastSection);
+	}
+
+	public function sectionHit():Void
+	{
+		if (curSection != lastSection)
+			lastSection = Std.int(curSection);
 	}
 
 	var textField:FlxText;
@@ -192,16 +198,13 @@ class MusicBeatState extends FNFUIState
 
 class MusicBeatSubstate extends FlxSubState
 {
-	public function new()
-	{
-		super();
-	}
-
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
+	private var lastSection:Float = 0;
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
+	private var curSection:Int = 0;
 
 	override function create()
 	{
@@ -227,11 +230,11 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		// everyStep();
 		var oldStep:Int = curStep;
 
 		updateCurStep();
 		curBeat = Math.floor(curStep / 4);
+		curSection = Math.floor(curStep / 16);
 
 		if (oldStep != curStep && curStep > 0)
 			stepHit();
@@ -263,6 +266,12 @@ class MusicBeatSubstate extends FlxSubState
 
 	public function beatHit():Void
 	{
-		// do literally nothing dumbass
+		// trace('Section: ' + curSection + ' Last: ' + lastSection);
+	}
+
+	public function sectionHit():Void
+	{
+		if (curSection != lastSection)
+			lastSection = Std.int(curSection);
 	}
 }

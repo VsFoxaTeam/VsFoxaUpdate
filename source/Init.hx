@@ -228,7 +228,7 @@ class Init extends FlxState
 			Selector,
 			"Chooses where the camera should stay; None = move depending on sections.",
 			NOT_FORCED,
-			['none', 'bf', 'center', 'dad']
+			['none', 'bf', 'gf', 'dad', 'center']
 		],
 	];
 

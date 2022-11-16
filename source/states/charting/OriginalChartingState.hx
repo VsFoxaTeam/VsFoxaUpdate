@@ -53,17 +53,9 @@ class OriginalChartingState extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 
-	/**
-	 * Array of notes showing when each section STARTS in STEPS
-	 * Usually rounded up??
-	 */
-	var curSection:Int = 0;
-
 	var curNoteType:Int = 0;
 
 	var events:Map<FlxSprite, Array<Dynamic>> = new Map();
-
-	public static var lastSection:Int = 0;
 
 	var bpmTxt:FlxText;
 
@@ -124,7 +116,7 @@ class OriginalChartingState extends MusicBeatState
 		blockPressNumStepper = [];
 		blockPressScrolling = [];
 
-		curSection = lastSection;
+		curSection = Std.int(lastSection);
 
 		chartCamera = new FlxCamera();
 		chartUI = new FlxCamera();
@@ -923,6 +915,13 @@ class OriginalChartingState extends MusicBeatState
 				Main.switchState(this, new PlayState());
 			}
 
+			if (FlxG.keys.justPressed.BACKSPACE)
+			{
+				songMusic.stop();
+				vocals.stop();
+				Main.switchState(this, new states.menus.FreeplayMenu());
+			}
+
 			if (FlxG.keys.justPressed.E)
 			{
 				changeNoteSustain(Conductor.stepCrochet);
@@ -1109,7 +1108,7 @@ class OriginalChartingState extends MusicBeatState
 		}
 
 		curStep = lastChange.stepTime + Math.floor((songMusic.time - lastChange.songTime) / Conductor.stepCrochet);
-		updateBeat();
+		curBeat = Math.floor(curStep / 4);
 
 		return curStep;
 	}
