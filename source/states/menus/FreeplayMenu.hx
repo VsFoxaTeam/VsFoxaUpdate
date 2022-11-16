@@ -353,9 +353,6 @@ class FreeplayMenu extends MusicBeatState
 		}
 		//
 
-		if (lastDifficulty == "NORMAL")
-			curDifficulty = 0;
-
 		changeDiff();
 		changeSongPlaying();
 		updateDiscord();
