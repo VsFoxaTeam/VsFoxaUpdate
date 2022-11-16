@@ -1240,7 +1240,7 @@ class PlayState extends MusicBeatState
 		if (baseRating == "sick" || coolNote.noteSplash)
 			// create the note splash if you hit a sick
 			createSplash(coolNote, strumline);
-		else
+		else if (!strumline.autoplay)
 			// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
 			if (Timings.perfectCombo)
 				Timings.perfectCombo = false;
