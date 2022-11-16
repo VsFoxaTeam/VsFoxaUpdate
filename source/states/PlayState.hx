@@ -169,7 +169,9 @@ class PlayState extends MusicBeatState
 		lastCombo = [];
 
 		defaultCamZoom = 1.05;
+		cameraBumpSpeed = 4;
 		cameraSpeed = 1;
+
 		forceZoom = [0, 0, 0, 0];
 
 		assetModifier = 'base';
