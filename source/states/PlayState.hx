@@ -899,7 +899,7 @@ class PlayState extends MusicBeatState
 
 								vocals.volume = 0;
 								missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
-								daNote.noteMiss();
+								daNote.noteMiss(daNote.noteType);
 
 								// ambiguous name
 								Timings.updateAccuracy(0);
@@ -1032,7 +1032,7 @@ class PlayState extends MusicBeatState
 						}
 					}
 
-					coolNote.noteHit();
+					coolNote.noteHit(coolNote.noteType);
 				}
 			}
 
@@ -1442,7 +1442,7 @@ class PlayState extends MusicBeatState
 		if (!paused)
 		{
 			songMusic.play();
-			songMusic.onComplete = endSong.bind();
+			songMusic.onComplete = endSong;
 			vocals.play();
 
 			resyncVocals();
@@ -1562,7 +1562,7 @@ class PlayState extends MusicBeatState
 		{
 			strumline.allNotes.forEachAlive(function(coolNote:Note)
 			{
-				coolNote.stepHit();
+				coolNote.stepHit(coolNote.noteType, curStep);
 			});
 		}
 
@@ -1627,7 +1627,7 @@ class PlayState extends MusicBeatState
 		{
 			strumline.allNotes.forEachAlive(function(coolNote:Note)
 			{
-				coolNote.beatHit();
+				coolNote.beatHit(coolNote.noteType, curBeat);
 			});
 		}
 

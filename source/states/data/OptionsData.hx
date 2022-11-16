@@ -5,6 +5,7 @@ typedef GroupData =
 	var name:String;
 	var type:String;
 	@:optional var description:String;
+	@:optional var previousSection:String; // for accessing groups inside groups;
 }
 
 /**
@@ -56,21 +57,22 @@ class OptionsData
 	/* == Visuals Group == */
 	public static var visuals:Array<GroupData> = [
 		//
-		{name: "User Interface Settings", type: "divider"},
+		{name: "User Interface", type: "divider"},
 		//
 		{name: "UI Skin", type: "option"},
+		// {name: "Judgements", type: "subgroup", previousSection: "Visuals"},
 		{name: "Fixed Judgements", type: "option"},
 		{name: "Simply Judgements", type: "option"},
 		{name: "Opaque User Interface", type: "option"},
+		//
+		{name: "Performance and Text", type: "divider"},
+		//
+		{name: "Counter", type: "option"},
 		{name: "Judgement Recycling", type: "option"},
-		//
-		{name: "Text Settings", type: "divider"},
-		//
 		{name: 'Display Accuracy', type: "option"},
 		{name: "Accuracy Hightlight", type: "option"},
-		{name: "Counter", type: "option"},
 		//
-		{name: "Note Settings", type: "divider"},
+		{name: "Note and Holds", type: "divider"},
 		//
 		{name: "Note Skin", type: "option"},
 		{name: "Disable Note Splashes", type: "option"},

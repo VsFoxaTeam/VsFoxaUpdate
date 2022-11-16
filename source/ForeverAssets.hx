@@ -338,31 +338,35 @@ class ForeverAssets
 		newCheckmark.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary));
 		newCheckmark.antialiasing = true;
 
-		switch (changeableSkin.toLowerCase())
+		switch (assetModifier)
 		{
-			case "forever":
-				newCheckmark.animation.addByPrefix('false', 'uncheck', 12, false);
-				newCheckmark.animation.addByPrefix('true', 'check', 12, false);
-				newCheckmark.animation.addByPrefix('false finished', 'uncheckFinished');
-				newCheckmark.animation.addByPrefix('true finished', 'checkFinished');
-
-				///*
-				newCheckmark.addOffset('false', 45, 5);
-				newCheckmark.addOffset('true', 45, 5);
-				newCheckmark.addOffset('true finished', 45, 5);
-				newCheckmark.addOffset('false finished', 45, 5);
-				// */
 			default:
-				// for week 7 assets when they decide to exist
-				newCheckmark.animation.addByPrefix('false', 'Check Box unselected', 24, false);
-				newCheckmark.animation.addByPrefix('true', 'Check Box selecting animation', 24, false);
-				newCheckmark.animation.addByPrefix('false finished', 'Check Box unselected');
-				newCheckmark.animation.addByPrefix('true finished', 'Check Box Selected Static');
+				switch (changeableSkin.toLowerCase())
+				{
+					case "forever":
+						newCheckmark.animation.addByPrefix('false', 'uncheck', 12, false);
+						newCheckmark.animation.addByPrefix('true', 'check', 12, false);
+						newCheckmark.animation.addByPrefix('false finished', 'uncheckFinished');
+						newCheckmark.animation.addByPrefix('true finished', 'checkFinished');
 
-				newCheckmark.addOffset('false', 8, -12);
-				newCheckmark.addOffset('true', 23, 59);
-				newCheckmark.addOffset('false finished', 8, -12);
-				newCheckmark.addOffset('true finished', 15, 38);
+						//
+						newCheckmark.addOffset('false', 45, 5);
+						newCheckmark.addOffset('true', 45, 5);
+						newCheckmark.addOffset('true finished', 45, 5);
+						newCheckmark.addOffset('false finished', 45, 5);
+					default:
+						// for week 7 assets
+						newCheckmark.animation.addByPrefix('false', 'Check Box unselected', 24, false);
+						newCheckmark.animation.addByPrefix('true', 'Check Box selecting animation', 24, false);
+						newCheckmark.animation.addByPrefix('false finished', 'Check Box unselected', 24, false);
+						newCheckmark.animation.addByPrefix('true finished', 'Check Box Selected Static', 24, true);
+
+						//
+						newCheckmark.addOffset('false', 2, -12);
+						newCheckmark.addOffset('false finished', 2, -12);
+						newCheckmark.addOffset('true', 20, 59);
+						newCheckmark.addOffset('true finished', 12, 39);
+				}
 		}
 
 		newCheckmark.setGraphicSize(Std.int(newCheckmark.width * 0.7));

@@ -62,36 +62,39 @@ class ChartParser
 				// create the new note
 				var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
 
-				swagNote.noteType = daNoteType;
-				swagNote.noteSpeed = songData.speed;
-				swagNote.mustPress = gottaHitNote;
-
-				if (swagNote.noteData > -1) // don't push notes if they are an event??
-					unspawnNotes.push(swagNote);
-
-				// set the note's length (sustain note)
-				swagNote.sustainLength = songNotes[2];
-				if (swagNote.sustainLength > 0)
-					swagNote.sustainLength = Math.round(swagNote.sustainLength / Conductor.stepCrochet) * Conductor.stepCrochet;
-				swagNote.scrollFactor.set(0, 0);
-
-				if (swagNote.sustainLength > 0)
+				if (swagNote != null)
 				{
-					var floorSus:Int = Math.round(swagNote.sustainLength / Conductor.stepCrochet);
-					if (floorSus > 0)
+					swagNote.noteType = daNoteType;
+					swagNote.noteSpeed = songData.speed;
+					swagNote.mustPress = gottaHitNote;
+
+					if (swagNote.noteData > -1) // don't push notes if they are an event??
+						unspawnNotes.push(swagNote);
+
+					// set the note's length (sustain note)
+					swagNote.sustainLength = songNotes[2];
+					if (swagNote.sustainLength > 0)
+						swagNote.sustainLength = Math.round(swagNote.sustainLength / Conductor.stepCrochet) * Conductor.stepCrochet;
+					swagNote.scrollFactor.set(0, 0);
+
+					if (swagNote.sustainLength > 0)
 					{
-						if (floorSus == 1)
-							floorSus++;
-						for (susNote in 0...floorSus)
+						var floorSus:Int = Math.round(swagNote.sustainLength / Conductor.stepCrochet);
+						if (floorSus > 0)
 						{
-							oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+							if (floorSus == 1)
+								floorSus++;
+							for (susNote in 0...floorSus)
+							{
+								oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-							var sustainNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier,
-								daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteAlt, daNoteType, true, oldNote);
-							sustainNote.mustPress = gottaHitNote;
-							sustainNote.scrollFactor.set();
+								var sustainNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier,
+									daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteAlt, daNoteType, true, oldNote);
+								sustainNote.mustPress = gottaHitNote;
+								sustainNote.scrollFactor.set();
 
-							unspawnNotes.push(sustainNote);
+								unspawnNotes.push(sustainNote);
+							}
 						}
 					}
 				}

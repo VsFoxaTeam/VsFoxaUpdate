@@ -60,8 +60,6 @@ class BaseOptions extends MusicBeatState
 
 	public var activeGroup:Array<GroupData> = [];
 
-	public var lockedMovement:Bool = false;
-
 	public var curSelected:Int = 0;
 	public var curCategory:String = 'main';
 
@@ -86,6 +84,15 @@ class BaseOptions extends MusicBeatState
 
 		if (attachmentsGroup != null)
 			repositionAttachments();
+
+		if (activeGroup != null)
+		{
+			for (i in 0...activeGroup.length)
+			{
+				if (activeGroup[i].type == "divider") // skip dividers;
+					alphabetGroup.members[i].alpha = 0.6;
+			}
+		}
 	}
 
 	function repositionAttachments()
@@ -138,11 +145,15 @@ class BaseOptions extends MusicBeatState
 
 		// reset selection;
 		curSelected = 0;
+		updateSelections(curSelected);
 	}
 
-	public function updateSelections(newSelection:Int = 0)
+	public function updateSelections(newSelection:Int)
 	{
-		curSelected += newSelection;
+		// direction increment finder
+		var directionIncrement = ((newSelection < curSelected) ? -1 : 1);
+
+		curSelected = newSelection;
 
 		if (curSelected < 0)
 			curSelected = activeGroup.length - 1;
@@ -172,6 +183,12 @@ class BaseOptions extends MusicBeatState
 
 			if (attachmentsMap != null)
 				setAttachmentAlpha(attachmentsMap.get(item), item.alpha);
+		}
+
+		for (i in 0...activeGroup.length)
+		{
+			if (activeGroup[curSelected].type == "divider")
+				updateSelections(curSelected + directionIncrement);
 		}
 	}
 
@@ -205,9 +222,18 @@ class BaseOptions extends MusicBeatState
 			if (option.type != null && (Init.gameSettings.get(option.name) == null || Init.gameSettings.get(option.name) != Init.FORCED))
 			{
 				var thisOption:Alphabet = new Alphabet(160, 0, option.name, true, false);
-				thisOption.screenCenter();
-				thisOption.y += (125 * (i - Math.floor(groupArray.length / 2)));
-				thisOption.y += 75; // probably shouldn't do this but yeah;
+				if (option.type != "divider")
+				{
+					thisOption.screenCenter();
+					thisOption.y += (125 * (i - Math.floor(groupArray.length / 2)) + 75);
+				}
+				else
+				{
+					// hardcoded divider centering lol;
+					thisOption.screenCenter(X);
+					thisOption.forceX = thisOption.x;
+					thisOption.yAdd = -55;
+				}
 				thisOption.targetY = i;
 				thisOption.disableX = true;
 				// the main category shouldn't scroll;
