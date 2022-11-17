@@ -55,10 +55,7 @@ function generateSustain(newNote)
 
 function generateSplash(noteSplash, noteData)
 {
-	var skin = Init.trueSettings.get("Note Skin");
-	var ui = Init.trueSettings.get("UI Skin");
-
-	if (ui == "forever")
+	if (Init.trueSettings.get("UI Skin") == "forever")
 	{
 		noteSplash.loadGraphic(Paths.image(getSkinPath('noteSplashes'), 'notetypes'), true, 210, 210);
 		noteSplash.animation.add('anim1', [

@@ -172,8 +172,9 @@ class ForeverAssets
 					tempSplash.splashScript = null;
 					// trace('[SPLASH ERROR] $e');
 
-					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary, 'notetypes'), 'notetypes'),
-						true, 210, 210);
+					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary, 'notetypes'),
+						'notetypes'), true, 210,
+						210);
 					tempSplash.animation.add('anim1', [
 						(noteData * 2 + 1),
 						8 + (noteData * 2 + 1),
