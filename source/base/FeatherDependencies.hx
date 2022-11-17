@@ -44,6 +44,8 @@ class ScriptHandler extends SScript
 		set('Character', gameObjects.Character);
 		set('Conductor', song.Conductor);
 		set('HealthIcon', gameObjects.userInterface.HealthIcon);
+		set('Receptor', gameObjects.Strumline.Receptor);
+		set('Strumline', gameObjects.Strumline);
 		set('game', states.PlayState.main);
 		set('PlayState', states.PlayState);
 		set('Paths', Paths);

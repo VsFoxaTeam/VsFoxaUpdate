@@ -50,8 +50,7 @@ class Note extends FNFSprite
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
 
-	public static var storedNotes:Map<String, ScriptHandler> = [];
-	private static var pushedNotes:Array<String> = [];
+	public var noteScript:ScriptHandler;
 
 	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?isSustainNote:Bool = false)
 	{
@@ -84,8 +83,6 @@ class Note extends FNFSprite
 			parentNote = null;
 
 		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
-
-		// getNoteScript(this, this.noteType);
 	}
 
 	function getNoteColor(noteData)
@@ -111,11 +108,10 @@ class Note extends FNFSprite
 		if (tooLate || (parentNote != null && parentNote.tooLate))
 			alpha = 0.3;
 
-		if (storedNotes.get(noteType) != null)
+		if (noteScript != null)
 		{
-			var script:ScriptHandler = storedNotes.get(noteType);
-			if (script != null)
-				script.call('update', [elapsed]);
+			if (noteScript != null)
+				noteScript.call('update', [elapsed]);
 		}
 	}
 
@@ -286,91 +282,36 @@ class Note extends FNFSprite
 
 	public function noteHit(noteType:String)
 	{
-		if (storedNotes.get(noteType) != null)
-		{
-			var script:ScriptHandler = storedNotes.get(noteType);
-			script.call('onHit', [this]);
-		}
+		if (noteScript != null)
+			noteScript.call('onHit', [this]);
 	}
 
 	public function noteMiss(noteType:String)
 	{
-		if (storedNotes.get(noteType) != null)
-		{
-			var script:ScriptHandler = storedNotes.get(noteType);
-			script.call('onMiss', [this]);
-		}
+		if (noteScript != null)
+			noteScript.call('onMiss', [this]);
 	}
 
 	public function stepHit(noteType:String, noteStep:Int)
 	{
-		if (storedNotes.get(noteType) != null)
-		{
-			var script:ScriptHandler = storedNotes.get(noteType);
-			script.call('stepHit', [this, noteStep]);
-		}
+		if (noteScript != null)
+			noteScript.call('stepHit', [this, noteStep]);
 	}
 
 	public function beatHit(noteType:String, noteBeat:Int)
 	{
-		if (storedNotes.get(noteType) != null)
-		{
-			var script:ScriptHandler = storedNotes.get(noteType);
-			script.call('beatHit', [this, noteBeat]);
-		}
+		if (noteScript != null)
+			noteScript.call('beatHit', [this, noteBeat]);
 	}
 
-	public static function getNoteScript(newNote:Note, noteType:String)
+	public function callScriptVars()
 	{
-		if (noteType == null)
-			noteType = 'default';
-
-		storedNotes.clear();
-		pushedNotes = [];
-
-		var myNotes:Array<String> = [];
-
-		for (myNote in sys.FileSystem.readDirectory('assets/notetypes'))
+		if (noteScript != null)
 		{
-			if (!pushedNotes.contains(myNote))
-			{
-				try
-				{
-					storedNotes.set(myNote, new ScriptHandler(Paths.module('$myNote', 'notetypes/$myNote')));
-					trace('new note module loaded: $myNote');
-					myNotes.push(myNote);
-				}
-				catch (e)
-				{
-					// have to use FlxG instead of main since this isn't a class;
-					flixel.FlxG.switchState(new states.menus.MainMenu('[NOTE SCRIPT]: Uncaught Error: $e'));
-				}
-			}
+			noteScript.set('resetNote', resetNote);
+			noteScript.set('getNoteColor', getNoteColor);
+			noteScript.set('getNoteAction', getNoteAction);
+			noteScript.set('prevNote', prevNote);
 		}
-		myNotes.sort(function(e1, e2) return Reflect.compare(e1.toLowerCase(), e2.toLowerCase()));
-
-		for (n in myNotes)
-		{
-			if (!pushedNotes.contains(n))
-				pushedNotes.push(n);
-		}
-
-		var script:ScriptHandler = storedNotes.get(noteType);
-		script.set('noteSkin', Init.trueSettings.get('Note Skin'));
-
-		var noteFunc:String = newNote.isSustainNote ? 'generateSustain' : 'generateNote';
-
-		try
-		{
-			if (storedNotes.get(noteType) != null)
-				script.call(noteFunc, [newNote]);
-		}
-		catch (e)
-		{
-			newNote.destroy();
-			return;
-		}
-
-		myNotes = [];
 	}
 }

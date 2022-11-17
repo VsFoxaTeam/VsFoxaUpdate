@@ -18,52 +18,52 @@ class ChartParser
 	// hopefully this makes it easier for people to load and save chart features and such, y'know the deal lol
 	public static function parseBaseChart(songData:SwagSong):Array<Note>
 	{
-		var unspawnNotes:Array<Note> = [];
-
-		for (section in songData.notes)
+		return try
 		{
-			var coolSection:Int = Std.int(section.lengthInSteps / 4);
+			var unspawnNotes:Array<Note> = [];
 
-			for (songNotes in section.sectionNotes)
+			for (section in songData.notes)
 			{
-				var daStrumTime:Float = #if !neko songNotes[0] - Init.trueSettings['Offset'] /* - | late, + | early */ #else songNotes[0] #end;
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
-				// define the note's animation (in accordance to the original game)!
-				var daNoteAlt:Float = 0;
-				var daNoteType:String = 'default';
-				var daNoteSkin:String = 'NOTE_assets';
-				var assetModifier:String = "base";
+				var coolSection:Int = Std.int(section.lengthInSteps / 4);
 
-				// very stupid but I'm lazy
-				if (songNotes.length > 2)
-					daNoteAlt = songNotes[3];
-
-				// check the base section
-				var gottaHitNote:Bool = section.mustHitSection;
-
-				// if the note is on the other side, flip the base section of the note
-				if (songNotes[1] > 3)
-					gottaHitNote = !section.mustHitSection;
-
-				var char:Character = (gottaHitNote ? PlayState.boyfriend : PlayState.opponent);
-				if (char != null)
+				for (songNotes in section.sectionNotes)
 				{
-					daNoteSkin = char.characterData.noteSkin;
-					assetModifier = char.characterData.assetModifier;
-				}
+					var daStrumTime:Float = #if !neko songNotes[0] - Init.trueSettings['Offset'] /* - | late, + | early */ #else songNotes[0] #end;
+					var daNoteData:Int = Std.int(songNotes[1] % 4);
+					// define the note's animation (in accordance to the original game)!
+					var daNoteAlt:Float = 0;
+					var daNoteType:String = 'default';
+					var daNoteSkin:String = 'NOTE_assets';
+					var assetModifier:String = "base";
 
-				// define the note that comes before (previous note)
-				var oldNote:Note;
-				if (unspawnNotes.length > 0)
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-				else
-					oldNote = null;
+					// very stupid but I'm lazy
+					if (songNotes.length > 2)
+						daNoteAlt = songNotes[3];
 
-				// create the new note
-				var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
+					// check the base section
+					var gottaHitNote:Bool = section.mustHitSection;
 
-				if (swagNote != null)
-				{
+					// if the note is on the other side, flip the base section of the note
+					if (songNotes[1] > 3)
+						gottaHitNote = !section.mustHitSection;
+
+					var char:Character = (gottaHitNote ? PlayState.boyfriend : PlayState.opponent);
+					if (char != null)
+					{
+						daNoteSkin = char.characterData.noteSkin;
+						assetModifier = char.characterData.assetModifier;
+					}
+
+					// define the note that comes before (previous note)
+					var oldNote:Note;
+					if (unspawnNotes.length > 0)
+						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+					else
+						oldNote = null;
+
+					// create the new note
+					var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
+
 					swagNote.noteType = daNoteType;
 					swagNote.noteSpeed = songData.speed;
 					swagNote.mustPress = gottaHitNote;
@@ -99,15 +99,19 @@ class ChartParser
 					}
 				}
 			}
+
+			// sort notes before returning them;
+			unspawnNotes.sort(function(Obj1:Note, Obj2:Note):Int
+			{
+				return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+			});
+
+			return unspawnNotes;
 		}
-
-		// sort notes before returning them;
-		unspawnNotes.sort(function(Obj1:Note, Obj2:Note):Int
+		catch (e)
 		{
-			return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
-		});
-
-		return unspawnNotes;
+			return [];
+		}
 	}
 
 	public static function parseEvents(events:Array<Array<Dynamic>>):Array<TimedEvent>

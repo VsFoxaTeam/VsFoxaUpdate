@@ -1,5 +1,6 @@
 package gameObjects;
 
+import base.FeatherDependencies.ScriptHandler;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -38,6 +39,8 @@ class Receptor extends FlxSprite
 
 	public static var actions:Array<String> = ['left', 'down', 'up', 'right'];
 	public static var colors:Array<String> = ['purple', 'blue', 'green', 'red'];
+
+	public var receptorScript:ScriptHandler;
 
 	public function new(x:Float, y:Float, ?strumData:Int = 0)
 	{

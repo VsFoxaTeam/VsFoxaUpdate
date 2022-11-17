@@ -849,134 +849,137 @@ class PlayState extends MusicBeatState
 
 				strumline.allNotes.forEachAlive(function(daNote:Note)
 				{
-					var roundedSpeed = FlxMath.roundDecimal(daNote.noteSpeed, 2);
-					var receptorPosY:Float = strumline.receptors.members[Math.floor(daNote.noteData)].y + Note.swagWidth / 6;
-					var psuedoY:Float = (downscrollMultiplier * -((Conductor.songPosition - daNote.strumTime) * (0.45 * roundedSpeed)));
-					var psuedoX = 25 + daNote.noteVisualOffset;
-
-					daNote.y = receptorPosY
-						+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY)
-						+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX);
-					// painful math equation
-					daNote.x = strumline.receptors.members[Math.floor(daNote.noteData)].x
-						+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX)
-						+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY);
-
-					// also set note rotation
-					daNote.angle = -daNote.noteDirection;
-
-					// shitty note hack I hate it so much
-					var center:Float = receptorPosY + Note.swagWidth / 2;
-					if (daNote.isSustainNote)
+					if (daNote != null)
 					{
-						daNote.y -= ((daNote.height / 2) * downscrollMultiplier);
-						if ((daNote.animation.curAnim.name.endsWith('holdend')) && (daNote.prevNote != null))
+						var roundedSpeed = FlxMath.roundDecimal(daNote.noteSpeed, 2);
+						var receptorPosY:Float = strumline.receptors.members[Math.floor(daNote.noteData)].y + Note.swagWidth / 6;
+						var psuedoY:Float = (downscrollMultiplier * -((Conductor.songPosition - daNote.strumTime) * (0.45 * roundedSpeed)));
+						var psuedoX = 25 + daNote.noteVisualOffset;
+
+						daNote.y = receptorPosY
+							+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY)
+							+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX);
+						// painful math equation
+						daNote.x = strumline.receptors.members[Math.floor(daNote.noteData)].x
+							+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX)
+							+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY);
+
+						// also set note rotation
+						daNote.angle = -daNote.noteDirection;
+
+						// shitty note hack I hate it so much
+						var center:Float = receptorPosY + Note.swagWidth / 2;
+						if (daNote.isSustainNote)
 						{
-							daNote.y -= ((daNote.prevNote.height / 2) * downscrollMultiplier);
-							if (strumline.downscroll)
+							daNote.y -= ((daNote.height / 2) * downscrollMultiplier);
+							if ((daNote.animation.curAnim.name.endsWith('holdend')) && (daNote.prevNote != null))
 							{
-								daNote.y += (daNote.height * 2);
-								if (daNote.endHoldOffset == Math.NEGATIVE_INFINITY)
+								daNote.y -= ((daNote.prevNote.height / 2) * downscrollMultiplier);
+								if (strumline.downscroll)
 								{
-									// set the end hold offset yeah I hate that I fix this like this
-									daNote.endHoldOffset = (daNote.prevNote.y - (daNote.y + daNote.height));
-								}
-								else
-									daNote.y += daNote.endHoldOffset;
-							}
-							else // this system is funny like that
-								daNote.y += ((daNote.height / 2) * downscrollMultiplier);
-						}
-
-						if (downscrollMultiplier < 0)
-						{
-							daNote.flipY = true;
-							if ((daNote.parentNote != null && daNote.parentNote.wasGoodHit)
-								&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= center
-								&& (strumline.autoplay || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
-							{
-								var swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
-								swagRect.height = (center - daNote.y) / daNote.scale.y;
-								swagRect.y = daNote.frameHeight - swagRect.height;
-								daNote.clipRect = swagRect;
-							}
-						}
-						else if (downscrollMultiplier > 0)
-						{
-							if ((daNote.parentNote != null && daNote.parentNote.wasGoodHit)
-								&& daNote.y + daNote.offset.y * daNote.scale.y <= center
-								&& (strumline.autoplay || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
-							{
-								var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-								swagRect.y = (center - daNote.y) / daNote.scale.y;
-								swagRect.height -= swagRect.y;
-								daNote.clipRect = swagRect;
-							}
-						}
-					}
-					// hell breaks loose here, we're using nested scripts!
-					mainControls(daNote, strumline);
-
-					// check where the note is and make sure it is either active or inactive
-					if (daNote.y > FlxG.height)
-					{
-						daNote.active = false;
-						daNote.visible = false;
-					}
-					else
-					{
-						daNote.visible = true;
-						daNote.active = true;
-					}
-
-					if (!daNote.tooLate && daNote.strumTime < Conductor.songPosition - (Timings.msThreshold) && !daNote.wasGoodHit)
-					{
-						if ((!daNote.tooLate) && (daNote.mustPress))
-						{
-							if (!daNote.isSustainNote)
-							{
-								daNote.tooLate = true;
-								for (note in daNote.childrenNotes)
-									note.tooLate = true;
-
-								vocals.volume = 0;
-								missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
-								daNote.noteMiss(daNote.noteType);
-
-								// ambiguous name
-								Timings.updateAccuracy(0);
-							}
-							else if (daNote.isSustainNote)
-							{
-								if (daNote.parentNote != null)
-								{
-									var parentNote = daNote.parentNote;
-									if (!parentNote.tooLate)
+									daNote.y += (daNote.height * 2);
+									if (daNote.endHoldOffset == Math.NEGATIVE_INFINITY)
 									{
-										var breakFromLate:Bool = false;
-										for (note in parentNote.childrenNotes)
+										// set the end hold offset yeah I hate that I fix this like this
+										daNote.endHoldOffset = (daNote.prevNote.y - (daNote.y + daNote.height));
+									}
+									else
+										daNote.y += daNote.endHoldOffset;
+								}
+								else // this system is funny like that
+									daNote.y += ((daNote.height / 2) * downscrollMultiplier);
+							}
+
+							if (downscrollMultiplier < 0)
+							{
+								daNote.flipY = true;
+								if ((daNote.parentNote != null && daNote.parentNote.wasGoodHit)
+									&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= center
+									&& (strumline.autoplay || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
+								{
+									var swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
+									swagRect.height = (center - daNote.y) / daNote.scale.y;
+									swagRect.y = daNote.frameHeight - swagRect.height;
+									daNote.clipRect = swagRect;
+								}
+							}
+							else if (downscrollMultiplier > 0)
+							{
+								if ((daNote.parentNote != null && daNote.parentNote.wasGoodHit)
+									&& daNote.y + daNote.offset.y * daNote.scale.y <= center
+									&& (strumline.autoplay || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
+								{
+									var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
+									swagRect.y = (center - daNote.y) / daNote.scale.y;
+									swagRect.height -= swagRect.y;
+									daNote.clipRect = swagRect;
+								}
+							}
+						}
+						// hell breaks loose here, we're using nested scripts!
+						mainControls(daNote, strumline);
+
+						// check where the note is and make sure it is either active or inactive
+						if (daNote.y > FlxG.height)
+						{
+							daNote.active = false;
+							daNote.visible = false;
+						}
+						else
+						{
+							daNote.visible = true;
+							daNote.active = true;
+						}
+
+						if (!daNote.tooLate && daNote.strumTime < Conductor.songPosition - (Timings.msThreshold) && !daNote.wasGoodHit)
+						{
+							if ((!daNote.tooLate) && (daNote.mustPress))
+							{
+								if (!daNote.isSustainNote)
+								{
+									daNote.tooLate = true;
+									for (note in daNote.childrenNotes)
+										note.tooLate = true;
+
+									vocals.volume = 0;
+									missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
+									daNote.noteMiss(daNote.noteType);
+
+									// ambiguous name
+									Timings.updateAccuracy(0);
+								}
+								else if (daNote.isSustainNote)
+								{
+									if (daNote.parentNote != null)
+									{
+										var parentNote = daNote.parentNote;
+										if (!parentNote.tooLate)
 										{
-											if (note.tooLate && !note.wasGoodHit)
-												breakFromLate = true;
-										}
-										if (!breakFromLate)
-										{
-											missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
+											var breakFromLate:Bool = false;
 											for (note in parentNote.childrenNotes)
-												note.tooLate = true;
+											{
+												if (note.tooLate && !note.wasGoodHit)
+													breakFromLate = true;
+											}
+											if (!breakFromLate)
+											{
+												missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
+												for (note in parentNote.childrenNotes)
+													note.tooLate = true;
+											}
+											//
 										}
-										//
 									}
 								}
 							}
 						}
-					}
 
-					// if the note is off screen (above)
-					if ((((!strumline.downscroll) && (daNote.y < -daNote.height))
-						|| ((strumline.downscroll) && (daNote.y > (FlxG.height + daNote.height))))
-						&& (daNote.tooLate || daNote.wasGoodHit))
-						destroyNote(strumline, daNote);
+						// if the note is off screen (above)
+						if ((((!strumline.downscroll) && (daNote.y < -daNote.height))
+							|| ((strumline.downscroll) && (daNote.y > (FlxG.height + daNote.height))))
+							&& (daNote.tooLate || daNote.wasGoodHit))
+							destroyNote(strumline, daNote);
+					}
 				});
 
 				// unoptimised asf camera control based on strums

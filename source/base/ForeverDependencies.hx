@@ -24,6 +24,7 @@ import playerData.Timings;
 import song.Conductor;
 import states.PlayState;
 import sys.FileSystem;
+import base.FeatherDependencies.ScriptHandler;
 
 using StringTools;
 
@@ -185,6 +186,7 @@ class ForeverAssets
 			noteType:String = 'default'):Receptor
 	{
 		var uiReceptor:Receptor = new Receptor(x, y, receptorData);
+
 		switch (assetModifier)
 		{
 			case 'pixel':
@@ -218,42 +220,57 @@ class ForeverAssets
 				uiReceptor.addOffset('confirm');
 
 			default:
-				// probably gonna revise this and make it possible to add other arrow types but for now it's just pixel and normal
-				var stringSect:String = '';
-				// call arrow type I think
-				stringSect = Receptor.actions[receptorData];
-
-				uiReceptor.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('$framesArg', assetModifier, Init.trueSettings.get("Note Skin"),
-					'$noteType/skins', 'notetypes'),
-					'notetypes');
-
-				uiReceptor.animation.addByPrefix('static', 'arrow' + stringSect.toUpperCase());
-				uiReceptor.animation.addByPrefix('pressed', stringSect + ' press', 24, false);
-				uiReceptor.animation.addByPrefix('confirm', stringSect + ' confirm', 24, false);
-
-				uiReceptor.antialiasing = true;
-				uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.7));
-
-				// set little offsets per note!
-				// so these had a little problem honestly and they make me wanna off(set) myself so the middle notes basically
-				// have slightly different offsets than the side notes (which have the same offset)
-
-				var offsetMiddleX = 0;
-				var offsetMiddleY = 0;
-				if (receptorData > 0 && receptorData < 3)
+				try
 				{
-					offsetMiddleX = 2;
-					offsetMiddleY = 2;
-					if (receptorData == 1)
+					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						offsetMiddleX -= 1;
-						offsetMiddleY += 2;
+						uiReceptor.receptorScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
+						uiReceptor.receptorScript.call('generateReceptor', [uiReceptor]);
+						// trace('Receptor Module loaded: $noteType-$assetModifier');
 					}
 				}
+				catch (e)
+				{
+					uiReceptor.receptorScript = null;
+					// trace('[RECEPTOR ERROR] $e');
 
-				uiReceptor.addOffset('static');
-				uiReceptor.addOffset('pressed', -2, -2);
-				uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+					// probably gonna revise this and make it possible to add other arrow types but for now it's just pixel and normal
+					var stringSect:String = '';
+					// call arrow type I think
+					stringSect = Receptor.actions[receptorData];
+
+					uiReceptor.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('$framesArg', assetModifier, Init.trueSettings.get("Note Skin"),
+						'$noteType/skins', 'notetypes'),
+						'notetypes');
+
+					uiReceptor.animation.addByPrefix('static', 'arrow' + stringSect.toUpperCase());
+					uiReceptor.animation.addByPrefix('pressed', stringSect + ' press', 24, false);
+					uiReceptor.animation.addByPrefix('confirm', stringSect + ' confirm', 24, false);
+
+					uiReceptor.antialiasing = true;
+					uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.7));
+
+					// set little offsets per note!
+					// so these had a little problem honestly and they make me wanna off(set) myself so the middle notes basically
+					// have slightly different offsets than the side notes (which have the same offset)
+
+					var offsetMiddleX = 0;
+					var offsetMiddleY = 0;
+					if (receptorData > 0 && receptorData < 3)
+					{
+						offsetMiddleX = 2;
+						offsetMiddleY = 2;
+						if (receptorData == 1)
+						{
+							offsetMiddleX -= 1;
+							offsetMiddleY += 2;
+						}
+					}
+
+					uiReceptor.addOffset('static');
+					uiReceptor.addOffset('pressed', -2, -2);
+					uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+				}
 		}
 
 		return uiReceptor;
@@ -280,47 +297,56 @@ class ForeverAssets
 
 			// newNote.holdHeight = 0.72;
 
-			// frames originally go here
 			switch (assetModifier)
 			{
-				case 'pixel': // pixel arrows default
-					switch (noteType)
+				case "pixel":
+					if (isSustainNote)
+						Note.resetNote('arrowEnds', changeableSkin, assetModifier, newNote);
+					else
+						Note.resetNote('arrows-pixels', changeableSkin, assetModifier, newNote);
+					newNote.antialiasing = false;
+					newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
+					newNote.updateHitbox();
+				default:
+					try
 					{
-						default:
-							if (isSustainNote)
-								Note.resetNote('arrowEnds', changeableSkin, assetModifier, newNote);
-							else
-								Note.resetNote('arrows-pixels', changeableSkin, assetModifier, newNote);
-							newNote.antialiasing = false;
-							newNote.setGraphicSize(Std.int(newNote.width * PlayState.daPixelZoom));
-							newNote.updateHitbox();
+						if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
+						{
+							newNote.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
+							newNote.noteScript.call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
+							newNote.callScriptVars();
+							// trace('Note Module loaded: $noteType-$assetModifier');
+						}
 					}
-				default: // base game arrows for no reason whatsoever
-					switch (noteType)
+					catch (e)
 					{
-						default:
-							Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
+						newNote.noteScript = null;
+						// trace('[NOTE ERROR] $e');
 
-							newNote.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
-							newNote.setGraphicSize(Std.int(newNote.width * 0.7));
-							newNote.updateHitbox();
+						// load default so the game won't explode in front of you;
+						Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
+						newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
+						newNote.updateHitbox();
 					}
 			}
 
-			if (!isSustainNote)
-				newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
-
-			if (isSustainNote && prevNote != null)
+			if (newNote.frames != null)
 			{
-				newNote.noteSpeed = prevNote.noteSpeed;
-				newNote.alpha = (Init.trueSettings.get('Opaque Holds')) ? 1 : 0.6;
-				newNote.animation.play(Receptor.colors[noteData] + 'holdend');
-				newNote.updateHitbox();
-				if (prevNote.isSustainNote)
+				if (!isSustainNote)
+					newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
+
+				if (isSustainNote && prevNote != null)
 				{
-					prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
-					prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
-					prevNote.updateHitbox();
+					newNote.noteSpeed = prevNote.noteSpeed;
+					newNote.alpha = (Init.trueSettings.get('Opaque Holds')) ? 1 : 0.6;
+					newNote.animation.play(Receptor.colors[noteData] + 'holdend');
+					newNote.updateHitbox();
+					if (prevNote.isSustainNote)
+					{
+						prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
+						prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
+						prevNote.updateHitbox();
+					}
 				}
 			}
 		}
