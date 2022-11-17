@@ -30,10 +30,10 @@ class Controls
 
 	public static var defaultActions:Map<String, Array<Key>> = [
 		// NOTE KEYS
-		"left" => [Keyboard.LEFT, Keyboard.D],
-		"down" => [Keyboard.DOWN, Keyboard.F],
-		"up" => [Keyboard.UP, Keyboard.J],
-		"right" => [Keyboard.RIGHT, Keyboard.K],
+		"left" => [Keyboard.LEFT, Keyboard.A],
+		"down" => [Keyboard.DOWN, Keyboard.S],
+		"up" => [Keyboard.UP, Keyboard.W],
+		"right" => [Keyboard.RIGHT, Keyboard.D],
 		// UI KEYS
 		"ui_left" => [Keyboard.LEFT, Keyboard.A],
 		"ui_down" => [Keyboard.DOWN, Keyboard.S],
