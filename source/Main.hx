@@ -202,7 +202,7 @@ class Main extends Sprite
 		#if DISCORD_RPC
 		Discord.shutdownRPC();
 		#end
-		openfl.system.System.exit(1);
+		Sys.exit(1);
 	}
 
 	public static function framerateAdjust(input:Float)
