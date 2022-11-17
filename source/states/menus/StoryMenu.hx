@@ -1,5 +1,6 @@
 package states.menus;
 
+import base.ScoreUtils;
 import dependency.Discord;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -14,9 +15,8 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import gameObjects.userInterface.menu.*;
-import playerData.Highscore;
-import states.MusicBeatState;
 import song.Song;
+import states.MusicBeatState;
 
 using StringTools;
 
@@ -325,7 +325,7 @@ class StoryMenu extends MusicBeatState
 		}
 		lastDifficulty = coolDifficulty;
 
-		intendedScore = Highscore.getWeekScore(curWeek, curDifficulty);
+		intendedScore = ScoreUtils.getWeekScore(curWeek, curDifficulty);
 
 		FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07);
 	}
@@ -389,6 +389,6 @@ class StoryMenu extends MusicBeatState
 		txtTracklist.screenCenter(X);
 		txtTracklist.x -= FlxG.width * 0.35;
 
-		intendedScore = Highscore.getWeekScore(curWeek, curDifficulty);
+		intendedScore = ScoreUtils.getWeekScore(curWeek, curDifficulty);
 	}
 }

@@ -1,5 +1,6 @@
 package gameObjects.userInterface;
 
+import base.ScoreUtils;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
@@ -8,7 +9,6 @@ import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
-import playerData.Timings;
 import song.Conductor;
 import states.PlayState;
 
@@ -93,9 +93,9 @@ class ClassHUD extends FlxSpriteGroup
 		if (Init.trueSettings.get('Counter') != 'None')
 		{
 			var judgementNameArray:Array<String> = [];
-			for (i in Timings.judgementsMap.keys())
-				judgementNameArray.insert(Timings.judgementsMap.get(i)[0], i);
-			judgementNameArray.sort(sortByShit);
+			for (i in 0...ScoreUtils.judges.length)
+				judgementNameArray.insert(i, ScoreUtils.judges[i].name);
+			judgementNameArray.sort(sortJudgements);
 			for (i in 0...judgementNameArray.length)
 			{
 				var textAsset:FlxText = new FlxText(5
@@ -134,8 +134,12 @@ class ClassHUD extends FlxSpriteGroup
 
 	var counterTextSize:Int = 18;
 
-	function sortByShit(Obj1:String, Obj2:String):Int
-		return FlxSort.byValues(FlxSort.ASCENDING, Timings.judgementsMap.get(Obj1)[0], Timings.judgementsMap.get(Obj2)[0]);
+	function sortJudgements(Obj1:String, Obj2:String):Int
+	{
+		for (i in 0...ScoreUtils.judges.length)
+			return FlxSort.byValues(FlxSort.ASCENDING, i, i);
+		return 0;
+	}
 
 	var left = (Init.trueSettings.get('Counter') == 'Left');
 
@@ -165,25 +169,25 @@ class ClassHUD extends FlxSpriteGroup
 
 	public function updateScoreText()
 	{
-		if (Timings.notesHit > 0 && Init.trueSettings.get('Accuracy Hightlight'))
+		if (ScoreUtils.notesHit > 0 && Init.trueSettings.get('Accuracy Hightlight'))
 			markupDivider = '°';
 
-		scoreDisplay = 'Score: ' + Timings.score;
+		scoreDisplay = 'Score: ' + ScoreUtils.score;
 
-		var isRated = (Timings.comboDisplay != null && Timings.comboDisplay != '' && Timings.notesHit > 0);
-		var rank:String = (Timings.returnScoreRating() != null
-			&& Timings.returnScoreRating() != ''
-			&& Timings.notesHit > 0 ? ' [${Timings.returnScoreRating()}]' : '');
+		var isRated = (ScoreUtils.curCombo != null && ScoreUtils.curCombo != '' && ScoreUtils.notesHit > 0);
+		var rank:String = (ScoreUtils.curRating != null
+			&& ScoreUtils.curRating != ''
+			&& ScoreUtils.notesHit > 0 ? ' [${ScoreUtils.curRating}]' : '');
 
 		// testing purposes
 		var displayAccuracy:Bool = Init.trueSettings.get('Display Accuracy');
 		if (displayAccuracy)
 		{
-			scoreDisplay += divider + markupDivider + 'Accuracy: ${Timings.returnAccuracy()}' + markupDivider;
-			scoreDisplay += isRated ? ' $markupDivider[' + Timings.comboDisplay + divider + Timings.returnScoreRating() + ']$markupDivider' : '$markupDivider'
+			scoreDisplay += divider + markupDivider + 'Accuracy: ${ScoreUtils.returnAccuracy()}' + markupDivider;
+			scoreDisplay += isRated ? ' $markupDivider[' + ScoreUtils.curCombo + divider + ScoreUtils.curRating + ']$markupDivider' : '$markupDivider'
 				+ rank
 				+ '$markupDivider';
-			scoreDisplay += divider + 'Combo Breaks: ${Timings.misses}';
+			scoreDisplay += divider + 'Combo Breaks: ${ScoreUtils.misses}';
 		}
 		scoreDisplay += '\n';
 
@@ -191,7 +195,7 @@ class ClassHUD extends FlxSpriteGroup
 
 		if (Init.trueSettings.get('Accuracy Hightlight'))
 		{
-			if (Timings.notesHit > 0)
+			if (ScoreUtils.notesHit > 0)
 				scoreBar.applyMarkup(scoreBar.text, [new FlxTextFormatMarkerPair(scoreFlashFormat, markupDivider)]);
 		}
 
@@ -202,7 +206,7 @@ class ClassHUD extends FlxSpriteGroup
 		{
 			for (i in timingsMap.keys())
 			{
-				timingsMap[i].text = '${(i.charAt(0).toUpperCase() + i.substring(1, i.length))}: ${Timings.gottenJudgements.get(i)}';
+				timingsMap[i].text = '${(i.charAt(0).toUpperCase() + i.substring(1, i.length))}: ${ScoreUtils.gottenJudgements.get(i)}';
 				timingsMap[i].x = (5 + (!left ? (FlxG.width - 10) : 0) - (!left ? (6 * counterTextSize) : 0));
 			}
 		}
@@ -235,7 +239,7 @@ class ClassHUD extends FlxSpriteGroup
 
 	var scoreFlashFormat:FlxTextFormat;
 
-	public function colorHighlight(judge:String, perfectSick:Bool)
+	public function colorHighlight(id:Int, perfectSick:Bool)
 	{
 		// highlights the accuracy mark on the score bar;
 		var ratingMap:Map<String, FlxColor> = [
@@ -250,10 +254,10 @@ class ClassHUD extends FlxSpriteGroup
 		];
 
 		var color:FlxColor = FlxColor.WHITE;
-		for (scoreRating => ratingColor in ratingMap)
+		for (scoreRating => rankColor in ratingMap)
 		{
-			if (scoreRating == Timings.returnScoreRating())
-				color = ratingColor;
+			if (scoreRating == ScoreUtils.curRating)
+				color = rankColor;
 		}
 
 		scoreFlashFormat = new FlxTextFormat(color, true);

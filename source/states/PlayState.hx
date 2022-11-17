@@ -1,8 +1,8 @@
 package states;
 
-import states.editors.CharacterOffsetEditor;
-import base.FeatherDependencies.ScriptHandler;
 import base.FeatherDependencies.Events;
+import base.FeatherDependencies.ScriptHandler;
+import base.ScoreUtils;
 import dependency.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -28,13 +28,12 @@ import gameObjects.*;
 import gameObjects.Strumline.Receptor;
 import gameObjects.userInterface.*;
 import openfl.media.Sound;
-import playerData.Highscore;
-import playerData.Timings;
 import song.ChartParser;
 import song.Conductor;
 import song.Song;
 import song.SongFormat.SwagSong;
 import song.SongFormat.TimedEvent;
+import states.editors.CharacterOffsetEditor;
 import states.menus.*;
 import states.substates.GameOverSubstate;
 
@@ -166,7 +165,7 @@ class PlayState extends MusicBeatState
 
 		if (!keepScore)
 		{
-			Timings.resetAccuracy();
+			ScoreUtils.resetAccuracy();
 			PlayState.SONG.validScore = true;
 			deaths = 0;
 			health = 1;
@@ -315,7 +314,7 @@ class PlayState extends MusicBeatState
 		comboPlacement.set();
 
 		// cache shit
-		displayScore('sick', 'early', true);
+		displayScore(0, false, true);
 		//
 
 		stageGroup = new FlxTypedGroup<Stage>();
@@ -931,7 +930,7 @@ class PlayState extends MusicBeatState
 							daNote.active = true;
 						}
 
-						if (!daNote.tooLate && daNote.strumTime < Conductor.songPosition - (Timings.msThreshold) && !daNote.wasGoodHit)
+						if (!daNote.tooLate && daNote.strumTime < Conductor.songPosition - (ScoreUtils.msThreshold) && !daNote.wasGoodHit)
 						{
 							if ((!daNote.tooLate) && (daNote.mustPress))
 							{
@@ -944,9 +943,6 @@ class PlayState extends MusicBeatState
 									vocals.volume = 0;
 									missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
 									daNote.noteMiss(daNote.noteType);
-
-									// ambiguous name
-									Timings.updateAccuracy(0);
 								}
 								else if (daNote.isSustainNote)
 								{
@@ -1039,17 +1035,15 @@ class PlayState extends MusicBeatState
 				// get the note ms timing
 				var noteDiff:Float = Math.abs(coolNote.strumTime - Conductor.songPosition);
 				// get the timing
-				if (coolNote.strumTime < Conductor.songPosition)
-					ratingTiming = "late";
-				else
-					ratingTiming = "early";
+				var isLate:Bool = coolNote.strumTime < Conductor.songPosition ? true : false;
 
 				// loop through all avaliable judgements
-				var foundRating:String = 'miss';
+				var foundRating:Int = 4;
 				var lowestThreshold:Float = Math.POSITIVE_INFINITY;
-				for (myRating in Timings.judgementsMap.keys())
+
+				for (myRating in 0...ScoreUtils.judges.length)
 				{
-					var myThreshold:Float = Timings.judgementsMap.get(myRating)[1];
+					var myThreshold:Float = ScoreUtils.judges[myRating].timing;
 					if (noteDiff <= myThreshold && (myThreshold < lowestThreshold))
 					{
 						foundRating = myRating;
@@ -1062,17 +1056,17 @@ class PlayState extends MusicBeatState
 					if (!coolNote.isSustainNote)
 					{
 						increaseCombo(foundRating, coolNote.noteData, strumline);
-						popUpScore(foundRating, ratingTiming, strumline, coolNote);
+						popUpScore(foundRating, isLate, strumline, coolNote);
 						if (coolNote.childrenNotes.length > 0)
-							Timings.notesHit++;
-						healthCall(Timings.judgementsMap.get(foundRating)[3]);
+							ScoreUtils.notesHit++;
+						healthCall(ScoreUtils.judges[foundRating].health);
 					}
-					else
+					else if (coolNote.parentNote != null)
 					{
 						// call updated accuracy stuffs
 						if (coolNote.parentNote != null)
 						{
-							Timings.updateAccuracy(100, true, coolNote.parentNote.childrenNotes.length);
+							ScoreUtils.updateInfo(100, true, coolNote.parentNote.childrenNotes.length);
 							healthCall(100 / coolNote.parentNote.childrenNotes.length);
 						}
 					}
@@ -1266,28 +1260,27 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	private var ratingTiming:String = "";
-
-	function popUpScore(baseRating:String, timing:String, strumline:Strumline, coolNote:Note)
+	function popUpScore(ratingID:Int, late:Bool, strumline:Strumline, coolNote:Note)
 	{
 		// set up the rating
 		var ratingScore:Int = 50;
 
-		// notesplashes
-		if (baseRating == "sick" || coolNote.noteSplash)
-			// create the note splash if you hit a sick
+		// create note splash if you hit a "sick" note;
+		if (ratingID == 0 || coolNote.noteSplash)
 			createSplash(coolNote, strumline);
 		else if (!strumline.autoplay)
 			// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
-			if (Timings.perfectCombo)
-				Timings.perfectCombo = false;
+			if (ScoreUtils.perfectCombo)
+				ScoreUtils.perfectCombo = false;
 
-		displayScore(strumline.autoplay ? "sick" : baseRating, timing);
-		uiHUD.colorHighlight(strumline.autoplay ? "sick" : baseRating, Timings.perfectCombo);
-		Timings.updateAccuracy(Timings.judgementsMap.get(baseRating)[3]);
+		var gottenRating = strumline.autoplay ? 0 : ratingID;
 
-		ratingScore = Std.int(Timings.judgementsMap.get(baseRating)[2]);
-		Timings.score += ratingScore;
+		displayScore(gottenRating, late);
+		uiHUD.colorHighlight(gottenRating, ScoreUtils.perfectCombo);
+		ScoreUtils.updateInfo(Std.int(ScoreUtils.judges[ratingID].accuracy));
+
+		ratingScore = ScoreUtils.judges[ratingID].score;
+		ScoreUtils.score += ratingScore;
 	}
 
 	public function createSplash(coolNote:Note, strumline:Strumline)
@@ -1301,38 +1294,40 @@ class PlayState extends MusicBeatState
 	function decreaseCombo(?popMiss:Bool = false)
 	{
 		// painful if statement
-		if (Timings.combo > 5 && gf.animOffsets.exists('sad'))
+		if (ScoreUtils.combo > 5 && gf.animOffsets.exists('sad'))
 			gf.playAnim('sad');
 
-		if (Timings.combo > 0)
-			Timings.combo = 0; // bitch lmao
+		if (ScoreUtils.combo > 0)
+			ScoreUtils.combo = 0; // bitch lmao
 		else
-			Timings.combo--;
+			ScoreUtils.combo--;
 
 		// misses
-		Timings.score -= 10;
-		Timings.misses++;
+		ScoreUtils.score -= 10;
+		ScoreUtils.misses++;
 
 		// display negative combo
 		if (popMiss)
 		{
 			// doesnt matter miss ratings dont have timings
-			displayScore("miss", 'late');
-			uiHUD.colorHighlight('miss', false);
-			healthCall(Timings.judgementsMap.get("miss")[3]);
+			displayScore(4, true);
+			uiHUD.colorHighlight(4, false);
+			healthCall(ScoreUtils.judges[4].health);
 		}
+
+		ScoreUtils.updateInfo(0);
 	}
 
-	function increaseCombo(?baseRating:String, ?direction = 0, ?strumline:Strumline)
+	function increaseCombo(?baseRating:Int, ?direction = 0, ?strumline:Strumline)
 	{
 		// trolled this can actually decrease your combo if you get a bad/shit/miss
 		if (baseRating != null)
 		{
-			if (Timings.judgementsMap.get(baseRating)[3] > 0)
+			if (ScoreUtils.judges[baseRating].accuracy > 0)
 			{
-				if (Timings.combo < 0)
-					Timings.combo = 0;
-				Timings.combo += 1;
+				if (ScoreUtils.combo < 0)
+					ScoreUtils.combo = 0;
+				ScoreUtils.combo += 1;
 			}
 			else
 				missNoteCheck(true, direction, strumline, false, true);
@@ -1342,14 +1337,13 @@ class PlayState extends MusicBeatState
 	// "Miss" Judgement Color;
 	private var createdColor = FlxColor.fromRGB(204, 66, 66);
 
-	public function displayScore(daRating:String, timing:String, ?cache:Bool = false)
+	public function displayScore(id:Int, late:Bool, ?cache:Bool = false)
 	{
 		/* so you might be asking
 			"oh but if the rating isn't sick why not just reset it"
 			because miss judgements can pop, and they dont mess with your sick combo
 		 */
-		var rating = ForeverAssets.generateRating('$daRating', judgementsGroup, (daRating == 'sick' ? Timings.perfectCombo : false), timing, assetModifier,
-			changeableSkin, 'UI');
+		var rating = ForeverAssets.generateRating(ScoreUtils.judges[id].name, judgementsGroup, id, late, assetModifier, changeableSkin, 'UI');
 		rating.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y);
 		if (!Init.trueSettings.get('Judgement Recycling'))
 			insert(members.indexOf(strumLines), rating);
@@ -1394,22 +1388,20 @@ class PlayState extends MusicBeatState
 				rating.screenCenter();
 			}
 
-			// return the actual rating to the array of judgements
-			Timings.gottenJudgements.set(daRating, Timings.gottenJudgements.get(daRating) + 1);
+			var ratingName = ScoreUtils.judges[id].name;
 
-			// set new smallest rating
-			if (Timings.smallestRating != daRating)
-			{
-				if (Timings.judgementsMap.get(Timings.smallestRating)[0] < Timings.judgementsMap.get(daRating)[0])
-					Timings.smallestRating = daRating;
-			}
+			// return the actual rating to the array of judgements
+			ScoreUtils.gottenJudgements.set(ratingName, ScoreUtils.gottenJudgements.get(ratingName) + 1);
+
+			if (id > ScoreUtils.smallestRating)
+				ScoreUtils.smallestRating = id;
 		}
 
 		// COMBO
 
-		var comboString:String = Std.string(Timings.combo);
+		var comboString:String = Std.string(ScoreUtils.combo);
 		var negative = false;
-		if ((comboString.startsWith('-')) || (Timings.combo == 0))
+		if ((comboString.startsWith('-')) || (ScoreUtils.combo == 0))
 			negative = true;
 		var stringArray:Array<String> = comboString.split("");
 		// deletes all combo sprites prior to initalizing new ones
@@ -1425,8 +1417,8 @@ class PlayState extends MusicBeatState
 		for (scoreInt in 0...stringArray.length)
 		{
 			// numScore.loadGraphic(Paths.image('UI/' + pixelModifier + 'num' + stringArray[scoreInt]));
-			var numScore = ForeverAssets.generateCombo('combo', comboGroup, stringArray[scoreInt], (!negative ? Timings.perfectCombo : false), assetModifier,
-				changeableSkin, 'UI', negative, createdColor, scoreInt);
+			var numScore = ForeverAssets.generateCombo('combo', comboGroup, stringArray[scoreInt], (!negative ? ScoreUtils.perfectCombo : false),
+				assetModifier, changeableSkin, 'UI', negative, createdColor, scoreInt);
 			numScore.setPosition(numScore.x + comboPlacement.x, numScore.y + comboPlacement.y);
 			if (!Init.trueSettings.get('Judgement Recycling'))
 				insert(members.indexOf(strumLines), numScore);
@@ -1779,7 +1771,7 @@ class PlayState extends MusicBeatState
 		endingSong = true;
 
 		if (SONG.validScore)
-			Highscore.saveScore(SONG.song, Timings.score, storyDifficulty);
+			ScoreUtils.saveScore(SONG.song, ScoreUtils.score, storyDifficulty);
 
 		deaths = 0;
 
@@ -1790,7 +1782,7 @@ class PlayState extends MusicBeatState
 		else
 		{
 			// set the campaign's score higher
-			campaignScore += Timings.score;
+			campaignScore += ScoreUtils.score;
 
 			// remove a song from the story playlist
 			storyPlaylist.remove(storyPlaylist[0]);
@@ -1810,7 +1802,7 @@ class PlayState extends MusicBeatState
 
 				// save the week's score if the score is valid
 				if (SONG.validScore)
-					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
+					ScoreUtils.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 
 				// flush the save
 				FlxG.save.flush();
@@ -1933,7 +1925,7 @@ class PlayState extends MusicBeatState
 		camHUD.visible = true;
 
 		var targetUIAlpha:Float = 1;
-		if (!Init.trueSettings.get('Opaque User Interface'))
+		if (!Init.trueSettings.get('Opaque UI'))
 			targetUIAlpha = 0.8;
 
 		FlxTween.tween(uiHUD, {alpha: targetUIAlpha}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
@@ -2113,10 +2105,10 @@ class PlayState extends MusicBeatState
 		if (uiHUD != null)
 			setVar('ui', uiHUD);
 
-		setVar('score', Timings.score);
-		setVar('combo', Timings.combo);
-		setVar('hits', Timings.notesHit);
-		setVar('misses', Timings.misses);
+		setVar('score', ScoreUtils.score);
+		setVar('combo', ScoreUtils.combo);
+		setVar('hits', ScoreUtils.notesHit);
+		setVar('misses', ScoreUtils.misses);
 		setVar('health', health);
 		setVar('deaths', deaths);
 

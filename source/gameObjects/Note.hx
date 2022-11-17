@@ -1,10 +1,10 @@
 package gameObjects;
 
 import base.FeatherDependencies.ScriptHandler;
+import base.ScoreUtils;
 import dependency.FNFSprite;
 import flixel.FlxSprite;
 import gameObjects.Strumline.Receptor;
-import playerData.Timings;
 import song.Conductor;
 import states.PlayState;
 
@@ -97,7 +97,8 @@ class Note extends FNFSprite
 
 		if (mustPress)
 		{
-			if (strumTime > Conductor.songPosition - (Timings.msThreshold) && strumTime < Conductor.songPosition + (Timings.msThreshold))
+			if (strumTime > Conductor.songPosition - (ScoreUtils.msThreshold)
+				&& strumTime < Conductor.songPosition + (ScoreUtils.msThreshold))
 				canBeHit = true;
 			else
 				canBeHit = false;

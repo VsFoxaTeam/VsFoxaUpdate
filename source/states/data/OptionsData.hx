@@ -23,6 +23,15 @@ class OptionsData
 		{name: 'Centered Notefield', type: "option"},
 		{name: 'Ghost Tapping', type: "option"},
 		//
+		{name: "Timing Windows", type: "divider"},
+		{name: "Timing Preset", type: "option"},
+		/*
+			{name: "Sick Timing Window", type: "option"},
+			{name: "Good Timing Window", type: "option"},
+			{name: "Bad Timing Window", type: "option"},
+			{name: "Shit Timing Window", type: "option"},
+		 */
+		//
 		{name: "Meta Settings", type: "divider"},
 		//
 		{name: 'Skip Text', type: "option"},
@@ -61,10 +70,9 @@ class OptionsData
 		{name: "User Interface", type: "divider"},
 		//
 		{name: "UI Skin", type: "option"},
-		// {name: "Judgements", type: "subgroup", previousSection: "Visuals"},
 		{name: "Fixed Judgements", type: "option"},
 		{name: "Simply Judgements", type: "option"},
-		{name: "Opaque User Interface", type: "option"},
+		{name: "Opaque UI", type: "option"},
 		//
 		{name: "Performance and Text", type: "divider"},
 		//

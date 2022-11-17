@@ -1,5 +1,6 @@
 package states.menus;
 
+import base.ScoreUtils;
 import dependency.Discord;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -11,10 +12,9 @@ import flixel.util.FlxColor;
 import gameObjects.gameFonts.Alphabet;
 import gameObjects.userInterface.HealthIcon;
 import openfl.media.Sound;
-import playerData.Highscore;
-import states.MusicBeatState;
 import song.Song;
 import song.SongFormat.SwagSong;
+import states.MusicBeatState;
 import sys.FileSystem;
 import sys.thread.Mutex;
 import sys.thread.Thread;
@@ -244,7 +244,7 @@ class FreeplayMenu extends MusicBeatState
 
 		if (accepted)
 		{
-			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(),
+			var poop:String = ScoreUtils.formatSong(songs[curSelected].songName.toLowerCase(),
 				CoolUtil.difficultyArray.indexOf(existingDifficulties[curSelected][curDifficulty]));
 
 			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
@@ -306,7 +306,7 @@ class FreeplayMenu extends MusicBeatState
 		if (curDifficulty > existingDifficulties[curSelected].length - 1)
 			curDifficulty = 0;
 
-		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
+		intendedScore = ScoreUtils.getScore(songs[curSelected].songName, curDifficulty);
 
 		diffText.text = '< ' + existingDifficulties[curSelected][curDifficulty] + ' >';
 		lastDifficulty = existingDifficulties[curSelected][curDifficulty];
@@ -323,7 +323,7 @@ class FreeplayMenu extends MusicBeatState
 		if (curSelected >= songs.length)
 			curSelected = 0;
 
-		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
+		intendedScore = ScoreUtils.getScore(songs[curSelected].songName, curDifficulty);
 
 		// set up color stuffs
 		mainColor = songs[curSelected].songColor;

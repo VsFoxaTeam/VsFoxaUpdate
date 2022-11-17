@@ -1,10 +1,9 @@
 import base.Overlay;
+import base.ScoreUtils;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.input.keyboard.FlxKey;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
-import playerData.*;
 
 using StringTools;
 
@@ -94,7 +93,7 @@ class Init extends FlxState
 			'Whether the Health Bar should be colored after the Icons.',
 			NOT_FORCED,
 		],
-		'Opaque User Interface' => [false, Checkmark, 'Makes the UI (Healthbar, Icons, etc.) opaque.', NOT_FORCED],
+		'Opaque UI' => [false, Checkmark, 'Makes the UI (Healthbar, Icons, etc.) opaque.', NOT_FORCED],
 		'Counter' => [
 			'None',
 			Selector,
@@ -230,6 +229,13 @@ class Init extends FlxState
 			NOT_FORCED,
 			['none', 'bf', 'gf', 'dad', 'center']
 		],
+		"Timing Preset" => [
+			'forever',
+			Selector,
+			"Chooses what preset should be used for Judgement Timing Windows.",
+			NOT_FORCED,
+			['forever', 'funkin', 'judge four', 'itg']
+		],
 	];
 
 	public static var trueSettings:Map<String, Dynamic> = [];
@@ -274,7 +280,7 @@ class Init extends FlxState
 		FlxG.save.bind('gameSettings', "Feather");
 
 		// load controls and highscore
-		Highscore.load();
+		ScoreUtils.loadScores();
 		loadControls();
 
 		loadSettings();

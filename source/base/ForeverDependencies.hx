@@ -4,6 +4,8 @@ package base;
 	Forever Dependencies is a way to unify both ForeverAssets and ForeverTools;
 	it contains data for custom asset skins and generation scripts for asset types;
  */
+import base.FeatherDependencies.ScriptHandler;
+import base.ScoreUtils;
 import dependency.FNFSprite;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -20,11 +22,9 @@ import gameObjects.NoteSplash;
 import gameObjects.Strumline.Receptor;
 import gameObjects.userInterface.menu.Checkmark;
 import openfl.display.BlendMode;
-import playerData.Timings;
 import song.Conductor;
 import states.PlayState;
 import sys.FileSystem;
-import base.FeatherDependencies.ScriptHandler;
 
 using StringTools;
 
@@ -89,7 +89,7 @@ class ForeverAssets
 		return comboNumbers;
 	}
 
-	public static function generateRating(asset:String, assetGroup:FlxTypedGroup<FNFSprite>, perfectSick:Bool, timing:String, assetModifier:String = 'base',
+	public static function generateRating(asset:String, assetGroup:FlxTypedGroup<FNFSprite>, id:Int, late:Bool, assetModifier:String = 'base',
 			changeableSkin:String = 'default', baseLibrary:String):FNFSprite
 	{
 		var width = 500;
@@ -116,10 +116,16 @@ class ForeverAssets
 			judgement.velocity.y = -FlxG.random.int(140, 175);
 			judgement.velocity.x = -FlxG.random.int(0, 10);
 		}
-		judgement.animation.add('base', [
-			Std.int((Timings.judgementsMap.get(asset)[0] * 2) + (perfectSick ? 0 : 2) + (timing == 'late' ? 1 : 0))
-		], 24, false);
-		judgement.animation.play('base');
+		judgement.animation.add('sick-perfect', [0]);
+		for (i in 0...ScoreUtils.judges.length)
+		{
+			for (j in 0...2)
+				judgement.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) + 2]);
+		}
+		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-pefect' : '');
+		var timingString = (late ? '-late' : '-early');
+
+		judgement.animation.play(ScoreUtils.judges[id].name + perfectString + timingString);
 		judgement.zDepth = -Conductor.songPosition;
 
 		if (assetModifier == 'pixel')
