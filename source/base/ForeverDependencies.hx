@@ -158,25 +158,40 @@ class ForeverAssets
 				tempSplash.setGraphicSize(Std.int(tempSplash.width * PlayState.daPixelZoom));
 
 			default:
-				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary, 'notetypes'), 'notetypes'),
-					true, 210, 210);
-				tempSplash.animation.add('anim1', [
-					(noteData * 2 + 1),
-					8 + (noteData * 2 + 1),
-					16 + (noteData * 2 + 1),
-					24 + (noteData * 2 + 1),
-					32 + (noteData * 2 + 1)
-				], 24, false);
-				tempSplash.animation.add('anim2', [
-					(noteData * 2),
-					8 + (noteData * 2),
-					16 + (noteData * 2),
-					24 + (noteData * 2),
-					32 + (noteData * 2)
-				], 24, false);
-				tempSplash.animation.play('anim1');
-				tempSplash.addOffset('anim1', -20, -10);
-				tempSplash.addOffset('anim2', -20, -10);
+				try
+				{
+					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
+					{
+						tempSplash.splashScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
+						tempSplash.splashScript.call('generateSplash', [tempSplash, noteData]);
+						// trace('Splash Module loaded: $noteType-$assetModifier');
+					}
+				}
+				catch (e)
+				{
+					tempSplash.splashScript = null;
+					// trace('[SPLASH ERROR] $e');
+
+					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary, 'notetypes'), 'notetypes'),
+						true, 210, 210);
+					tempSplash.animation.add('anim1', [
+						(noteData * 2 + 1),
+						8 + (noteData * 2 + 1),
+						16 + (noteData * 2 + 1),
+						24 + (noteData * 2 + 1),
+						32 + (noteData * 2 + 1)
+					], 24, false);
+					tempSplash.animation.add('anim2', [
+						(noteData * 2),
+						8 + (noteData * 2),
+						16 + (noteData * 2),
+						24 + (noteData * 2),
+						32 + (noteData * 2)
+					], 24, false);
+					tempSplash.animation.play('anim1');
+					tempSplash.addOffset('anim1', -20, -10);
+					tempSplash.addOffset('anim2', -20, -10);
+				}
 		}
 
 		return tempSplash;

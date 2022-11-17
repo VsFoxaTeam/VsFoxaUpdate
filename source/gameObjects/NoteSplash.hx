@@ -1,5 +1,6 @@
 package gameObjects;
 
+import base.FeatherDependencies.ScriptHandler;
 import dependency.FNFSprite;
 
 /**
@@ -8,6 +9,8 @@ import dependency.FNFSprite;
 class NoteSplash extends FNFSprite
 {
 	public var noteData:Int = 0;
+
+	public var splashScript:ScriptHandler;
 
 	public function new(noteData:Int)
 	{
