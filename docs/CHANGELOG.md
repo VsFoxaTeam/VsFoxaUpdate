@@ -37,7 +37,7 @@ Used in *both* the [original Funkin' repo](https://github.com/ninjamuffin99/Funk
 - Psych Engine Chart Support (for newer versions);
 - Chart Editor Shortcut on Freeplay;
 - Stages per Chart, rather than Hardcoded;
-- On-Screen Error Log, enabled only for build with the ``debug`` flag (by @superpowers04);
+- On-Screen Error Log, enabled only for build with the ``-debug`` flag (by @superpowers04);
 - Week 6 fixes;
 
 --------------------------
@@ -72,7 +72,7 @@ Used in *both* the [original Funkin' repo](https://github.com/ninjamuffin99/Funk
 ### 11/09/22
 
 - [WIP] - Error Handling for scripts;
-- [SOURCE] A new sprite class which can be used to attach sprites to other sprites;
+- [SOURCE] - A new sprite class which can be used to attach sprites to other sprites;
 - Minor UI Adjustments;
 
 --------------------------
