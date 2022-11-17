@@ -12,6 +12,7 @@ typedef Judgement =
 	var health:Float; // default: 100
 	var accuracy:Float; // default : 100
 	var timing:Float; // default: 45
+	var timingCap:Float; // default: 45
 	var comboStatus:String; // default: none
 }
 
@@ -48,6 +49,7 @@ class ScoreUtils
 			health: 100,
 			accuracy: 100,
 			timing: 45,
+			timingCap: 45,
 			comboStatus: "MFC"
 		},
 		{
@@ -56,30 +58,34 @@ class ScoreUtils
 			health: 50,
 			accuracy: 85,
 			timing: 90,
+			timingCap: 90,
 			comboStatus: "GFC"
 		},
 		{
 			name: "bad",
-			timing: 125,
 			score: 50,
 			health: 20,
 			accuracy: 50,
+			timing: 125,
+			timingCap: 125,
 			comboStatus: 'FC'
 		},
 		{
 			name: "shit",
-			timing: 150,
 			score: -50,
 			health: -50,
 			accuracy: 0,
+			timing: 150,
+			timingCap: 150,
 			comboStatus: null
 		},
 		{
 			name: "miss",
-			timing: 175,
 			score: -100,
 			health: -100,
 			accuracy: 0,
+			timing: 175,
+			timingCap: 175,
 			comboStatus: null
 		}
 	];
@@ -96,6 +102,14 @@ class ScoreUtils
 		"D" => 75,
 		"E" => 70,
 		"F" => 65,
+	];
+
+	// left to right, preset name, timings (sick, good, bad, shit);
+	public static var timingPresets:Map<String, Array<Float>> = [
+		"judge four" => [45, 90, 135, 180],
+		"itg" => [43, 102, 135, 180],
+		"funkin" => [33.33, 91.67, 133.33, 166.67],
+		"forever" => [45, 90, 125, 150]
 	];
 
 	public static var curRating:String = "F";
@@ -236,29 +250,12 @@ class ScoreUtils
 		curRating = "N/A";
 		curCombo = "";
 
-		// for testing, will change this later
-		switch (Init.trueSettings.get("Timing Preset"))
+		var preset = Init.trueSettings.get("Timing Preset");
+
+		if (preset != null)
 		{
-			case "judge four":
-				setJudgeTiming(0, 45);
-				setJudgeTiming(1, 90);
-				setJudgeTiming(2, 135);
-				setJudgeTiming(3, 180);
-			case "itg":
-				setJudgeTiming(0, 43);
-				setJudgeTiming(1, 102);
-				setJudgeTiming(2, 135);
-				setJudgeTiming(3, 180);
-			case "funkin":
-				setJudgeTiming(0, 33.33);
-				setJudgeTiming(1, 91.67);
-				setJudgeTiming(2, 133.33);
-				setJudgeTiming(3, 166.67);
-			default:
-				setJudgeTiming(0, 45); // sick
-				setJudgeTiming(1, 90); // good
-				setJudgeTiming(2, 125); // bad
-				setJudgeTiming(3, 150); // shit
+			for (i in 0...judges.length)
+				setJudgeTiming(i, timingPresets.get(preset)[i]);
 		}
 	}
 
@@ -303,7 +300,7 @@ class ScoreUtils
 		if (judges[smallestRating].comboStatus != null)
 			curCombo = judges[smallestRating].comboStatus;
 		else
-			curCombo = (misses >= 0 && misses < 10 ? 'SDCB' : null);
+			curCombo = (misses > 0 && misses < 10 ? 'SDCB' : null);
 
 		// this updates the most so uh
 		PlayState.uiHUD.updateScoreText();
