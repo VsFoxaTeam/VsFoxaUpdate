@@ -63,6 +63,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (Controls.getPressEvent("back"))
 		{
+			PlayState.clearStored = true;
 			FlxG.sound.music.stop();
 			PlayState.deaths = 0;
 

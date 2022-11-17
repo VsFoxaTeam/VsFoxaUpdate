@@ -103,6 +103,7 @@ class PlayState extends MusicBeatState
 	public var startingSong:Bool = false;
 	public var endingSong:Bool = false;
 	public var startedCountdown:Bool = false;
+	public static var clearStored:Bool = false;
 	public var skipCountdown:Bool = false;
 	public var inCutscene:Bool = false;
 	public var canPause:Bool = true;
@@ -175,6 +176,7 @@ class PlayState extends MusicBeatState
 		moduleArray = [];
 		lastCombo = [];
 
+		clearStored = false;
 		Conductor.shouldStartSong = false;
 		defaultCamZoom = 1.05;
 		cameraBumpSpeed = 4;
@@ -1777,6 +1779,8 @@ class PlayState extends MusicBeatState
 
 		if (!isStoryMode)
 		{
+			// enable memory cleaning;
+			clearStored = true;
 			Main.switchState(this, new FreeplayMenu());
 		}
 		else
@@ -1792,6 +1796,9 @@ class PlayState extends MusicBeatState
 			{
 				// play menu music
 				ForeverTools.resetMenuMusic();
+
+				// enable memory cleaning;
+				clearStored = true;
 
 				// set up transitions
 				transIn = FlxTransitionableState.defaultTransIn;
@@ -1830,7 +1837,11 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new PlayState());
 		}
 		else
+		{
+			// enable memory cleaning;
+			clearStored = true;
 			Main.switchState(this, new FreeplayMenu());
+		}
 	}
 
 	var dialogueBox:DialogueBox;

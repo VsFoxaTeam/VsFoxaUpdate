@@ -34,8 +34,11 @@ class MusicBeatState extends FNFUIState
 	override function create()
 	{
 		// dump
-		Paths.clearStoredMemory();
-		if ((!Std.isOfType(this, states.PlayState)) && (!Std.isOfType(this, states.editors.OriginalChartingState)))
+		var clearPlayState = (PlayState.clearStored && !Std.isOfType(this, states.PlayState));
+		if ((clearPlayState))
+			Paths.clearStoredMemory();
+
+		if ((!Std.isOfType(this, states.editors.OriginalChartingState)))
 			Paths.clearUnusedMemory();
 
 		// create controls event;
