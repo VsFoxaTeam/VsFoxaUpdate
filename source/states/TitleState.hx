@@ -58,7 +58,7 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		super.create();
 
-		FlxG.sound.muteBinds = [FlxKey.ZERO];
+		FlxG.sound.muteKeys = [FlxKey.ZERO];
 
 		startIntro();
 	}
