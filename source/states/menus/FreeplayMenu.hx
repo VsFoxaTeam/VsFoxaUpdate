@@ -51,8 +51,8 @@ class FreeplayMenu extends MusicBeatState
 
 	private var iconArray:Array<HealthIcon> = [];
 
-	private var mainColor = FlxColor.WHITE;
-	private var bg:FlxSprite;
+	private var mainColor:Null<FlxColor> = FlxColor.WHITE;
+	private var bg:Null<FlxSprite>;
 	private var scoreBG:FlxSprite;
 
 	private var existingSongs:Array<String> = [];
