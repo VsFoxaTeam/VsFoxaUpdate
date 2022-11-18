@@ -247,7 +247,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		UI_box.addGroup(tab_group);
 	}
 
-	function addTextUI()
+	inline function addTextUI()
 	{
 		characterSelTextField = new FlxText(0, 0, 0, 'Character: $curCharacter');
 		add(characterSelTextField);
@@ -384,7 +384,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function updateAnimation(hey:Int)
+	inline function updateAnimation(hey:Int)
 	{
 		curAnim += hey;
 
@@ -563,7 +563,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		FlxG.log.error("Problem saving Offset data");
 	}
 
-	function updateTexts():Void
+	inline function updateTexts():Void
 	{
 		dumbTexts.forEach(function(text:FlxText)
 		{

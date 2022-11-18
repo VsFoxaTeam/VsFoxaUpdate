@@ -23,7 +23,7 @@ class Paths
 {
 	// Here we set up the paths class. This will be used to
 	// Return the paths of assets and call on those assets as well.
-	inline public static var SOUND_EXT = "ogg";
+	inline public static final SOUND_EXT = "ogg";
 
 	// level we're loading
 	static var currentLevel:String;
@@ -187,8 +187,8 @@ class Paths
 	// kind of an afterthought, I don't think i'm gonna clean this up and make it an actual feature until I rework this class or something;
 	public static function getSound(path:String, ?library:String)
 	{
-		var returnExtension:String = SOUND_EXT; // defaults to "ogg";
-		var SOUND_EXTS:Array<String> = [".mp3", ".ogg", ".wav", ".flac"];
+		final returnExtension:String = SOUND_EXT; // defaults to "ogg";
+	 	final SOUND_EXTS:Array<String> = [".mp3", ".ogg", ".wav", ".flac"];
 
 		for (i in 0...SOUND_EXTS.length)
 		{

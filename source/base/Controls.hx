@@ -49,6 +49,7 @@ class Controls
 	];
 
 	// thing to sort by key ID idk i'm a dummy -gabi
+	// I was gonna try & optimize it via inlining but nvm it's not done yet -memehoovy
 	public static var actionSort:Map<String, Int> = [
 		// NOTE KEYS
 		"left" => 0,
@@ -130,7 +131,7 @@ class Controls
 		}
 	}
 
-	private static function catchKeys(key:Key):Array<String>
+	inline private static function catchKeys(key:Key):Array<String>
 	{
 		//
 		if (key == null)
@@ -146,13 +147,13 @@ class Controls
 		return gottenKeys;
 	}
 
-	public static function getKeyState(key:Key):KeyState
+	inline public static function getKeyState(key:Key):KeyState
 	{
 		//
 		return keysHeld.contains(key) ? PRESSED : RELEASED;
 	}
 
-	public static function getKeyString(action:String)
+	inline public static function getKeyString(action:String)
 	{
 		//
 		if (actions.exists(action))
@@ -180,7 +181,7 @@ class Controls
 		return false;
 	}
 
-	public static function addActionKey(action:String, keys:Array<Key>)
+	inline public static function addActionKey(action:String, keys:Array<Key>)
 	{
 		//
 		if (actions.exists(action))
@@ -190,7 +191,7 @@ class Controls
 		}
 	}
 
-	public static function setActionKey(action:String, id:Int, key:Key)
+	inline public static function setActionKey(action:String, id:Int, key:Key)
 	{
 		//
 		if (actions.exists(action))

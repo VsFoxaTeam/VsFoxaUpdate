@@ -109,7 +109,7 @@ class BaseOptions extends MusicBeatState
 		}
 	}
 
-	public function updateDiscord(?forcedPresence:String)
+ 	public function updateDiscord(?forcedPresence:String)
 	{
 		var myPresence:String = curCategory == 'main' ? 'Navigating through Categories' : 'Changing $curCategory';
 
@@ -192,7 +192,7 @@ class BaseOptions extends MusicBeatState
 		}
 	}
 
-	function setAttachmentAlpha(attachment:flixel.FlxSprite, newAlpha:Float)
+	inline function setAttachmentAlpha(attachment:flixel.FlxSprite, newAlpha:Float)
 	{
 		// oddly enough, you can't set alphas of objects that arent directly and inherently defined as a value.
 		// ya flixel is weird lmao

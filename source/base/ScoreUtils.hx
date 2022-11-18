@@ -39,10 +39,10 @@ class ScoreUtils
 	public static var notesAccuracy:Float;
 	public static var notesHit:Int = 0;
 
-	static function get_accuracy():Float
+	inline static function get_accuracy():Float
 		return notesAccuracy / notesHit;
 
-	public static var judges:Array<Judgement> = [
+	public static final judges:Array<Judgement> = [
 		{
 			name: "sick",
 			score: 350,
@@ -93,7 +93,7 @@ class ScoreUtils
 	public static var msThreshold:Float = 0;
 
 	// set the score judgements for later use
-	public static var scoreRating:Map<String, Int> = [
+	public static final scoreRating:Map<String, Int> = [
 		"S+" => 100,
 		"S" => 95,
 		"A" => 90,
@@ -105,7 +105,7 @@ class ScoreUtils
 	];
 
 	// left to right, preset name, timings (sick, good, bad, shit);
-	public static var timingPresets:Map<String, Array<Float>> = [
+	public static final timingPresets:Map<String, Array<Float>> = [
 		"judge four" => [45, 90, 135, 180],
 		"itg" => [43, 102, 135, 180],
 		"funkin" => [33.33, 91.67, 133.33, 166.67],
@@ -158,7 +158,7 @@ class ScoreUtils
 	/**
 	 * YOU SHOULD FORMAT SONG WITH formatSong() BEFORE TOSSING IN SONG VARIABLE
 	 */
-	static function setScore(song:String, score:Int):Void
+	inline static function setScore(song:String, score:Int):Void
 	{
 		FlxG.save.bind("HighScores", "Feather");
 		// Reminder that I don't need to format this song, it should come formatted!
@@ -167,7 +167,7 @@ class ScoreUtils
 		FlxG.save.flush();
 	}
 
-	static function setWeekScore(song:String, score:Int):Void
+	inline static function setWeekScore(song:String, score:Int):Void
 	{
 		FlxG.save.bind("WeekScores", "Feather");
 		// Reminder that I don't need to format this song, it should come formatted!
@@ -188,7 +188,7 @@ class ScoreUtils
 		return daSong;
 	}
 
-	public static function getScore(song:String, diff:Int):Int
+	inline public static function getScore(song:String, diff:Int):Int
 	{
 		FlxG.save.bind("HighScores", "Feather");
 		if (!songScores.exists(formatSong(song, diff)))
@@ -197,7 +197,7 @@ class ScoreUtils
 		return songScores.get(formatSong(song, diff));
 	}
 
-	public static function getWeekScore(week:Int, diff:Int):Int
+	inline public static function getWeekScore(week:Int, diff:Int):Int
 	{
 		FlxG.save.bind("WeekScores", "Feather");
 		if (!weekScores.exists(formatSong('week' + week, diff)))
@@ -206,7 +206,7 @@ class ScoreUtils
 		return weekScores.get(formatSong('week' + week, diff));
 	}
 
-	public static function loadScores():Void
+	inline public static function loadScores():Void
 	{
 		FlxG.save.bind("HighScores", "Feather");
 		if (FlxG.save.data.songScores != null)
@@ -275,7 +275,7 @@ class ScoreUtils
 			updateRanking();
 	}
 
-	public static function returnAccuracy()
+	inline public static function returnAccuracy()
 	{
 		var accuracyFinal:String = 'N/A';
 		if (notesHit > 0)

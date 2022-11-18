@@ -116,14 +116,14 @@ class DialogueBox extends FlxSpriteGroup
 
 	public var dialogueSong:FlxSound;
 
-	public static function createDialogue(thisDialogue:String):DialogueBox
+	public static inline function createDialogue(thisDialogue:String):DialogueBox
 	{
 		//
 		var newDialogue = new DialogueBox(false, thisDialogue);
 		return newDialogue;
 	}
 
-	public function dialoguePath(file:String):String
+	inline public function dialoguePath(file:String):String
 	{
 		var dialoguePath = Paths.file('assets/images/dialogue/portraits/$curCharacter/$file');
 		var truePath = Paths.file(file);

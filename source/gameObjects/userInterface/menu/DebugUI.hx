@@ -22,8 +22,8 @@ import flixel.util.FlxStringUtil;
 **/
 class UIBox extends FlxUITabMenu
 {
-	public static inline var STACK_FRONT:String = "front"; // button goes in front of backing
-	public static inline var STACK_BACK:String = "back"; // buton goes behind backing
+	public static inline final STACK_FRONT:String = "front"; // button goes in front of backing
+	public static inline final STACK_BACK:String = "back"; // buton goes behind backing
 
 	public function new(?back_:FlxSprite, ?tabs_:Array<IFlxUIButton>, ?tab_names_and_labels_:Array<{name:String, label:String}>, ?tab_offset:FlxPoint,
 			?stretch_tabs:Bool = false, ?tab_spacing:Null<Float> = null, ?tab_stacking:Array<String> = null)

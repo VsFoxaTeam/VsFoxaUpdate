@@ -183,7 +183,7 @@ class StoryMenu extends MusicBeatState
 		updateText();
 	}
 
-	function checkProgression(week:String):Bool
+	inline function checkProgression(week:String):Bool
 	{
 		// here we check if the target week is locked;
 		var weekProgress = Main.gameWeeksMap.get(week);

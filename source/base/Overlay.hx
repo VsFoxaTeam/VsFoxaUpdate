@@ -41,7 +41,7 @@ class Overlay extends TextField
 
 	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-	public static function getInterval(num:UInt):String
+	inline public static function getInterval(num:UInt):String
 	{
 		var size:Float = num;
 		var data = 0;
@@ -75,7 +75,7 @@ class Overlay extends TextField
 		}
 	}
 
-	public static function updateDisplayInfo(shouldDisplayFps:Bool, shouldDisplayExtra:Bool, shouldDisplayMemory:Bool)
+	inline public static function updateDisplayInfo(shouldDisplayFps:Bool, shouldDisplayExtra:Bool, shouldDisplayMemory:Bool)
 	{
 		displayFps = shouldDisplayFps;
 		displayExtra = shouldDisplayExtra;
