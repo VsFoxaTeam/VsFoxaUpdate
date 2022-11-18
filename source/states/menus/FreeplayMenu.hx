@@ -226,7 +226,8 @@ class FreeplayMenu extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		FlxTween.color(bg, 0.35, bg.color, mainColor);
+		if (bg != null && mainColor != null)
+			FlxTween.color(bg, 0.35, bg.color, mainColor);
 
 		var lerpVal = Main.framerateAdjust(0.1);
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, lerpVal));
