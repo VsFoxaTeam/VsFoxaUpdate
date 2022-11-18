@@ -36,6 +36,7 @@ import song.SongFormat.TimedEvent;
 import states.editors.CharacterOffsetEditor;
 import states.menus.*;
 import states.substates.GameOverSubstate;
+import gameObjects.Character;
 
 using StringTools;
 

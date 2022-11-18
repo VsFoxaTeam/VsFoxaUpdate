@@ -39,7 +39,7 @@ class ScriptHandler extends SScript
 
 		// CLASSES (FUNKIN);
 		set('Alphabet', gameObjects.gameFonts.Alphabet);
-		set('Boyfriend', gameObjects.Boyfriend);
+		set('Boyfriend', gameObjects.Character.Boyfriend);
 		set('CoolUtil', base.CoolUtil);
 		set('Character', gameObjects.Character);
 		set('Conductor', song.Conductor);
