@@ -58,7 +58,7 @@ class ChartParser
 						oldNote = null;
 
 					// create the new note
-					var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
+					var swagNote:Note = ForeverAssets.generateArrow(daNoteSkin, assetModifier, daStrumTime, daNoteData, daNoteAlt, 'default');
 
 					swagNote.noteType = daNoteType;
 					swagNote.noteSpeed = songData.speed;
