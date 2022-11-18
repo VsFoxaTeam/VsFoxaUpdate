@@ -54,7 +54,7 @@ class OriginalChartingState extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 
-	var curNoteType:Int = 0;
+	var curNoteType:String = 'default';
 
 	var events:Map<FlxSprite, Array<Dynamic>> = new Map();
 
@@ -687,8 +687,8 @@ class OriginalChartingState extends MusicBeatState
 				case 'note_susLength': // STOP POSTING ABOUT AMONG US
 					curSelectedNote[2] = nums.value; // change the currently selected note's length
 					updateGrid(); // oh btw I know sus stands for sustain it just bothers me
-				case 'note_type':
-					curNoteType = Std.int(nums.value); // oh yeah dont forget this has to be an integer
+				// case 'note_type':
+				//	curNoteType = nums.value; // oh yeah dont forget this has to be an integer
 				// set the new note type for when placing notes next!
 				case 'section_bpm':
 					_song.notes[curSection].bpm = Std.int(nums.value); // redefine the section's bpm
