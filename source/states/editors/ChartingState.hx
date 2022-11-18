@@ -25,11 +25,6 @@ import states.MusicBeatState;
 import song.Song;
 import song.SongFormat.SwagSong;
 
-using StringTools;
-
-#if sys
-#end
-
 /**
 	As the name implies, this is the class where all of the charting state stuff happens, so when you press 7 the game
 	state switches to this one, where you get to chart songs and such. I'm planning on overhauling this entirely in the future

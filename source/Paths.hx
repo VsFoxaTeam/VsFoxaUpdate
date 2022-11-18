@@ -17,8 +17,6 @@ import openfl.utils.Assets as OpenFlAssets;
 import sys.FileSystem;
 import sys.io.File;
 
-using StringTools;
-
 class Paths
 {
 	// Here we set up the paths class. This will be used to

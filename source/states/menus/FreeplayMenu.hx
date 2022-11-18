@@ -19,8 +19,6 @@ import sys.FileSystem;
 import sys.thread.Mutex;
 import sys.thread.Thread;
 
-using StringTools;
-
 class FreeplayMenu extends MusicBeatState
 {
 	//

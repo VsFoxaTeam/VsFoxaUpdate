@@ -10,8 +10,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.text.FlxText;
 import states.MusicBeatState;
 
-using StringTools;
-
 /*
 	Typedef for Menu Preferences
 	carries information for items

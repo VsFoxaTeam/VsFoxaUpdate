@@ -28,8 +28,6 @@ import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
 import states.MusicBeatState;
 
-using StringTools;
-
 /*
 	Character Offset Editor, WORK IN PROGRESS;
  */

@@ -7,8 +7,6 @@ import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 import openfl.media.Sound;
 
-using StringTools;
-
 /**
  * Loosley based on FlxTypeText lolol
  */

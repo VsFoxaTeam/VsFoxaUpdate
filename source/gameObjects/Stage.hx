@@ -8,8 +8,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import states.PlayState;
 
-using StringTools;
-
 typedef StageDataDef =
 {
 	var objects:Array<StageObject>;

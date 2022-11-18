@@ -12,8 +12,6 @@ import flixel.util.FlxSort;
 import song.Conductor;
 import states.PlayState;
 
-using StringTools;
-
 class ClassHUD extends FlxSpriteGroup
 {
 	// set up variables and stuff here

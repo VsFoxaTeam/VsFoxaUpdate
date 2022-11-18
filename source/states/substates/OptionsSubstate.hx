@@ -11,8 +11,6 @@ import flixel.util.FlxColor;
 import gameObjects.gameFonts.Alphabet;
 import states.MusicBeatState.MusicBeatSubstate;
 
-using StringTools;
-
 class OptionsSubstate extends MusicBeatSubstate
 {
 	private var curSelection = 0;

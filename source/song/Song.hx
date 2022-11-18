@@ -5,8 +5,6 @@ import song.SongFormat.SwagSection;
 import song.SongFormat.SwagSong;
 import sys.io.File;
 
-using StringTools;
-
 class Song
 {
 	public var song:String;

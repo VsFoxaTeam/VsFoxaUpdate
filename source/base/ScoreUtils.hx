@@ -3,8 +3,6 @@ package base;
 import flixel.FlxG;
 import states.PlayState;
 
-using StringTools;
-
 typedef Judgement =
 {
 	var name:String; // default: sick

@@ -5,8 +5,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.tweens.FlxTween;
 import sys.FileSystem;
 
-using StringTools;
-
 class HealthIcon extends FlxSprite
 {
 	// rewrite using da new icon system as ninjamuffin would say it

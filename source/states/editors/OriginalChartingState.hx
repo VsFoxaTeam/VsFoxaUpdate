@@ -43,8 +43,6 @@ import states.MusicBeatState;
 import song.SongFormat;
 import gameObjects.Character;
 
-using StringTools;
-
 /**
 	In case you dont like the forever engine chart editor, here's the base game one instead.
 **/

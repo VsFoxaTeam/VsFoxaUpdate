@@ -2,8 +2,6 @@ package gameObjects.userInterface.menu;
 
 import dependency.FNFSprite;
 
-using StringTools;
-
 class Checkmark extends FNFSprite
 {
 	override public function update(elapsed:Float)

@@ -37,9 +37,6 @@ import states.editors.CharacterOffsetEditor;
 import states.menus.*;
 import states.substates.GameOverSubstate;
 import gameObjects.Character;
-
-using StringTools;
-
 #if desktop
 import dependency.Discord;
 #end

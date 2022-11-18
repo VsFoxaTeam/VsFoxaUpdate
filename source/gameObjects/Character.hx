@@ -10,8 +10,6 @@ import states.PlayState;
 import sys.FileSystem;
 import sys.io.File;
 
-using StringTools;
-
 enum abstract CharacterOrigin(String) to String
 {
 	var FOREVER_FEATHER;

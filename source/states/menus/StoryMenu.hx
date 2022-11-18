@@ -18,8 +18,6 @@ import gameObjects.userInterface.menu.*;
 import song.Song;
 import states.MusicBeatState;
 
-using StringTools;
-
 class StoryMenu extends MusicBeatState
 {
 	var scoreText:FlxText;

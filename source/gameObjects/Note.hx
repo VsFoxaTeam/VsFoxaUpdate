@@ -8,8 +8,6 @@ import gameObjects.Strumline.Receptor;
 import song.Conductor;
 import states.PlayState;
 
-using StringTools;
-
 class Note extends FNFSprite
 {
 	public var strumTime:Float = 0;

@@ -6,8 +6,6 @@ package base;
 
 	this class is subjective of change;
  */
-using StringTools;
-
 class ScriptHandler extends SScript
 {
 	// this just kinda sets up script variables and such;

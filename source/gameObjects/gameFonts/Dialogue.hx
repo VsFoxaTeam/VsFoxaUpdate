@@ -5,8 +5,6 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import gameObjects.gameFonts.Alphabet.AlphaCharacter;
 
-using StringTools;
-
 class Dialogue extends FlxSpriteGroup
 {
 	public var textSpeed:Float = 0.05;

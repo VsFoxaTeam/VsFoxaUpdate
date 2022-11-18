@@ -5,8 +5,6 @@ import flixel.FlxState;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
 
-using StringTools;
-
 /** 
 	Enumerator for settingtypes
 **/

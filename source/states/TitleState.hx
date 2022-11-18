@@ -30,8 +30,6 @@ import song.Conductor;
 import states.MusicBeatState;
 import flixel.input.keyboard.FlxKey;
 
-using StringTools;
-
 /**
 	I hate this state so much that I gave up after trying to rewrite it 3 times and just copy pasted the original code
 	with like minor edits so it actually runs in forever engine. I'll redo this later, I've said that like 12 times now

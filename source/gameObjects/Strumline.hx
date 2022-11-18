@@ -11,8 +11,6 @@ import flixel.util.FlxSort;
 import song.Conductor;
 import states.PlayState;
 
-using StringTools;
-
 class Strumline extends FlxSpriteGroup
 {
 	//
