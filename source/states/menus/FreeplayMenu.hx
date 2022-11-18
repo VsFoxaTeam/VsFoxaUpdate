@@ -236,6 +236,11 @@ class FreeplayMenu extends MusicBeatState
 
 		if (Controls.getPressEvent("back"))
 		{
+			if (!FlxG.keys.pressed.SHIFT)
+			{
+				FlxG.sound.play(Paths.sound('base/menus/cancelMenu'));
+				FlxG.sound.music.stop();
+			}
 			threadActive = false;
 			Main.switchState(this, new MainMenu());
 		}
