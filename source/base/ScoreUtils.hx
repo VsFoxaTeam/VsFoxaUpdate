@@ -300,7 +300,7 @@ class ScoreUtils
 		if (judges[smallestRating].comboStatus != null)
 			curCombo = judges[smallestRating].comboStatus;
 		else
-			curCombo = (misses > 0 && misses < 10 ? 'SDCB' : null);
+			curCombo = (misses >= 0 && misses <= 9 ? 'SDCB' : null);
 
 		// this updates the most so uh
 		PlayState.uiHUD.updateScoreText();
