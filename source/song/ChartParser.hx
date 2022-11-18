@@ -38,7 +38,10 @@ class ChartParser
 
 					// very stupid but I'm lazy
 					if (songNotes.length > 2)
-						daNoteAlt = songNotes[3];
+					{
+						daNoteType = (songNotes[3] != null ? songNotes[3] : 'default');
+						// daNoteAlt = songNotes[3];
+					}
 
 					// check the base section
 					var gottaHitNote:Bool = section.mustHitSection;
