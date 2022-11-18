@@ -220,7 +220,7 @@ class ChartingState extends MusicBeatState
 					// noteCleanup(notesSection, noteStrum, noteData);
 					// _song.notes[notesSection].sectionNotes.push([noteStrum, noteData, noteSus]);
 
-					generateChartNote(noteData, noteStrum, noteSus, 0, notesSection);
+					generateChartNote(noteData, noteStrum, noteSus, 0, 'default', notesSection);
 
 					// updateSelection(_song.notes[notesSection].sectionNotes[_song.notes[notesSection].sectionNotes.length - 1], notesSection, true);
 					// isPlacing = true;
@@ -390,10 +390,10 @@ class ChartingState extends MusicBeatState
 			for (i in _song.notes[section].sectionNotes)
 			{
 				// note stuffs
-				var daNoteAlt = 0;
-				if (i.length > 2)
-					daNoteAlt = i[3];
-				generateChartNote(i[1], i[0], i[2], daNoteAlt, section);
+				var daNoteAlt = i[3];
+				var daNoteType = 'default';
+				
+				generateChartNote(i[1], i[0], i[2], daNoteAlt, daNoteType, section);
 			}
 		}
 		// lolll
@@ -444,9 +444,15 @@ class ChartingState extends MusicBeatState
 		//
 	}
 
-	private function generateChartNote(daNoteInfo, daStrumTime, daSus, daNoteAlt, noteSection)
+	private function generateChartNote(daNoteInfo, daStrumTime, daSus, daNoteAlt, daNoteType, noteSection)
 	{
-		var note:Note = ForeverAssets.generateArrow('NOTE_assets', PlayState.assetModifier, daStrumTime, daNoteInfo % 4, daNoteAlt, 'default', false, null);
+		var note:Note = new Note(daStrumTime, daNoteInfo % 4, 0, daNoteType);
+
+		var stringSect = gameObjects.Strumline.Receptor.colors[note.noteData];
+		note.frames = Paths.getSparrowAtlas('default/skins/default/base/NOTE_assets', 'notetypes');
+		note.animation.addByPrefix(stringSect + 'Scroll', stringSect + '0');
+		note.antialiasing = true;
+
 		// I love how there's 3 different engines that use this exact same variable name lmao
 		note.rawNoteData = daNoteInfo;
 		note.sustainLength = daSus;

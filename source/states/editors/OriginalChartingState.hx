@@ -1312,7 +1312,12 @@ class OriginalChartingState extends MusicBeatState
 			if (i.length > 2)
 				daNoteType = i[3];
 
-			var note:Note = ForeverAssets.generateArrow('NOTE_assets', PlayState.assetModifier, daStrumTime, daNoteInfo % 4, 0, daNoteType);
+			var note:Note = new Note(daStrumTime, daNoteInfo % 4, 0, daNoteType);
+			var stringSect = gameObjects.Strumline.Receptor.colors[note.noteData];
+			note.frames = Paths.getSparrowAtlas('default/skins/default/base/NOTE_assets', 'notetypes');
+			note.animation.addByPrefix(stringSect + 'Scroll', stringSect + '0');
+			note.antialiasing = true;
+
 			note.sustainLength = daSus;
 			note.noteType = daNoteType;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
