@@ -2117,6 +2117,8 @@ class PlayState extends MusicBeatState
 		setVar('curBeat', curBeat);
 		setVar('curStep', curStep);
 		setVar('curSection', curSection);
+		setVar('lastBeat', lastBeat);
+		setVar('lastStep', lastStep);
 		setVar('lastSection', lastSection);
 
 		setVar('set', function(key:String, value:Dynamic)

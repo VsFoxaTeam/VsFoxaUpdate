@@ -17,7 +17,9 @@ import song.Conductor;
  */
 class MusicBeatState extends FNFUIState
 {
-	public var lastSection:Float = 0;
+	public var lastStep:Int = 0;
+	public var lastBeat:Int = 0;
+	public var lastSection:Int = 0;
 
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
@@ -131,17 +133,30 @@ class MusicBeatState extends FNFUIState
 
 		if (!storedSteps.contains(curStep))
 			storedSteps.push(curStep);
+
+		if (lastStep >= curStep)
+			return;
+
+		if (curStep != lastStep)
+			lastStep = curStep;
 	}
 
 	public function beatHit():Void
 	{
-		// trace('Section: ' + curSection + ' Last: ' + lastSection);
+		if (lastBeat >= curBeat)
+			return;
+
+		if (curBeat != lastBeat)
+			lastBeat = curBeat;
 	}
 
 	public function sectionHit():Void
 	{
+		if (lastSection >= curSection)
+			return;
+
 		if (curSection != lastSection)
-			lastSection = Std.int(curSection);
+			lastSection = curSection;
 	}
 
 	var textField:FlxText;
@@ -203,7 +218,9 @@ class MusicBeatState extends FNFUIState
 
 class MusicBeatSubstate extends FlxSubState
 {
-	private var lastSection:Float = 0;
+	private var lastStep:Int = 0;
+	private var lastBeat:Int = 0;
+	private var lastSection:Int = 0;
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
@@ -265,16 +282,29 @@ class MusicBeatSubstate extends FlxSubState
 	{
 		if (curStep % 4 == 0)
 			beatHit();
+
+		if (lastStep >= curStep)
+			return;
+
+		if (curStep != lastStep)
+			lastStep = curStep;
 	}
 
 	public function beatHit():Void
 	{
-		// trace('Section: ' + curSection + ' Last: ' + lastSection);
+		if (lastBeat >= curBeat)
+			return;
+
+		if (curBeat != lastBeat)
+			lastBeat = curBeat;
 	}
 
 	public function sectionHit():Void
 	{
+		if (lastSection >= curSection)
+			return;
+
 		if (curSection != lastSection)
-			lastSection = Std.int(curSection);
+			lastSection = curSection;
 	}
 }
