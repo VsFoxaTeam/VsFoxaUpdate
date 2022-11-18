@@ -7,6 +7,7 @@ function generateNote(newNote)
 	newNote.animation.add(stringSect + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12);
 	newNote.animation.play(stringSect + 'Scroll');
 
+	newNote.isMine = true;
 	newNote.setGraphicSize(Std.int(newNote.width * 0.8));
 	newNote.updateHitbox();
 }

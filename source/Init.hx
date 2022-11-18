@@ -126,12 +126,6 @@ class Init extends FlxState
 			'When enabled, left and right notes no longer move the camera.',
 			NOT_FORCED
 		],
-		'Disable Note Splashes' => [
-			false,
-			Checkmark,
-			'Whether to disable note splashes during Gameplay, useful if you find them distracting.',
-			NOT_FORCED
-		],
 		// custom ones lol
 		'Offset' => [Checkmark, 3],
 		'Filter' => [
@@ -173,6 +167,12 @@ class Init extends FlxState
 			60,
 			Selector,
 			"Sets the opacity for the Hold Notes... Huh, why isnt the trail cut off?",
+			NOT_FORCED
+		],
+		"Splash Opacity" => [
+			60,
+			Selector,
+			"Sets the opacity for the Note Splashes, shown when hitting \"Sick!\" judgements on notes.",
 			NOT_FORCED
 		],
 		'Accuracy Hightlight' => [
@@ -326,6 +326,7 @@ class Init extends FlxState
 		setDefaultValue("Stage Opacity", 0, 100, 100);
 		setDefaultValue("Arrow Opacity", 0, 1, 80);
 		setDefaultValue("Hold Opacity", 0, 1, 60);
+		setDefaultValue("Splash Opacity", 0, 1, 60);
 
 		reloadUISkins();
 

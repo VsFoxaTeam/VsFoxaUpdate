@@ -50,7 +50,7 @@ class Note extends FNFSprite
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
 
-	public var noteScript:ScriptHandler;
+	public static var noteScript:ScriptHandler;
 
 	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?isSustainNote:Bool = false)
 	{
@@ -303,16 +303,5 @@ class Note extends FNFSprite
 	{
 		if (noteScript != null)
 			noteScript.call('beatHit', [this, noteBeat]);
-	}
-
-	public function callScriptVars()
-	{
-		if (noteScript != null)
-		{
-			noteScript.set('resetNote', resetNote);
-			noteScript.set('getNoteColor', getNoteColor);
-			noteScript.set('getNoteAction', getNoteAction);
-			noteScript.set('prevNote', prevNote);
-		}
 	}
 }

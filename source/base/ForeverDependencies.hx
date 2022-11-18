@@ -143,17 +143,20 @@ class ForeverAssets
 	}
 
 	public static function generateNoteSplashes(asset:String, group:FlxTypedSpriteGroup<NoteSplash>, assetModifier:String = 'base',
-			changeableSkin:String = 'default', baseLibrary:String, noteType:String = 'default', noteData:Int):NoteSplash
+			changeableSkin:String = 'default', noteType:String = 'default', noteData:Int):NoteSplash
 	{
 		//
-		var tempSplash:NoteSplash = group.recycle(NoteSplash);
-		tempSplash.noteData = noteData;
+		var tempSplash:NoteSplash = group.recycle(NoteSplash, function()
+			{
+				var splash:NoteSplash = new NoteSplash(noteData);
+				return splash;
+			});
 		tempSplash.zDepth = -Conductor.songPosition;
 
 		switch (assetModifier)
 		{
 			case 'pixel':
-				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('splash-pixel', assetModifier, changeableSkin, baseLibrary, 'notetypes'),
+				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('splash-pixel', assetModifier, changeableSkin, '$noteType/skins', 'notetypes'),
 					'notetypes'), true, 34,
 					34);
 				tempSplash.animation.add('anim1', [noteData, 4 + noteData, 8 + noteData, 12 + noteData], 24, false);
@@ -168,17 +171,17 @@ class ForeverAssets
 				{
 					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						tempSplash.splashScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
-						tempSplash.splashScript.call('generateSplash', [tempSplash, noteData]);
+						Note.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
+						Note.noteScript.call('generateSplash', [tempSplash, noteData]);
 						// trace('Splash Module loaded: $noteType-$assetModifier');
 					}
 				}
 				catch (e)
 				{
-					tempSplash.splashScript = null;
+					Note.noteScript = null;
 					// trace('[SPLASH ERROR] $e');
 
-					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary, 'notetypes'),
+					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, '$noteType/skins', 'notetypes'),
 						'notetypes'), true, 210,
 						210);
 					tempSplash.animation.add('anim1', [
@@ -246,14 +249,14 @@ class ForeverAssets
 				{
 					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						uiReceptor.receptorScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
-						uiReceptor.receptorScript.call('generateReceptor', [uiReceptor]);
+						Note.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
+						Note.noteScript.call('generateReceptor', [uiReceptor]);
 						// trace('Receptor Module loaded: $noteType-$assetModifier');
 					}
 				}
 				catch (e)
 				{
-					uiReceptor.receptorScript = null;
+					Note.noteScript = null;
 					// trace('[RECEPTOR ERROR] $e');
 
 					// probably gonna revise this and make it possible to add other arrow types but for now it's just pixel and normal
@@ -334,15 +337,14 @@ class ForeverAssets
 					{
 						if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 						{
-							newNote.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
-							newNote.noteScript.call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
-							newNote.callScriptVars();
+							Note.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
+							Note.noteScript.call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
 							// trace('Note Module loaded: $noteType-$assetModifier');
 						}
 					}
 					catch (e)
 					{
-						newNote.noteScript = null;
+						Note.noteScript = null;
 						// trace('[NOTE ERROR] $e');
 
 						// load default so the game won't explode in front of you;

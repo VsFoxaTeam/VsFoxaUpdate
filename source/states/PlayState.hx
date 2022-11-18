@@ -784,7 +784,7 @@ class PlayState extends MusicBeatState
 				// push note to its correct strumline
 				strumLines.members[
 					Math.floor((dunceNote.noteData + (dunceNote.mustPress ? 4 : 0)) / strumline.keyAmount)
-				].push(dunceNote);
+				].addNote(dunceNote);
 				unspawnNotes.splice(unspawnNotes.indexOf(dunceNote), 1);
 			}
 
@@ -940,7 +940,7 @@ class PlayState extends MusicBeatState
 
 						if (!daNote.tooLate && daNote.strumTime < Conductor.songPosition - (ScoreUtils.msThreshold) && !daNote.wasGoodHit)
 						{
-							if ((!daNote.tooLate) && (daNote.mustPress))
+							if ((!daNote.tooLate) && (daNote.mustPress) && (!daNote.isMine))
 							{
 								if (!daNote.isSustainNote)
 								{
@@ -982,7 +982,7 @@ class PlayState extends MusicBeatState
 						if ((((!strumline.downscroll) && (daNote.y < -daNote.height))
 							|| ((strumline.downscroll) && (daNote.y > (FlxG.height + daNote.height))))
 							&& (daNote.tooLate || daNote.wasGoodHit))
-							destroyNote(strumline, daNote);
+							strumline.removeNote(daNote);
 					}
 				});
 
@@ -1001,21 +1001,6 @@ class PlayState extends MusicBeatState
 					boyfriend.dance();
 			}
 		}
-	}
-
-	function destroyNote(strumline:Strumline, daNote:Note)
-	{
-		daNote.active = false;
-		daNote.exists = false;
-
-		var chosenGroup = (daNote.isSustainNote ? strumline.holdsGroup : strumline.notesGroup);
-		// note damage here I guess
-		daNote.kill();
-		if (strumline.allNotes.members.contains(daNote))
-			strumline.allNotes.remove(daNote, true);
-		if (chosenGroup.members.contains(daNote))
-			chosenGroup.remove(daNote, true);
-		daNote.destroy();
 	}
 
 	function goodNoteHit(coolNote:Note, strumline:Strumline)
@@ -1084,7 +1069,7 @@ class PlayState extends MusicBeatState
 			}
 
 			if (!coolNote.isSustainNote)
-				destroyNote(strumline, coolNote);
+				strumline.removeNote( coolNote);
 		}
 	}
 

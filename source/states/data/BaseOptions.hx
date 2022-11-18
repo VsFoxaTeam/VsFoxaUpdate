@@ -338,8 +338,6 @@ class BaseOptions extends MusicBeatState
 					setupSelector(updateBy, selector, 30, 360, 15);
 				case 'Darkness Opacity':
 					setupSelector(updateBy, selector, 0, 100, 5);
-				case 'Arrow Opacity' | 'Hold Opacity':
-					setupSelector(updateBy, selector, 0, 100, 1);
 				default:
 					setupSelector(updateBy, selector);
 			}

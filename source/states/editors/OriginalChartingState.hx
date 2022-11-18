@@ -595,6 +595,8 @@ class OriginalChartingState extends MusicBeatState
 
 	function generateGrid():Void
 	{
+		gridGroup.clear();
+
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 9, GRID_SIZE * 16);
 		gridGroup.add(gridBG);
 
@@ -687,8 +689,8 @@ class OriginalChartingState extends MusicBeatState
 				case 'note_susLength': // STOP POSTING ABOUT AMONG US
 					curSelectedNote[2] = nums.value; // change the currently selected note's length
 					updateGrid(); // oh btw I know sus stands for sustain it just bothers me
-				// case 'note_type':
-				//	curNoteType = nums.value; // oh yeah dont forget this has to be an integer
+				case 'note_type':
+					curNoteType = 'default';
 				// set the new note type for when placing notes next!
 				case 'section_bpm':
 					_song.notes[curSection].bpm = Std.int(nums.value); // redefine the section's bpm
@@ -1257,20 +1259,17 @@ class OriginalChartingState extends MusicBeatState
 	function updateNoteUI():Void
 	{
 		if (curSelectedNote != null)
+		{
 			stepperSusLength.value = curSelectedNote[2];
+			if (curSelectedNote[3] != null)
+				curNoteType = 'default';
+		}
 	}
 
 	function updateGrid():Void
 	{
-		while (curRenderedNotes.members.length > 0)
-		{
-			curRenderedNotes.remove(curRenderedNotes.members[0], true);
-		}
-
-		while (curRenderedSustains.members.length > 0)
-		{
-			curRenderedSustains.remove(curRenderedSustains.members[0], true);
-		}
+		curRenderedNotes.clear();
+		curRenderedSustains.clear();
 
 		var sectionInfo:Array<Dynamic> = _song.notes[curSection].sectionNotes;
 
@@ -1289,29 +1288,12 @@ class OriginalChartingState extends MusicBeatState
 			Conductor.changeBPM(daBPM);
 		}
 
-		/* // PORT BULLSHIT, INCASE THERE'S NO SUSTAIN DATA FOR A NOTE
-			for (sec in 0..._song.notes.length)
-			{
-				for (notesse in 0..._song.notes[sec].sectionNotes.length)
-				{
-					if (_song.notes[sec].sectionNotes[notesse][2] == null)
-					{
-						trace('SUS NULL');
-						_song.notes[sec].sectionNotes[notesse][2] = 0;
-					}
-				}
-			}
-		 */
-
 		for (i in sectionInfo)
 		{
 			var daNoteInfo = i[1];
 			var daStrumTime = i[0];
 			var daSus = i[2];
-			var daNoteType:String = 'default';
-
-			if (i.length > 2)
-				daNoteType = i[3];
+			var daNoteType:String = i[3];
 
 			var note:Note = new Note(daStrumTime, daNoteInfo % 4, 0, daNoteType);
 			var stringSect = gameObjects.Strumline.Receptor.colors[note.noteData];
@@ -1527,9 +1509,7 @@ class OriginalChartingState extends MusicBeatState
 		curSelectedNote = _song.notes[curSection].sectionNotes[_song.notes[curSection].sectionNotes.length - 1];
 
 		if (FlxG.keys.pressed.CONTROL)
-		{
 			_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, noteType]);
-		}
 
 		updateGrid();
 		updateNoteUI();

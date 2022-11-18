@@ -84,9 +84,9 @@ class OptionsData
 		{name: "Note and Holds", type: "divider"},
 		//
 		{name: "Note Skin", type: "option"},
-		{name: "Disable Note Splashes", type: "option"},
 		{name: "Clip Style", type: "option"},
 		{name: "Arrow Opacity", type: "option"},
-		{name: "Hold Opacity", type: "option"}
+		{name: "Hold Opacity", type: "option"},
+		{name: "Splash Opacity", type: "option"},
 	];
 }

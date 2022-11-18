@@ -8,15 +8,10 @@ import dependency.FNFSprite;
 **/
 class NoteSplash extends FNFSprite
 {
-	public var noteData:Int = 0;
-
-	public var splashScript:ScriptHandler;
-
 	public function new(noteData:Int)
 	{
 		super(x, y);
 		alpha = 0.000001;
-		this.noteData = noteData;
 	}
 
 	override function update(elapsed:Float)
@@ -36,8 +31,8 @@ class NoteSplash extends FNFSprite
 	override public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0)
 	{
 		// make sure the animation is visible
-		if (!Init.trueSettings.get('Disable Note Splashes'))
-			alpha = 0.6;
+		if (Init.trueSettings.get('Splash Opacity') > 0)
+			alpha = Init.trueSettings.get('Splash Opacity') * 0.01;
 
 		super.playAnim(AnimName, Force, Reversed, Frame);
 	}

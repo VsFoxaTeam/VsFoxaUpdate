@@ -32,16 +32,9 @@ class ChartParser
 					var daNoteData:Int = Std.int(songNotes[1] % 4);
 					// define the note's animation (in accordance to the original game)!
 					var daNoteAlt:Float = 0;
-					var daNoteType:String = 'default';
+					var daNoteType:String = (songNotes[3] != null ? songNotes[3] : 'default');
 					var daNoteSkin:String = 'NOTE_assets';
 					var assetModifier:String = "base";
-
-					// very stupid but I'm lazy
-					if (songNotes.length > 2)
-					{
-						daNoteType = (songNotes[3] != null ? songNotes[3] : 'default');
-						// daNoteAlt = songNotes[3];
-					}
 
 					// check the base section
 					var gottaHitNote:Bool = section.mustHitSection;
