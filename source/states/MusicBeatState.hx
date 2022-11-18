@@ -17,10 +17,6 @@ import song.Conductor;
  */
 class MusicBeatState extends FNFUIState
 {
-	// original variables extended from original game source
-	private var lastBeat:Float = 0;
-	private var lastStep:Float = 0;
-
 	public var lastSection:Float = 0;
 
 	public var curStep:Int = 0;
@@ -207,8 +203,6 @@ class MusicBeatState extends FNFUIState
 
 class MusicBeatSubstate extends FlxSubState
 {
-	private var lastBeat:Float = 0;
-	private var lastStep:Float = 0;
 	private var lastSection:Float = 0;
 
 	private var curStep:Int = 0;

@@ -89,9 +89,6 @@ class TitleState extends MusicBeatState
 		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		// bg.antialiasing = true;
-		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
 		add(bg);
 
 		gameLogo = new FlxSprite(-10, 10);
@@ -156,7 +153,7 @@ class TitleState extends MusicBeatState
 			initialized = true;
 	}
 
-	function getIntroTextShit():Array<Array<String>>
+	inline function getIntroTextShit():Array<Array<String>>
 	{
 		var swagGoodArray:Array<Array<String>> = [[]];
 		if (Assets.exists(Paths.txt('introText')))
@@ -209,11 +206,6 @@ class TitleState extends MusicBeatState
 		{
 			if (gamepad.justPressed.START)
 				pressedEnter = true;
-
-			#if switch
-			if (gamepad.justPressed.B)
-				pressedEnter = true;
-			#end
 		}
 
 		if (initialized && !transitioning && skippedIntro)
@@ -275,7 +267,7 @@ class TitleState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function createCoolText(textArray:Array<String>)
+	inline function createCoolText(textArray:Array<String>)
 	{
 		for (i in 0...textArray.length)
 		{
@@ -287,7 +279,7 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function addMoreText(text:String)
+	inline function addMoreText(text:String)
 	{
 		if (!skippedIntro)
 		{
@@ -299,7 +291,7 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function deleteCoolText()
+	inline function deleteCoolText()
 	{
 		while (textGroup.members.length > 0)
 		{

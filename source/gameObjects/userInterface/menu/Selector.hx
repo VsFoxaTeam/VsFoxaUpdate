@@ -17,7 +17,7 @@ class Selector extends FlxTypedSpriteGroup<FlxSprite>
 	public var isNumber(default, null):Bool;
 	public var options:Array<String>;
 
-	public function set_chosenOptionString(newOption:String)
+	public inline function set_chosenOptionString(newOption:String)
 	{
 		chosenOptionString = newOption;
 		isNumber = Std.parseInt(newOption) != null;
@@ -48,7 +48,7 @@ class Selector extends FlxTypedSpriteGroup<FlxSprite>
 		chosenOptionString = Std.string(Init.trueSettings.get(name));
 	}
 
-	static function createSelector(dir:String):FNFSprite
+	static inline function createSelector(dir:String):FNFSprite
 	{
 		var returnSelector = new FNFSprite();
 		returnSelector.frames = Paths.getSparrowAtlas('menus/base/storymenu/campaign_menu_UI_assets');

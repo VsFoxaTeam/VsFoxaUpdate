@@ -169,7 +169,7 @@ class Events
 		myEvents = [];
 	}
 
-	public static function returnValue3(event:String):Array<String>
+	inline public static function returnValue3(event:String):Array<String>
 	{
 		if (loadedEvents.get(event) != null)
 		{
@@ -185,7 +185,7 @@ class Events
 		return needsValue3.copy();
 	}
 
-	public static function returnEventDescription(event:String):String
+	inline public static function returnEventDescription(event:String):String
 	{
 		if (loadedEvents.get(event) != null)
 		{

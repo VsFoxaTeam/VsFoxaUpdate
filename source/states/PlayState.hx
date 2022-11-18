@@ -193,7 +193,7 @@ class PlayState extends MusicBeatState
 		keepScore = false;
 	}
 
-	function checkTween(isDad:Bool = false):Bool
+	inline function checkTween(isDad:Bool = false):Bool
 	{
 		if (isDad && Init.trueSettings.get('Centered Notefield'))
 			return false;
@@ -457,7 +457,7 @@ class PlayState extends MusicBeatState
 		callFunc('postCreate', []);
 	}
 
-	public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey>
+	inline public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey>
 	{
 		var copiedArray:Array<FlxKey> = arrayToCopy.copy();
 		var i:Int = 0;
@@ -574,10 +574,10 @@ class PlayState extends MusicBeatState
 
 	@:isVar public var songSpeed(get, default):Float = 0;
 
-	function get_songSpeed()
+	inline function get_songSpeed()
 		return FlxMath.roundDecimal(songSpeed, 2);
 
-	function set_songSpeed(value:Float):Float
+	inline function set_songSpeed(value:Float):Float
 	{
 		var offset:Float = songSpeed / value;
 		for (note in bfStrums.allNotes)
@@ -797,7 +797,7 @@ class PlayState extends MusicBeatState
 
 	var isDead:Bool = false;
 
-	function deathCheck():Bool
+	inline function deathCheck():Bool
 	{
 		if (health <= 0 && startedCountdown && !isDead)
 		{
@@ -1856,7 +1856,7 @@ class PlayState extends MusicBeatState
 		//
 	}
 
-	function checkTextbox():Bool
+	inline function checkTextbox():Bool
 	{
 		var dialogueFileStr:String = 'dialogue';
 		dialogueFileStr = (endingSong ? 'dialogueEnd' : 'dialogue');
@@ -1890,7 +1890,7 @@ class PlayState extends MusicBeatState
 			(endingSong ? callDefaultSongEnd() : startCountdown());
 	}
 
-	public static function skipCutscenes():Bool
+	inline public static function skipCutscenes():Bool
 	{
 		// pretty messy but an if statement is messier
 		if (Init.trueSettings.get('Skip Text') != null && Std.isOfType(Init.trueSettings.get('Skip Text'), String))

@@ -99,7 +99,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 		}
 	}
 
-	public function destroyText():Void
+	public inline function destroyText():Void
 	{
 		for (_sprite in _sprites.copy())
 			_sprite.destroy();
@@ -177,7 +177,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 		}
 	}
 
-	function doSplitWords():Void
+	inline function doSplitWords():Void
 		splitWords = _finalText.split("");
 
 	public var swagTypingTimer:FlxTimer;
@@ -394,14 +394,14 @@ class AlphaCharacter extends FlxSprite
 		updateHitbox();
 	}
 
-	public function createBoldNumber(number:String)
+	inline public function createBoldNumber(number:String)
 	{
 		animation.addByPrefix(number, 'bold$number' + '0', 24);
 		animation.play(number);
 		updateHitbox();
 	}
 
-	public function createBold(letter:String)
+	inline public function createBold(letter:String)
 	{
 		animation.addByPrefix(letter, letter.toUpperCase() + " bold", 24);
 		animation.play(letter);
@@ -409,7 +409,7 @@ class AlphaCharacter extends FlxSprite
 		updateHitbox();
 	}
 
-	public function createLetter(letter:String):Void
+	inline public function createLetter(letter:String):Void
 	{
 		var letterCase:String = "lowercase";
 		if (letter.toLowerCase() != letter)
@@ -426,7 +426,7 @@ class AlphaCharacter extends FlxSprite
 		y += row * 50;
 	}
 
-	public function createNumber(letter:String):Void
+	inline public function createNumber(letter:String):Void
 	{
 		animation.addByPrefix(letter, letter, 24);
 		animation.play(letter);
@@ -434,7 +434,7 @@ class AlphaCharacter extends FlxSprite
 		updateHitbox();
 	}
 
-	public function createSymbol(letter:String)
+	inline public function createSymbol(letter:String)
 	{
 		switch (letter)
 		{

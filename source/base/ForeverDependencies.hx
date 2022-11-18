@@ -448,7 +448,7 @@ class ForeverAssets
 class ForeverTools
 {
 	// set up maps and stuffs
-	public static function resetMenuMusic(resetVolume:Bool = false)
+	inline public static function resetMenuMusic(resetVolume:Bool = false)
 	{
 		// make sure the music is playing
 		if (((FlxG.sound.music != null) && (!FlxG.sound.music.playing)) || (FlxG.sound.music == null))
@@ -463,7 +463,7 @@ class ForeverTools
 		//
 	}
 
-	public static function returnSkinAsset(asset:String, assetModifier:String = 'base', changeableSkin:String = 'default', baseLibrary:String,
+	inline public static function returnSkinAsset(asset:String, assetModifier:String = 'base', changeableSkin:String = 'default', baseLibrary:String,
 			?baseFolder:String):String
 	{
 		if (baseFolder == null)
@@ -484,7 +484,7 @@ class ForeverTools
 		return realAsset;
 	}
 
-	public static function killMusic(songsArray:Array<FlxSound>)
+	inline public static function killMusic(songsArray:Array<FlxSound>)
 	{
 		// neat function thing for songs
 		for (i in 0...songsArray.length)
@@ -676,13 +676,13 @@ class ForeverTools
 		return FlxAxes.XY;
 	}
 
-	public static function createTypedGroup(?variable)
+	inline public static function createTypedGroup(?variable)
 	{
 		variable = new FlxTypedGroup<Dynamic>();
 		return variable;
 	}
 
-	public static function createSpriteGroup(?variable)
+	inline public static function createSpriteGroup(?variable)
 	{
 		variable = new FlxSpriteGroup();
 		return variable;
@@ -690,18 +690,18 @@ class ForeverTools
 
 	// FLXCOLOR;
 
-	public static function fromHSB(hue:Float, sat:Float, brt:Float, alpha:Float):FlxColor
+	inline public static function fromHSB(hue:Float, sat:Float, brt:Float, alpha:Float):FlxColor
 		return FlxColor.fromHSB(hue, sat, brt, alpha);
 
-	public static function fromRGB(red:Int, green:Int, blue:Int, alpha:Int):FlxColor
+	inline public static function fromRGB(red:Int, green:Int, blue:Int, alpha:Int):FlxColor
 		return FlxColor.fromRGB(red, green, blue, alpha);
 
-	public static function fromRGBFloat(red:Float, green:Float, blue:Float, alpha:Float):FlxColor
+	inline public static function fromRGBFloat(red:Float, green:Float, blue:Float, alpha:Float):FlxColor
 		return FlxColor.fromRGBFloat(red, green, blue, alpha);
 
-	public static function fromInt(value:Int):FlxColor
+	inline public static function fromInt(value:Int):FlxColor
 		return FlxColor.fromInt(value);
 
-	public static function fromString(str:String):FlxColor
+	inline public static function fromString(str:String):FlxColor
 		return FlxColor.fromString(str);
 }

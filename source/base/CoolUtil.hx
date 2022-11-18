@@ -14,32 +14,32 @@ class CoolUtil
 	public static var difficultyLength:Int = difficultyArray.length;
 	public static var difficultyString:String = 'NORMAL';
 
-	public static function difficultyFromNumber(number:Int):String
+	inline public static function difficultyFromNumber(number:Int):String
 	{
 		return difficultyArray[number];
 	}
 
-	public static function boundTo(value:Float, minValue:Float, maxValue:Float):Float
+	inline public static function boundTo(value:Float, minValue:Float, maxValue:Float):Float
 	{
 		return Math.max(minValue, Math.min(maxValue, value));
 	}
 
-	public static function dashToSpace(string:String):String
+	inline public static function dashToSpace(string:String):String
 	{
 		return string.replace("-", " ");
 	}
 
-	public static function spaceToDash(string:String):String
+	inline public static function spaceToDash(string:String):String
 	{
 		return string.replace(" ", "-");
 	}
 
-	public static function swapSpaceDash(string:String):String
+	inline public static function swapSpaceDash(string:String):String
 	{
 		return StringTools.contains(string, '-') ? dashToSpace(string) : spaceToDash(string);
 	}
 
-	public static function coolTextFile(path:String):Array<String>
+	inline public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = Assets.getText(path).trim().split('\n');
 
@@ -51,7 +51,7 @@ class CoolUtil
 		return daList;
 	}
 
-	public static function getOffsetsFromTxt(path:String):Array<Array<String>>
+	inline public static function getOffsetsFromTxt(path:String):Array<Array<String>>
 	{
 		var fullText:String = Assets.getText(path);
 
@@ -87,7 +87,7 @@ class CoolUtil
 		return libraryArray;
 	}
 
-	public static function getAnimsFromTxt(path:String):Array<Array<String>>
+	inline public static function getAnimsFromTxt(path:String):Array<Array<String>>
 	{
 		var fullText:String = Assets.getText(path);
 
@@ -102,7 +102,7 @@ class CoolUtil
 		return swagOffsets;
 	}
 
-	public static function numberArray(max:Int, ?min = 0):Array<Int>
+	inline public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		var dumbArray:Array<Int> = [];
 		for (i in min...max)
@@ -118,7 +118,7 @@ class CoolUtil
 		var fileArray:Array<String> = CoolUtil.absoluteDirectory('scripts');
 		trace(fileArray); -> ['mods/scripts/modchart.hx', 'assets/scripts/script.hx']
 	**/
-	public static function absoluteDirectory(file:String):Array<String>
+	inline public static function absoluteDirectory(file:String):Array<String>
 	{
 		if (!file.endsWith('/'))
 			file = '$file/';
