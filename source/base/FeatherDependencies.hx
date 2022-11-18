@@ -25,6 +25,11 @@ class ScriptHandler extends SScript
 		// here we set up the built-in imports
 		// these should work on *any* script;
 
+		// CLASSES (HAXE)
+		set('Type', Type);
+		set('Math', Math);
+		set('Std', Std);
+
 		// CLASSES (FLIXEL);
 		set('FlxG', flixel.FlxG);
 		set('FlxBasic', flixel.FlxBasic);
