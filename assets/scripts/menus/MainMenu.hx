@@ -15,7 +15,6 @@ import states.TitleState;
 import states.menus.StoryMenu;
 import states.menus.FreeplayMenu;
 import states.menus.OptionsMenu;
-import states.ScriptableState;
 import states.menus.MainMenu;
 
 ////////////////////////////////////////////
@@ -171,8 +170,8 @@ function update(elapsed:Float)
 							Main.switchState(this, new StoryMenu());
 						case 'freeplay':
 							Main.switchState(this, new FreeplayMenu());
-						case 'credits':
-							Main.switchState(this, new ScriptableState('CreditsMenu'));
+						// case 'credits':
+						//	Main.switchState(this, new CreditsMenu());
 						case 'options':
 							Main.switchState(this, new OptionsMenu());
 					}

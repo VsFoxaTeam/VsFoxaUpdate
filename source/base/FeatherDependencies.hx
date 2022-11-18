@@ -62,8 +62,6 @@ class ScriptHandler extends SScript
 		set('ForeverTools', base.ForeverDependencies.ForeverTools);
 
 		// CLASSES (FEATHER);
-		set('ScriptableState', states.ScriptableState);
-		set('ScriptableSubstate', states.ScriptableState.ScriptableSubstate);
 		set('FeatherSprite', dependency.FeatherSprite);
 		set('Controls', base.Controls);
 
