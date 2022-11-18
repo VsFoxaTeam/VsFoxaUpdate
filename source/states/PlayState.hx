@@ -104,7 +104,9 @@ class PlayState extends MusicBeatState
 	public var startingSong:Bool = false;
 	public var endingSong:Bool = false;
 	public var startedCountdown:Bool = false;
+
 	public static var clearStored:Bool = false;
+
 	public var skipCountdown:Bool = false;
 	public var inCutscene:Bool = false;
 	public var canPause:Bool = true;

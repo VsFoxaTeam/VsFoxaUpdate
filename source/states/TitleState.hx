@@ -28,6 +28,7 @@ import lime.app.Application;
 import openfl.Assets;
 import song.Conductor;
 import states.MusicBeatState;
+import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
@@ -56,6 +57,8 @@ class TitleState extends MusicBeatState
 	{
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		super.create();
+
+		FlxG.sound.muteKeys = [FlxKey.ZERO];
 
 		startIntro();
 	}
