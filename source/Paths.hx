@@ -188,7 +188,7 @@ class Paths
 	public static function getSound(path:String, ?library:String)
 	{
 		final returnExtension:String = SOUND_EXT; // defaults to "ogg";
-	 	final SOUND_EXTS:Array<String> = [".mp3", ".ogg", ".wav", ".flac"];
+		final SOUND_EXTS:Array<String> = [".mp3", ".ogg", ".wav", ".flac"];
 
 		for (i in 0...SOUND_EXTS.length)
 		{

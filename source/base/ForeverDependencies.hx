@@ -147,18 +147,18 @@ class ForeverAssets
 	{
 		//
 		var tempSplash:NoteSplash = group.recycle(NoteSplash, function()
-			{
-				var splash:NoteSplash = new NoteSplash(noteData);
-				return splash;
-			});
+		{
+			var splash:NoteSplash = new NoteSplash(noteData);
+			return splash;
+		});
 		tempSplash.zDepth = -Conductor.songPosition;
 
 		switch (assetModifier)
 		{
 			case 'pixel':
-				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('splash-pixel', assetModifier, changeableSkin, '$noteType/skins', 'notetypes'),
-					'notetypes'), true, 34,
-					34);
+				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('splash-pixel', assetModifier, changeableSkin, '$noteType/skins',
+					'notetypes'), 'notetypes'),
+					true, 34, 34);
 				tempSplash.animation.add('anim1', [noteData, 4 + noteData, 8 + noteData, 12 + noteData], 24, false);
 				tempSplash.animation.add('anim2', [16 + noteData, 20 + noteData, 24 + noteData, 28 + noteData], 24, false);
 				tempSplash.animation.play('anim1');
@@ -182,8 +182,8 @@ class ForeverAssets
 					// trace('[SPLASH ERROR] $e');
 
 					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, '$noteType/skins', 'notetypes'),
-						'notetypes'), true, 210,
-						210);
+						'notetypes'), true,
+						210, 210);
 					tempSplash.animation.add('anim1', [
 						(noteData * 2 + 1),
 						8 + (noteData * 2 + 1),

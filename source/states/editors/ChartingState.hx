@@ -392,7 +392,7 @@ class ChartingState extends MusicBeatState
 				// note stuffs
 				var daNoteAlt = i[3];
 				var daNoteType = 'default';
-				
+
 				generateChartNote(i[1], i[0], i[2], daNoteAlt, daNoteType, section);
 			}
 		}

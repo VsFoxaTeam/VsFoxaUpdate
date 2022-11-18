@@ -879,7 +879,8 @@ class PlayState extends MusicBeatState
 
 							daNote.y -= ((daNote.height / 2) * downscrollMultiplier);
 							if ((daNote.animation.getByName(stringSect + 'holdend') != null
-								&& daNote.animation.curAnim.name.endsWith('holdend')) && (daNote.prevNote != null))
+								&& daNote.animation.curAnim.name.endsWith('holdend'))
+								&& (daNote.prevNote != null))
 							{
 								daNote.y -= ((daNote.prevNote.height / 2) * downscrollMultiplier);
 								if (strumline.downscroll)
@@ -1069,7 +1070,7 @@ class PlayState extends MusicBeatState
 			}
 
 			if (!coolNote.isSustainNote)
-				strumline.removeNote( coolNote);
+				strumline.removeNote(coolNote);
 		}
 	}
 

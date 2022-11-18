@@ -109,7 +109,7 @@ class BaseOptions extends MusicBeatState
 		}
 	}
 
- 	public function updateDiscord(?forcedPresence:String)
+	public function updateDiscord(?forcedPresence:String)
 	{
 		var myPresence:String = curCategory == 'main' ? 'Navigating through Categories' : 'Changing $curCategory';
 
