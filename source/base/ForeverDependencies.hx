@@ -355,17 +355,22 @@ class ForeverAssets
 			if (newNote.frames != null)
 			{
 				if (!isSustainNote)
-					newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
+				{
+					if (newNote.animation.getByName(Receptor.colors[noteData] + 'Scroll') != null)
+						newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
+				}
 
 				if (isSustainNote && prevNote != null)
 				{
 					newNote.noteSpeed = prevNote.noteSpeed;
 					newNote.alpha = (Init.trueSettings.get('Opaque Holds')) ? 1 : 0.6;
-					newNote.animation.play(Receptor.colors[noteData] + 'holdend');
+					if (newNote.animation.getByName(Receptor.colors[noteData] + 'holdend') != null)
+						newNote.animation.play(Receptor.colors[noteData] + 'holdend');
 					newNote.updateHitbox();
 					if (prevNote.isSustainNote)
 					{
-						prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
+						if (prevNote.animation.getByName(Receptor.colors[prevNote.noteData] + 'hold') != null)
+							prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
 						prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
 						prevNote.updateHitbox();
 					}

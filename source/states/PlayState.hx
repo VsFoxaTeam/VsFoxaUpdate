@@ -874,8 +874,11 @@ class PlayState extends MusicBeatState
 						var center:Float = receptorPosY + Note.swagWidth / 2;
 						if (daNote.isSustainNote)
 						{
+							var stringSect = Receptor.colors[daNote.noteData];
+
 							daNote.y -= ((daNote.height / 2) * downscrollMultiplier);
-							if ((daNote.animation.curAnim.name.endsWith('holdend')) && (daNote.prevNote != null))
+							if ((daNote.animation.getByName(stringSect + 'holdend') != null
+								&& daNote.animation.curAnim.name.endsWith('holdend')) && (daNote.prevNote != null))
 							{
 								daNote.y -= ((daNote.prevNote.height / 2) * downscrollMultiplier);
 								if (strumline.downscroll)
