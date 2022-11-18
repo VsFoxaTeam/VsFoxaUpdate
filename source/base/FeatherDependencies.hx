@@ -25,6 +25,11 @@ class ScriptHandler extends SScript
 		// here we set up the built-in imports
 		// these should work on *any* script;
 
+		// CLASSES (HAXE)
+		set('Type', Type);
+		set('Math', Math);
+		set('Std', Std);
+
 		// CLASSES (FLIXEL);
 		set('FlxG', flixel.FlxG);
 		set('FlxBasic', flixel.FlxBasic);
@@ -39,7 +44,7 @@ class ScriptHandler extends SScript
 
 		// CLASSES (FUNKIN);
 		set('Alphabet', gameObjects.gameFonts.Alphabet);
-		set('Boyfriend', gameObjects.Boyfriend);
+		set('Boyfriend', gameObjects.Character.Boyfriend);
 		set('CoolUtil', base.CoolUtil);
 		set('Character', gameObjects.Character);
 		set('Conductor', song.Conductor);

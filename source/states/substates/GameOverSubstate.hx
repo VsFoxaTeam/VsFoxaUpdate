@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import gameObjects.Boyfriend;
+import gameObjects.Character;
 import song.Conductor;
 import states.MusicBeatState.MusicBeatSubstate;
 

@@ -41,6 +41,7 @@ import song.*;
 import song.Conductor.BPMChangeEvent;
 import states.MusicBeatState;
 import song.SongFormat;
+import gameObjects.Character;
 
 using StringTools;
 

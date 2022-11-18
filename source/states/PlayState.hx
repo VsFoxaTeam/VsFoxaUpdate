@@ -36,6 +36,7 @@ import song.SongFormat.TimedEvent;
 import states.editors.CharacterOffsetEditor;
 import states.menus.*;
 import states.substates.GameOverSubstate;
+import gameObjects.Character;
 
 using StringTools;
 
@@ -1321,6 +1322,8 @@ class PlayState extends MusicBeatState
 			uiHUD.colorHighlight(4, false);
 			healthCall(ScoreUtils.judges[4].health);
 		}
+
+		ScoreUtils.perfectCombo = false;
 
 		ScoreUtils.updateInfo(0);
 	}
