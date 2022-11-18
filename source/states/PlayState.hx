@@ -1320,6 +1320,8 @@ class PlayState extends MusicBeatState
 			healthCall(ScoreUtils.judges[4].health);
 		}
 
+		ScoreUtils.perfectCombo = false;
+
 		ScoreUtils.updateInfo(0);
 	}
 
