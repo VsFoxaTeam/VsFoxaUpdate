@@ -505,7 +505,11 @@ class ChartingState extends MusicBeatState
 
 	private function generateBackground()
 	{
+		#if (flixel < "5.0.0")
 		coolGrid = new FlxBackdrop(null, 1, 1, true, true, 1, 1);
+		#else
+		coolGrid = new FlxBackdrop(null, X, 1, 1);
+		#end
 		coolGrid.loadGraphic(Paths.image('UI/forever/base/chart editor/grid'));
 		coolGrid.alpha = (32 / 255);
 		add(coolGrid);
