@@ -14,7 +14,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween.FlxTweenType;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import gameObjects.Note;
@@ -84,6 +84,20 @@ class ForeverAssets
 			comboNumbers.velocity.x = FlxG.random.float(-5, 5);
 		}
 
+		// hardcoded lmao
+		if (!Init.trueSettings.get('Simply Judgements'))
+		{
+			FlxTween.tween(comboNumbers, {alpha: 0}, (Conductor.stepCrochet * 2) / 1000, {
+				onComplete: function(tween:FlxTween)
+				{
+					comboNumbers.kill();
+				},
+				startDelay: (Conductor.crochet) / 1000
+			});
+		}
+		else
+			FlxTween.tween(comboNumbers, {y: comboNumbers.y + 20}, 0.1, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+
 		return comboNumbers;
 	}
 
@@ -98,7 +112,7 @@ class ForeverAssets
 			height = 32;
 		}
 		var judgement:FNFSprite;
-		if (assetGroup != null && Init.trueSettings.get('Judgement Recycling'))
+		if (assetGroup != null && Init.trueSettings.get('Judgements Recycling'))
 			judgement = assetGroup.recycle(FNFSprite);
 		else
 			judgement = new FNFSprite();
@@ -123,39 +137,6 @@ class ForeverAssets
 		judgement.animation.play(ScoreUtils.judges[id].name + perfectString);
 		judgement.zDepth = -Conductor.songPosition;
 
-		if (Init.trueSettings.get("Display Timings"))
-		{
-			var timingString = (late ? '-late' : '-early');
-			var timing:FNFSprite;
-			if (assetGroup != null && Init.trueSettings.get('Judgement Recycling'))
-				timing = assetGroup.recycle(FNFSprite);
-			else
-				timing = new FNFSprite();
-			timing.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('timings', assetModifier, changeableSkin, baseLibrary)), true, 163, 158);
-
-			for (i in 0...ScoreUtils.judges.length)
-			{
-				for (j in 0...2)
-					timing.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) + 2]);
-			}
-			timing.animation.play('good-early');
-
-			timing.setPosition(judgement.x, judgement.y);
-			timing.scrollFactor.set(judgement.scrollFactor.x, judgement.scrollFactor.y);
-			timing.velocity.set(judgement.velocity.x, judgement.velocity.y);
-			timing.acceleration.x = judgement.acceleration.x;
-			timing.acceleration.y = judgement.acceleration.y;
-			timing.alpha = judgement.alpha;
-
-			flixel.tweens.FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
-				onComplete: function(tween:flixel.tweens.FlxTween)
-				{
-					timing.kill();
-				},
-				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
-			});
-		}
-
 		if (assetModifier == 'pixel')
 		{
 			judgement.antialiasing = false;
@@ -167,7 +148,99 @@ class ForeverAssets
 			judgement.setGraphicSize(Std.int(judgement.width * 0.7));
 		}
 
+		if (!Init.trueSettings.get('Simply Judgements'))
+		{
+			FlxTween.tween(judgement, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
+				onComplete: function(tween:FlxTween)
+				{
+					judgement.kill();
+				},
+				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+			});
+		}
+		else
+		{
+			if (PlayState.lastRating != null)
+				PlayState.lastRating.kill();
+			PlayState.lastRating = judgement;
+			FlxTween.tween(judgement, {y: judgement.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+			FlxTween.tween(judgement, {"scale.x": 0, "scale.y": 0}, 0.1, {
+				onComplete: function(tween:FlxTween)
+				{
+					judgement.kill();
+				},
+				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+			});
+		}
+
 		return judgement;
+	}
+
+	public static function generateTimings(anim:String, isLate:Bool, parent:FNFSprite, assetGroup:FlxTypedGroup<FNFSprite>, assetModifier:String,
+			changeableSkin:String, baseLibrary:String):FNFSprite
+	{
+		var timing:FNFSprite;
+		if (assetGroup != null && Init.trueSettings.get('Judgement Recycling'))
+			timing = assetGroup.recycle(FNFSprite);
+		else
+			timing = new FNFSprite();
+		timing.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('timings', assetModifier, changeableSkin, baseLibrary)),
+			true, assetModifier == "pixel" ? 28 : 150, assetModifier == "pixel" ? 14 : 120);
+
+		for (i in 0...ScoreUtils.judges.length)
+		{
+			for (j in 0...2)
+				timing.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) - 2]);
+		}
+
+		timing.zDepth = -Conductor.songPosition;
+		var timingString = (isLate ? '-late' : '-early');
+
+		timing.animation.play(anim + timingString);
+
+		timing.visible = (anim != 'sick-perfect' && anim != 'sick' && anim != 'miss');
+		timing.scrollFactor.set(parent.scrollFactor.x, parent.scrollFactor.y);
+		timing.velocity.set(parent.velocity.x, parent.velocity.y);
+		timing.acceleration.x = parent.acceleration.x;
+		timing.acceleration.y = parent.acceleration.y;
+
+		if (assetModifier == 'pixel')
+		{
+			timing.antialiasing = false;
+			timing.setGraphicSize(Std.int(timing.width * PlayState.daPixelZoom * 0.7));
+		}
+		else
+		{
+			timing.antialiasing = true;
+			timing.setGraphicSize(Std.int(timing.width * 0.7));
+		}
+
+		if (!Init.trueSettings.get('Simply Judgements'))
+		{
+			FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
+				onComplete: function(tween:FlxTween)
+				{
+					timing.kill();
+				},
+				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+			});
+		}
+		else
+		{
+			if (PlayState.lastTiming != null)
+				PlayState.lastTiming.kill();
+			PlayState.lastTiming = timing;
+			FlxTween.tween(timing, {y: timing.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+			FlxTween.tween(timing, {"scale.x": 0, "scale.y": 0}, 0.1, {
+				onComplete: function(tween:FlxTween)
+				{
+					timing.kill();
+				},
+				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+			});
+		}
+
+		return timing;
 	}
 
 	public static function generateNoteSplashes(asset:String, group:FlxTypedSpriteGroup<NoteSplash>, assetModifier:String = 'base',
@@ -402,8 +475,8 @@ class ForeverAssets
 					{
 						if (prevNote.animation.getByName(Receptor.colors[prevNote.noteData] + 'hold') != null)
 							prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
-						prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
-						prevNote.updateHitbox();
+						// prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
+						// prevNote.updateHitbox();
 					}
 				}
 			}

@@ -144,17 +144,20 @@ class Strumline extends FlxSpriteGroup
 
 	public function removeNote(newNote:Note)
 	{
-		newNote.active = false;
-		newNote.exists = false;
+		if (newNote.canDie)
+		{
+			newNote.active = false;
+			newNote.exists = false;
 
-		var chosenGroup = (newNote.isSustainNote ? holdsGroup : notesGroup);
-		// note damage here I guess
-		newNote.kill();
-		if (allNotes.members.contains(newNote))
-			allNotes.remove(newNote, true);
-		if (chosenGroup.members.contains(newNote))
-			chosenGroup.remove(newNote, true);
-		newNote.destroy();
+			var chosenGroup = (newNote.isSustainNote ? holdsGroup : notesGroup);
+			// note damage here I guess
+			newNote.kill();
+			if (allNotes.members.contains(newNote))
+				allNotes.remove(newNote, true);
+			if (chosenGroup.members.contains(newNote))
+				chosenGroup.remove(newNote, true);
+			newNote.destroy();
+		}
 	}
 }
 

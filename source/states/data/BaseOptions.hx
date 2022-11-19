@@ -20,7 +20,7 @@ import states.MusicBeatState;
 class BaseOptions extends MusicBeatState
 {
 	/*
-		== OPTIONS MENU DOCUMENTATION ==
+		== OPTIONS DOCUMENTATION ==
 
 		to set up a category, add to the categoriesMap
 		format should be this;

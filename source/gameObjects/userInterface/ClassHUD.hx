@@ -36,7 +36,7 @@ class ClassHUD extends FlxSpriteGroup
 
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = CoolUtil.difficultyString;
-	public var engineDisplay:String = "F.E. FEATHER v" + Main.featherVersion;
+	public var engineDisplay:String = "FOREVER FEATHER v" + Main.featherVersion;
 
 	// eep
 	public function new()
@@ -124,7 +124,6 @@ class ClassHUD extends FlxSpriteGroup
 			else
 				autoplayMark.y = autoplayMark.y + 125;
 		}
-
 		add(autoplayMark);
 
 		updateScoreText();

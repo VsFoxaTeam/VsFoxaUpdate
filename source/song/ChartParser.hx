@@ -32,7 +32,11 @@ class ChartParser
 					var daNoteData:Int = Std.int(songNotes[1] % 4);
 					// define the note's animation (in accordance to the original game)!
 					var daNoteAlt:Float = 0;
-					var daNoteType:String = (songNotes[3] != null ? songNotes[3] : 'default');
+					var daNoteType:String = 'default';
+
+					// define the note's type if it is a string;
+					if (songNotes[3] != null && Std.isOfType(songNotes[3], String))
+						daNoteType = songNotes[3];
 
 					// check the base section
 					var gottaHitNote:Bool = section.mustHitSection;
@@ -49,7 +53,7 @@ class ChartParser
 						oldNote = null;
 
 					// create the new note
-					var swagNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteAlt, 'default');
+					var swagNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
 
 					swagNote.noteType = daNoteType;
 					swagNote.noteSpeed = songData.speed;

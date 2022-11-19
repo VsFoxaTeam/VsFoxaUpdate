@@ -31,8 +31,8 @@ class Init extends FlxState
 		3 - offsets, this is unused but it'd bug me if it were set to 0
 		might redo offset code since I didnt make it and it bugs me that it's hardcoded the the last part of the controls menu
 	 */
-	public static inline final FORCED = 'forced';
-	public static inline final NOT_FORCED = 'not forced';
+	public static var FORCED = 'forced';
+	public static var NOT_FORCED = 'not forced';
 
 	public static var gameSettings:Map<String, Dynamic> = [
 		'Downscroll' => [
@@ -244,7 +244,7 @@ class Init extends FlxState
 			false,
 			Checkmark,
 			"Whether to display how early/late you hit a judgement on a note.",
-			FORCED
+			NOT_FORCED
 		],
 	];
 

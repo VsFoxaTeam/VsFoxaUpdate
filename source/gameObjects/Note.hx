@@ -26,6 +26,7 @@ class Note extends FNFSprite
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
 
+	public var canDie:Bool = true;
 	public var ignoreNote:Bool = false;
 	public var noteSplash:Bool = false;
 	public var isMine:Bool = false;
@@ -37,18 +38,36 @@ class Note extends FNFSprite
 	// not set initially
 	public var noteQuant:Int = -1;
 	public var noteVisualOffset:Float = 0;
-	public var noteSpeed:Float = 0;
 	public var noteDirection:Float = 0;
+
+	// values
+	public var offsetX:Float = 0;
+	public var offsetY:Float = 0;
+
+	public var noteSpeed(default, set):Float;
+
+	public function set_noteSpeed(value:Float):Float
+	{
+		if (noteSpeed != value)
+		{
+			noteSpeed = value;
+			updateSustainScale();
+		}
+		return noteSpeed;
+	}
 
 	public var parentNote:Note;
 	public var childrenNotes:Array<Note> = [];
 
 	public static var swagWidth:Float = 160 * 0.7;
 
+	public var holdHeight = 0.713; // shitty hold note hack for sustain scales, i hate it;
+
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
 
 	public static var noteScript:ScriptHandler;
+	public static var noteMap:Map<String, ScriptHandler> = new Map();
 
 	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?isSustainNote:Bool = false)
 	{
@@ -83,6 +102,26 @@ class Note extends FNFSprite
 		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 	}
 
+	public function updateSustainScale()
+	{
+		if (isSustainNote)
+		{
+			alpha = Init.trueSettings.get('Hold Opacity') * 0.01;
+			if (prevNote != null && prevNote.exists)
+			{
+				if (prevNote.isSustainNote)
+				{
+					// listen I dont know what i was doing but I was onto something
+					prevNote.scale.y = (prevNote.width / prevNote.frameWidth) * ((Conductor.stepCrochet / 100) * (1.07 / holdHeight)) * noteSpeed;
+					prevNote.updateHitbox();
+					offsetX = prevNote.offsetX;
+				}
+				else
+					offsetX = ((prevNote.width / 2) - (width / 2));
+			}
+		}
+	}
+
 	function getNoteColor(noteData)
 		return Receptor.colors[noteData];
 
@@ -107,11 +146,7 @@ class Note extends FNFSprite
 		if (tooLate || (parentNote != null && parentNote.tooLate))
 			alpha = 0.3;
 
-		if (noteScript != null)
-		{
-			if (noteScript != null)
-				noteScript.call('update', [elapsed]);
-		}
+		noteCall('update', [elapsed]);
 	}
 
 	public static function resetNote(framesArg:String, changeable:String = '', assetModifier:String, newNote:Note)
@@ -164,6 +199,7 @@ class Note extends FNFSprite
 	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, noteType, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
 		var newNote:Note = new Note(strumTime, noteData, noteAlt, noteType, prevNote, isSustainNote);
+		newNote.holdHeight = 0.862;
 
 		// actually determine the quant of the note
 		if (newNote.noteQuant == -1)
@@ -187,8 +223,7 @@ class Note extends FNFSprite
 
 			final beatTimeSeconds:Float = (60 / curBPM); // beat in seconds
 			final beatTime:Float = beatTimeSeconds * 1000; // beat in milliseconds
-			// assumed 4 beats per measure?
-			final measureTime:Float = beatTime * 4;
+			final measureTime:Float = beatTime * 4; // assumed 4 beats per measure?
 
 			final smallestDeviation:Float = measureTime / quantArray[quantArray.length - 1];
 
@@ -262,7 +297,6 @@ class Note extends FNFSprite
 		if (isSustainNote && prevNote != null)
 		{
 			newNote.noteSpeed = prevNote.noteSpeed;
-			newNote.alpha = Init.trueSettings.get('Hold Opacity') * 0.01;
 			newNote.animation.play('holdend');
 			newNote.updateHitbox();
 
@@ -270,36 +304,29 @@ class Note extends FNFSprite
 			{
 				prevNote.animation.play('hold');
 
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * (43 / 52) * 1.5 * prevNote.noteSpeed;
-				prevNote.updateHitbox();
-				// prevNote.setGraphicSize();
+				// prevNote.scale.y *= Conductor.stepCrochet / 100 * (43 / 52) * 1.5 * prevNote.noteSpeed;
+				// prevNote.updateHitbox();
 			}
 		}
 
 		return newNote;
 	}
 
-	public function noteHit(noteType:String)
-	{
-		if (noteScript != null)
-			noteScript.call('onHit', [this]);
-	}
+	public function noteHit()
+		noteCall('onHit', [this]);
 
-	public function noteMiss(noteType:String)
-	{
-		if (noteScript != null)
-			noteScript.call('onMiss', [this]);
-	}
+	public function noteMiss()
+		noteCall('onMiss', [this]);
 
-	public function stepHit(noteType:String, noteStep:Int)
-	{
-		if (noteScript != null)
-			noteScript.call('stepHit', [this, noteStep]);
-	}
+	public function stepHit(curStep:Int)
+		noteCall('onStep', [this, curStep]);
 
-	public function beatHit(noteType:String, noteBeat:Int)
+	public function beatHit(curBeat:Int)
+		noteCall('onBeat', [this, curBeat]);
+
+	function noteCall(name:String, args:Array<Dynamic>)
 	{
 		if (noteScript != null)
-			noteScript.call('beatHit', [this, noteBeat]);
+			noteScript.call(name, args);
 	}
 }
