@@ -33,6 +33,7 @@ jobs:
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git polymod https://github.com/MasterEric/polymod
           haxelib git SScript https://github.com/AltronMaxX/SScript
+          haxelib update
 
       - name: Compile
         run: haxelib run lime build linux -release
@@ -67,6 +68,7 @@ jobs:
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git polymod https://github.com/MasterEric/polymod
           haxelib git SScript https://github.com/AltronMaxX/SScript
+          haxelib update
         shell: cmd
 
       - name: Compile
@@ -102,6 +104,7 @@ jobs:
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git polymod https://github.com/MasterEric/polymod
           haxelib git SScript https://github.com/AltronMaxX/SScript
+          haxelib update
 
       - name: Compile
         run: haxelib run lime build mac -release
