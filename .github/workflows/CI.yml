@@ -27,7 +27,6 @@ jobs:
           haxelib install flixel
           haxelib install flixel-ui
           haxelib install flixel-addons
-          haxelib install flixel-tools
           haxelib install hscript
           haxelib install hxcpp-debug-server
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
@@ -62,7 +61,6 @@ jobs:
           haxelib install flixel
           haxelib install flixel-ui
           haxelib install flixel-addons
-          haxelib install flixel-tools
           haxelib install hscript
           haxelib install hxcpp-debug-server
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
@@ -98,7 +96,6 @@ jobs:
           haxelib install flixel
           haxelib install flixel-ui
           haxelib install flixel-addons
-          haxelib install flixel-tools
           haxelib install hscript
           haxelib install hxcpp-debug-server
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
