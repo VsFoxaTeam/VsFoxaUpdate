@@ -29,9 +29,6 @@ typedef CharacterData =
 	var healthColor:Array<Float>;
 	var antialiasing:Bool;
 	var adjustPos:Bool;
-	var noteSkin:String;
-	var splashSkin:String;
-	var assetModifier:String;
 	var missColor:Array<Int>; // for fake misses;
 	var icon:String;
 }
@@ -84,9 +81,6 @@ class Character extends FNFSprite
 			healthColor: [255, 255, 255],
 			missColor: [112, 105, 255],
 			adjustPos: !character.startsWith('gf'),
-			noteSkin: "NOTE_assets",
-			splashSkin: "noteSplashes",
-			assetModifier: "base",
 			icon: null
 		};
 

@@ -159,18 +159,17 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 
+	public var legacyGf:Bool = false;
+
 	function resetStatics()
 	{
 		GameOverSubstate.resetDeathVariables();
 		Events.getScriptEvents();
 
-		if (!keepScore)
-		{
-			ScoreUtils.resetAccuracy();
-			PlayState.SONG.validScore = true;
-			deaths = 0;
-			health = 1;
-		}
+		ScoreUtils.resetAccuracy();
+		PlayState.SONG.validScore = true;
+		deaths = 0;
+		health = 1;
 
 		timedEvents = [];
 		moduleArray = [];
@@ -186,8 +185,6 @@ class PlayState extends MusicBeatState
 
 		assetModifier = 'base';
 		changeableSkin = 'default';
-
-		keepScore = false;
 	}
 
 	inline function checkTween(isDad:Bool = false):Bool
@@ -390,13 +387,8 @@ class PlayState extends MusicBeatState
 		var placement = (FlxG.width / 2);
 		var height = (downscroll ? FlxG.height - 200 : 0);
 
-		var dadData = opponent.characterData;
-		var bfData = boyfriend.characterData;
-
-		dadStrums = new Strumline(placement - (FlxG.width / 4), height, dadData.noteSkin, dadData.assetModifier, [opponent], downscroll, false, true,
-			checkTween(true), 4);
-		bfStrums = new Strumline(placement + (!centered ? (FlxG.width / 4) : 0), height, bfData.noteSkin, bfData.assetModifier, [boyfriend], downscroll, true,
-			false, checkTween(false), 4);
+		dadStrums = new Strumline(placement - (FlxG.width / 4), height, [opponent], downscroll, false, true, checkTween(true), false, 4);
+		bfStrums = new Strumline(placement + (!centered ? (FlxG.width / 4) : 0), height, [boyfriend], downscroll, true, false, checkTween(false), true, 4);
 
 		dadStrums.visible = !centered;
 
@@ -528,7 +520,7 @@ class PlayState extends MusicBeatState
 					if (!Init.trueSettings.get('Ghost Tapping'))
 					{
 						if (!inCutscene && !endingSong)
-							missNoteCheck(true, key, bfStrums, true);
+							missNoteCheck(true, key, bfStrums, Init.trueSettings.get("Display Miss Judgement"));
 					}
 				Conductor.songPosition = previousTime;
 			}
@@ -738,12 +730,7 @@ class PlayState extends MusicBeatState
 			Conductor.songPosition += elapsed * 1000;
 
 			if (Conductor.songPosition >= 0)
-			{
 				Conductor.shouldStartSong = true;
-
-				if (keepScore)
-					Conductor.songPosition = Conductor.lastPosition;
-			}
 
 			if (startingSong && startedCountdown && Conductor.shouldStartSong)
 				startSong();
@@ -947,7 +934,8 @@ class PlayState extends MusicBeatState
 										note.tooLate = true;
 
 									vocals.volume = 0;
-									missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
+									missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline,
+										Init.trueSettings.get("Display Miss Judgement"));
 									daNote.noteMiss(daNote.noteType);
 								}
 								else if (daNote.isSustainNote)
@@ -965,7 +953,8 @@ class PlayState extends MusicBeatState
 											}
 											if (!breakFromLate)
 											{
-												missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline, true);
+												missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline,
+													Init.trueSettings.get("Display Miss Judgement"));
 												for (note in parentNote.childrenNotes)
 													note.tooLate = true;
 											}
@@ -1299,15 +1288,12 @@ class PlayState extends MusicBeatState
 
 		// display negative combo
 		if (popMiss)
-		{
-			// doesnt matter miss ratings dont have timings
 			displayScore(4, true);
-			uiHUD.colorHighlight(4, false);
-			healthCall(ScoreUtils.judges[4].health);
-		}
+
+		uiHUD.colorHighlight(4, false);
+		healthCall(ScoreUtils.judges[4].health);
 
 		ScoreUtils.perfectCombo = false;
-
 		ScoreUtils.updateInfo(0);
 	}
 
@@ -1323,7 +1309,7 @@ class PlayState extends MusicBeatState
 				ScoreUtils.combo += 1;
 			}
 			else
-				missNoteCheck(true, direction, strumline, false, true);
+				missNoteCheck(true, direction, strumline, false, Init.trueSettings.get("Display Miss Judgement"));
 		}
 	}
 
@@ -1985,13 +1971,9 @@ class PlayState extends MusicBeatState
 			{
 				Conductor.songPosition = -(Conductor.crochet * 1);
 				Conductor.shouldStartSong = true;
-				if (keepScore)
-					Conductor.songPosition = Conductor.lastPosition;
 			}
 		}, 5);
 	}
-
-	public static var keepScore:Bool = false; // used to keep your last score info;
 
 	override function add(Object:FlxBasic):FlxBasic
 	{

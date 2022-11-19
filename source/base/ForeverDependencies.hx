@@ -90,11 +90,11 @@ class ForeverAssets
 	public static function generateRating(asset:String, assetGroup:FlxTypedGroup<FNFSprite>, id:Int, late:Bool, assetModifier:String = 'base',
 			changeableSkin:String = 'default', baseLibrary:String):FNFSprite
 	{
-		var width = 500;
+		var width = 390;
 		var height = 163;
 		if (assetModifier == 'pixel')
 		{
-			width = 72;
+			width = 60;
 			height = 32;
 		}
 		var judgement:FNFSprite;
@@ -116,15 +116,45 @@ class ForeverAssets
 		}
 		judgement.animation.add('sick-perfect', [0]);
 		for (i in 0...ScoreUtils.judges.length)
-		{
-			for (j in 0...2)
-				judgement.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) + 2]);
-		}
-		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-pefect' : '');
-		var timingString = (late ? '-late' : '-early');
+			judgement.animation.add(ScoreUtils.judges[i].name, [i + 1]);
 
-		judgement.animation.play(ScoreUtils.judges[id].name + perfectString + timingString);
+		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-pefect' : '');
+
+		judgement.animation.play(ScoreUtils.judges[id].name + perfectString);
 		judgement.zDepth = -Conductor.songPosition;
+
+		if (Init.trueSettings.get("Display Timings"))
+		{
+			var timingString = (late ? '-late' : '-early');
+			var timing:FNFSprite;
+			if (assetGroup != null && Init.trueSettings.get('Judgement Recycling'))
+				timing = assetGroup.recycle(FNFSprite);
+			else
+				timing = new FNFSprite();
+			timing.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('timings', assetModifier, changeableSkin, baseLibrary)), true, 163, 158);
+
+			for (i in 0...ScoreUtils.judges.length)
+			{
+				for (j in 0...2)
+					timing.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) + 2]);
+			}
+			timing.animation.play('good-early');
+
+			timing.setPosition(judgement.x, judgement.y);
+			timing.scrollFactor.set(judgement.scrollFactor.x, judgement.scrollFactor.y);
+			timing.velocity.set(judgement.velocity.x, judgement.velocity.y);
+			timing.acceleration.x = judgement.acceleration.x;
+			timing.acceleration.y = judgement.acceleration.y;
+			timing.alpha = judgement.alpha;
+
+			flixel.tweens.FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
+				onComplete: function(tween:flixel.tweens.FlxTween)
+				{
+					timing.kill();
+				},
+				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+			});
+		}
 
 		if (assetModifier == 'pixel')
 		{
@@ -205,10 +235,11 @@ class ForeverAssets
 		return tempSplash;
 	}
 
-	public static function generateUIArrows(x:Float, y:Float, ?receptorData:Int = 0, framesArg:String, assetModifier:String,
-			noteType:String = 'default'):Receptor
+	public static function generateUIArrows(x:Float, y:Float, ?receptorData:Int = 0, assetModifier:String, noteType:String = 'default'):Receptor
 	{
 		var uiReceptor:Receptor = new Receptor(x, y, receptorData);
+
+		var framesArg:String = "NOTE_assets";
 
 		switch (assetModifier)
 		{

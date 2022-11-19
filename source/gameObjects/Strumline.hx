@@ -25,17 +25,15 @@ class Strumline extends FlxSpriteGroup
 	public var doTween:Bool = true;
 	public var autoplay:Bool = true;
 	public var displayJudges:Bool = false;
+	public var displaySplashes:Bool = false;
 	public var downscroll:Bool = false;
 
 	public var keyAmount:Int = 4;
 	public var xPos:Float = 0;
 	public var yPos:Float = 0;
 
-	public var receptorFrames:String = "NOTE_assets";
-	public var assetModifier:String = "base";
-
-	public function new(xPos:Float = 0, yPos:Float = 0, receptorFrames:String = 'NOTE_assets', assetModifier:String = 'base', characters:Array<Character>,
-			?downscroll:Bool = false, ?displayJudges:Bool = true, ?autoplay:Bool = true, ?doTween:Bool = true, ?keyAmount:Int = 4)
+	public function new(xPos:Float = 0, yPos:Float = 0, characters:Array<Character>, ?downscroll:Bool = false, ?displayJudges:Bool = true,
+			?autoplay:Bool = true, ?doTween:Bool = true, displaySplashes:Bool = false, ?keyAmount:Int = 4)
 	{
 		super();
 
@@ -51,18 +49,17 @@ class Strumline extends FlxSpriteGroup
 		this.doTween = doTween;
 
 		this.displayJudges = displayJudges;
-		this.receptorFrames = receptorFrames;
-		this.assetModifier = assetModifier;
+		this.displaySplashes = displaySplashes;
 		this.downscroll = downscroll;
 
 		this.xPos = xPos;
 		this.keyAmount = keyAmount;
 		this.yPos = yPos;
 
-		reloadReceptors(assetModifier);
+		reloadReceptors();
 	}
 
-	public function reloadReceptors(?modifier:String = "base", ?xNew:Float, ?yNew:Float, ?skipTween:Bool = false)
+	public function reloadReceptors(?xNew:Float, ?yNew:Float, ?skipTween:Bool = false)
 	{
 		receptors.forEachAlive(function(receptor:Receptor)
 		{
@@ -80,11 +77,11 @@ class Strumline extends FlxSpriteGroup
 
 		for (i in 0...keyAmount)
 		{
-			var addX:Int = modifier == 'pixel' ? -35 : -20;
-			var addY:Int = modifier == 'pixel' ? 40 : 25;
+			var addX:Int = PlayState.assetModifier == 'pixel' ? -35 : -20;
+			var addY:Int = PlayState.assetModifier == 'pixel' ? 40 : 25;
 
 			var receptor:Receptor = ForeverAssets.generateUIArrows(addX + (xNew == null ? xPos : xNew), addY + (yNew == null ? yPos : yNew), i,
-				receptorFrames, modifier);
+				PlayState.assetModifier);
 			receptor.ID = i;
 
 			receptor.x -= ((keyAmount / 2) * Note.swagWidth);
@@ -112,12 +109,10 @@ class Strumline extends FlxSpriteGroup
 			if (displayJudges)
 			{
 				var noteSplash:NoteSplash = null;
-				for (character in this.characters)
-				{
-					var splashSkin:String = character.characterData.splashSkin;
-					noteSplash = ForeverAssets.generateNoteSplashes(splashSkin, splashNotes, modifier, PlayState.changeableSkin, i);
-				}
-				splashNotes.add(noteSplash);
+				noteSplash = ForeverAssets.generateNoteSplashes('noteSplashes', splashNotes, PlayState.assetModifier, PlayState.changeableSkin, i);
+
+				if (noteSplash != null)
+					splashNotes.add(noteSplash);
 			}
 		}
 

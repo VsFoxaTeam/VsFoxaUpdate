@@ -244,7 +244,6 @@ class ScoreUtils
 			gottenJudgements.set(judges[judgement].name, 0);
 
 		perfectCombo = true;
-
 		curRating = "N/A";
 		curCombo = "";
 
@@ -297,8 +296,9 @@ class ScoreUtils
 		// Update FC Display;
 		if (judges[smallestRating].comboStatus != null)
 			curCombo = judges[smallestRating].comboStatus;
-		else
-			curCombo = (misses >= 0 && misses <= 9 ? 'SDCB' : null);
+
+		if (misses > 0 && misses < 10)
+			curCombo = 'SDCB';
 
 		// this updates the most so uh
 		PlayState.uiHUD.updateScoreText();

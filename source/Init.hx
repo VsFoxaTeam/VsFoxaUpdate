@@ -234,6 +234,18 @@ class Init extends FlxState
 			NOT_FORCED,
 			['forever', 'funkin', 'judge four', 'itg']
 		],
+		"Display Miss Judgement" => [
+			true,
+			Checkmark,
+			"Whether to display a miss judgement when missing notes.",
+			NOT_FORCED
+		],
+		"Display Timings" => [
+			false,
+			Checkmark,
+			"Whether to display how early/late you hit a judgement on a note.",
+			FORCED
+		],
 	];
 
 	public static var trueSettings:Map<String, Dynamic> = [];

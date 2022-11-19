@@ -72,6 +72,8 @@ class OptionsData
 		{name: "UI Skin", type: "option"},
 		{name: "Fixed Judgements", type: "option"},
 		{name: "Simply Judgements", type: "option"},
+		{name: "Display Miss Judgement", type: "option"},
+		// {name: "Display Timings", type: "option"},
 		{name: "Opaque UI", type: "option"},
 		//
 		{name: "Performance and Text", type: "divider"},
