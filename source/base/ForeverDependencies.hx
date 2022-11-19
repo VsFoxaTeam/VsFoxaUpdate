@@ -184,8 +184,8 @@ class ForeverAssets
 			timing = assetGroup.recycle(FNFSprite);
 		else
 			timing = new FNFSprite();
-		timing.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('timings', assetModifier, changeableSkin, baseLibrary)),
-			true, assetModifier == "pixel" ? 28 : 150, assetModifier == "pixel" ? 14 : 120);
+		timing.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('timings', assetModifier, changeableSkin, baseLibrary)), true,
+			assetModifier == "pixel" ? 28 : 150, assetModifier == "pixel" ? 14 : 120);
 
 		for (i in 0...ScoreUtils.judges.length)
 		{
