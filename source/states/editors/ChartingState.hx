@@ -21,9 +21,9 @@ import gameObjects.*;
 import gameObjects.Strumline.Receptor;
 import openfl.geom.ColorTransform;
 import song.Conductor;
-import states.MusicBeatState;
 import song.Song;
 import song.SongFormat.SwagSong;
+import states.MusicBeatState;
 
 /**
 	As the name implies, this is the class where all of the charting state stuff happens, so when you press 7 the game
@@ -502,7 +502,7 @@ class ChartingState extends MusicBeatState
 
 	private function generateBackground()
 	{
-		coolGrid = new FlxBackdrop(null, XY, 1, 0);
+		coolGrid = new FlxBackdrop(null, 1, 1, true, true, 1, 1);
 		coolGrid.loadGraphic(Paths.image('UI/forever/base/chart editor/grid'));
 		coolGrid.alpha = (32 / 255);
 		add(coolGrid);
