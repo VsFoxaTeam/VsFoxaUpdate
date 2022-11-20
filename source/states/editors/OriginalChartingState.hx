@@ -1540,28 +1540,10 @@ class OriginalChartingState extends MusicBeatState
 	}
 
 	function getStrumTime(yPos:Float):Float
-	{
 		return FlxMath.remapToRange(yPos, gridBG.y, gridBG.y + gridBG.height, 0, 16 * Conductor.stepCrochet);
-	}
 
 	function getYfromStrum(strumTime:Float):Float
-	{
 		return FlxMath.remapToRange(strumTime, 0, 16 * Conductor.stepCrochet, gridBG.y, gridBG.y + gridBG.height);
-	}
-
-	private var daSpacing:Float = 0.3;
-
-	function getNotes():Array<Dynamic>
-	{
-		var noteData:Array<Dynamic> = [];
-
-		for (i in _song.notes)
-		{
-			noteData.push(i.sectionNotes);
-		}
-
-		return noteData;
-	}
 
 	function loadJson(song:String):Void
 	{
