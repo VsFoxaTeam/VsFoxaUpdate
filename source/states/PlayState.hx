@@ -929,16 +929,13 @@ class PlayState extends MusicBeatState
 							{
 								if (!daNote.isSustainNote)
 								{
-									if (daNote.ignoreNote)
-										return;
-
 									daNote.tooLate = true;
 									for (note in daNote.childrenNotes)
 										note.tooLate = true;
 									daNote.noteMiss();
 
 									// when the note is declared "late", stop this function if it's a mine;
-									if (daNote.isMine)
+									if (daNote.ignoreNote || daNote.isMine)
 										return;
 
 									vocals.volume = 0;
