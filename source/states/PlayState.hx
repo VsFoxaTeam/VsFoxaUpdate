@@ -25,6 +25,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import gameObjects.*;
+import gameObjects.Character;
 import gameObjects.Strumline.Receptor;
 import gameObjects.userInterface.*;
 import openfl.media.Sound;
@@ -36,7 +37,6 @@ import song.SongFormat.TimedEvent;
 import states.editors.CharacterOffsetEditor;
 import states.menus.*;
 import states.substates.GameOverSubstate;
-import gameObjects.Character;
 #if desktop
 import dependency.Discord;
 #end
@@ -674,6 +674,7 @@ class PlayState extends MusicBeatState
 			{
 				stopTimers();
 				// open pause substate
+				callFunc('pauseGame', []);
 				openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 			}
 
@@ -1237,6 +1238,7 @@ class PlayState extends MusicBeatState
 		{
 			stopTimers();
 			// open pause substate
+			callFunc('pauseGame', []);
 			openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		}
 		callFunc('onFocusLost', []);
@@ -1458,6 +1460,8 @@ class PlayState extends MusicBeatState
 			updateRPC(false);
 			#end
 		}
+
+		callFunc('startSong', []);
 	}
 
 	private function generateSong(dataPath:String):Void
@@ -1703,6 +1707,8 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		callFunc('openSubState', []);
+
 		super.openSubState(SubState);
 	}
 
@@ -1732,6 +1738,8 @@ class PlayState extends MusicBeatState
 			updateRPC(false);
 			// */
 		}
+
+		callFunc('closeSubState', []);
 
 		Paths.clearUnusedMemory();
 
