@@ -153,6 +153,9 @@ class ClassHUD extends FlxSpriteGroup
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
 
+		iconP1.bop(0.15);
+		iconP2.bop(0.15);
+
 		if (autoplayMark.visible)
 		{
 			autoplaySine += 180 * (elapsed / 4);
@@ -229,8 +232,17 @@ class ClassHUD extends FlxSpriteGroup
 	{
 		if (!Init.trueSettings.get('Reduced Movements'))
 		{
-			iconP1.bop(60 / Conductor.bpm);
-			iconP2.bop(60 / Conductor.bpm);
+			if (iconP1.canBounce)
+			{
+				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+				iconP1.updateHitbox();
+			}
+
+			if (iconP2.canBounce)
+			{
+				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+				iconP2.updateHitbox();
+			}
 		}
 	}
 

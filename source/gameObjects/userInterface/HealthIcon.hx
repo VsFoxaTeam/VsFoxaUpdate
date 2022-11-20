@@ -2,7 +2,7 @@ package gameObjects.userInterface;
 
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
-import flixel.tweens.FlxTween;
+import flixel.math.FlxMath;
 import sys.FileSystem;
 
 class HealthIcon extends FlxSprite
@@ -12,12 +12,7 @@ class HealthIcon extends FlxSprite
 	public var initialWidth:Float = 0;
 	public var initialHeight:Float = 0;
 
-	// script values;
 	public var canBounce:Bool = true;
-	public var scaleFactorX:Float = 1.2;
-	public var scaleFactorY:Float = 1.2;
-	public var easeValue:String = 'expoOut';
-
 	public var suffix:String = '';
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
@@ -43,17 +38,14 @@ class HealthIcon extends FlxSprite
 			animation.curAnim.curFrame = 0;
 	}
 
-	var bounceTween:FlxTween;
-
-	public function bop(time:Float)
+	public function bop(framerate:Float)
 	{
 		if (!canBounce)
 			return;
 
-		scale.set(scaleFactorX, scaleFactorY);
-		if (bounceTween != null)
-			bounceTween.cancel();
-		bounceTween = FlxTween.tween(this.scale, {x: 1, y: 1}, time, {ease: ForeverTools.returnTweenEase(easeValue)});
+		var iconLerp = 1 - Main.framerateAdjust(framerate);
+		scale.set(FlxMath.lerp(1, scale.x, iconLerp), FlxMath.lerp(1, scale.y, iconLerp));
+		updateHitbox();
 	}
 
 	public function updateIcon(char:String = 'bf', isPlayer:Bool = false)
