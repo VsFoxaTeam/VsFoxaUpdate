@@ -49,7 +49,7 @@ class StoryMenu extends MusicBeatState
 
 		// load week data;
 		Main.loadGameWeeks(true);
-		
+
 		if (Main.gameWeeks == null)
 			return Main.switchState(this, new MainMenu('[JSON ERROR] Weeks not Found!'));
 

@@ -474,10 +474,10 @@ class DialogueBox extends FlxSpriteGroup
 
 				if (portraitData.handTex == null)
 					portraitData.handTex = 'pixelHand';
-		
+
 				if (portraitData.handTexPath == null)
 					portraitData.handTexPath = 'images/dialogue/selectors';
-		
+
 				if (portraitData.handSize == null)
 					portraitData.handSize = 6;
 

@@ -108,13 +108,9 @@ class PauseSubstate extends MusicBeatSubstate
 		var accepted = Controls.getPressEvent("accept");
 
 		if (upP)
-		{
 			changeSelection(-1);
-		}
 		if (downP)
-		{
 			changeSelection(1);
-		}
 
 		if (accepted)
 		{

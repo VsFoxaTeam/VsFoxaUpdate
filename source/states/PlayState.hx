@@ -669,39 +669,37 @@ class PlayState extends MusicBeatState
 
 		if (!inCutscene)
 		{
-			// pause the game if the game is allowed to pause and enter is pressed
-			if (Controls.getPressEvent("pause") && startedCountdown && canPause)
+			if (startedCountdown)
 			{
-				stopTimers();
-				// open pause substate
-				callFunc('pauseGame', []);
-				openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-			}
+				// pause the game if the game is allowed to pause and enter is pressed
+				if (Controls.getPressEvent("pause") && canPause)
+					pauseGame();
 
-			if (!isStoryMode && startedCountdown)
-			{
-				if (Controls.getPressEvent("autoplay"))
+				if (!isStoryMode)
 				{
-					PlayState.SONG.validScore = false;
-					bfStrums.autoplay = !bfStrums.autoplay;
-					uiHUD.autoplayMark.visible = bfStrums.autoplay;
-					uiHUD.scoreBar.visible = !bfStrums.autoplay;
-				}
+					if (Controls.getPressEvent("autoplay"))
+					{
+						PlayState.SONG.validScore = false;
+						bfStrums.autoplay = !bfStrums.autoplay;
+						uiHUD.autoplayMark.visible = bfStrums.autoplay;
+						uiHUD.scoreBar.visible = !bfStrums.autoplay;
+					}
 
-				if (FlxG.keys.justPressed.SEVEN)
-				{
-					resetMusic();
-					if (FlxG.keys.pressed.SHIFT)
-						Main.switchState(this, new states.editors.ChartingState());
-					else
-						Main.switchState(this, new states.editors.OriginalChartingState());
-					PlayState.SONG.validScore = false;
-				}
+					if (FlxG.keys.justPressed.SEVEN)
+					{
+						resetMusic();
+						if (FlxG.keys.pressed.SHIFT)
+							Main.switchState(this, new states.editors.ChartingState());
+						else
+							Main.switchState(this, new states.editors.OriginalChartingState());
+						PlayState.SONG.validScore = false;
+					}
 
-				if (FlxG.keys.justPressed.EIGHT)
-				{
-					resetMusic();
-					Main.switchState(this, new states.editors.CharacterOffsetEditor());
+					if (FlxG.keys.justPressed.EIGHT)
+					{
+						resetMusic();
+						Main.switchState(this, new states.editors.CharacterOffsetEditor());
+					}
 				}
 			}
 
@@ -927,18 +925,25 @@ class PlayState extends MusicBeatState
 
 						if (!daNote.tooLate && daNote.strumTime < Conductor.songPosition - (ScoreUtils.msThreshold) && !daNote.wasGoodHit)
 						{
-							if ((!daNote.tooLate) && (daNote.mustPress) && (!daNote.isMine))
+							if ((!daNote.tooLate) && (daNote.mustPress))
 							{
 								if (!daNote.isSustainNote)
 								{
+									if (daNote.ignoreNote)
+										return;
+
 									daNote.tooLate = true;
 									for (note in daNote.childrenNotes)
 										note.tooLate = true;
+									daNote.noteMiss();
+
+									// when the note is declared "late", stop this function if it's a mine;
+									if (daNote.isMine)
+										return;
 
 									vocals.volume = 0;
 									missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline,
 										Init.trueSettings.get("Display Miss Judgement"));
-									daNote.noteMiss();
 								}
 								else if (daNote.isSustainNote)
 								{
@@ -1037,9 +1042,11 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				if (!coolNote.ignoreNote && !coolNote.isMine)
+				if (!coolNote.ignoreNote)
 				{
-					if (!coolNote.isSustainNote)
+					if (coolNote.isMine)
+						ScoreUtils.minesHit++;
+					else if (!coolNote.isSustainNote)
 					{
 						increaseCombo(foundRating, coolNote.noteData, strumline);
 						popUpScore(foundRating, isLate, strumline, coolNote);
@@ -1146,8 +1153,7 @@ class PlayState extends MusicBeatState
 				if (strumline.displayJudges)
 					notesPressedAutoplay.push(daNote);
 
-				if (!daNote.isMine && !daNote.ignoreNote)
-					goodNoteHit(daNote, strumline);
+				goodNoteHit(daNote, strumline);
 			}
 		}
 
@@ -1198,7 +1204,23 @@ class PlayState extends MusicBeatState
 		//
 	}
 
-	public function stopTimers()
+	override public function onFocus():Void
+	{
+		if (!paused)
+			updateRPC(false);
+		callFunc('onFocus', []);
+		super.onFocus();
+	}
+
+	override public function onFocusLost():Void
+	{
+		if (canPause && !paused && !inCutscene && !bfStrums.autoplay && !Init.trueSettings.get('Auto Pause'))
+			pauseGame();
+		callFunc('onFocusLost', []);
+		super.onFocusLost();
+	}
+
+	public function pauseGame()
 	{
 		// pause discord rpc
 		updateRPC(true);
@@ -1222,27 +1244,9 @@ class PlayState extends MusicBeatState
 			if (!twn.finished)
 				twn.active = false;
 		});
-	}
 
-	override public function onFocus():Void
-	{
-		if (!paused)
-			updateRPC(false);
-		callFunc('onFocus', []);
-		super.onFocus();
-	}
-
-	override public function onFocusLost():Void
-	{
-		if (canPause && !paused && !inCutscene && !bfStrums.autoplay && !Init.trueSettings.get('Auto Pause'))
-		{
-			stopTimers();
-			// open pause substate
-			callFunc('pauseGame', []);
-			openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-		}
-		callFunc('onFocusLost', []);
-		super.onFocusLost();
+		// open pause substate
+		openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 	}
 
 	public static function updateRPC(pausedRPC:Bool)
@@ -1441,7 +1445,6 @@ class PlayState extends MusicBeatState
 	function startSong():Void
 	{
 		startingSong = false;
-		canPause = true;
 
 		if (!paused)
 		{
@@ -1707,8 +1710,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		callFunc('openSubState', []);
-
 		super.openSubState(SubState);
 	}
 
@@ -1738,8 +1739,6 @@ class PlayState extends MusicBeatState
 			updateRPC(false);
 			// */
 		}
-
-		callFunc('closeSubState', []);
 
 		Paths.clearUnusedMemory();
 
@@ -1925,6 +1924,8 @@ class PlayState extends MusicBeatState
 	public function startCountdown():Void
 	{
 		inCutscene = false;
+		canPause = true;
+
 		Conductor.songPosition = -(Conductor.crochet * 5);
 
 		countdownPos = 0;
@@ -2116,6 +2117,7 @@ class PlayState extends MusicBeatState
 		setVar('score', ScoreUtils.score);
 		setVar('combo', ScoreUtils.combo);
 		setVar('hits', ScoreUtils.notesHit);
+		setVar('mineHits', ScoreUtils.minesHit);
 		setVar('misses', ScoreUtils.misses);
 		setVar('health', health);
 		setVar('deaths', deaths);

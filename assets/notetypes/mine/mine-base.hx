@@ -16,3 +16,8 @@ function generateSustain(newNote)
 {
 	newNote.kill();
 }
+
+function onHit(newNote)
+{
+	PlayState.health -= 0.0875;
+}

@@ -36,6 +36,7 @@ class ScoreUtils
 	public static var accuracy(get, default):Float;
 	public static var notesAccuracy:Float;
 	public static var notesHit:Int = 0;
+	public static var minesHit:Int = 0;
 
 	inline static function get_accuracy():Float
 		return notesAccuracy / notesHit;

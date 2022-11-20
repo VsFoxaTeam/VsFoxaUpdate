@@ -86,6 +86,8 @@ class Note extends FNFSprite
 		if (noteType == null)
 			noteType = 'default';
 
+		isMine = false;
+
 		super(x, y);
 
 		// oh okay I know why this exists now
@@ -98,6 +100,7 @@ class Note extends FNFSprite
 			this.noteString = parentNote.noteString;
 			this.noteSuffix = parentNote.noteSuffix;
 			this.noteTimer = parentNote.noteTimer;
+			this.isMine = parentNote.isMine;
 			while (parentNote.parentNote != null)
 				parentNote = parentNote.parentNote;
 			parentNote.childrenNotes.push(this);
@@ -204,6 +207,8 @@ class Note extends FNFSprite
 				newNote.animation.play(stringSect + 'Scroll');
 			}
 		}
+
+		newNote.isMine = false;
 	}
 
 	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, noteType, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
@@ -298,6 +303,7 @@ class Note extends FNFSprite
 					newNote.updateHitbox();
 					newNote.antialiasing = true;
 				}
+				newNote.isMine = false;
 		}
 
 		//
@@ -311,12 +317,7 @@ class Note extends FNFSprite
 			newNote.updateHitbox();
 
 			if (prevNote.isSustainNote)
-			{
 				prevNote.animation.play('hold');
-
-				// prevNote.scale.y *= Conductor.stepCrochet / 100 * (43 / 52) * 1.5 * prevNote.noteSpeed;
-				// prevNote.updateHitbox();
-			}
 		}
 
 		return newNote;
