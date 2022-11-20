@@ -110,8 +110,8 @@ class ScoreUtils
 		"forever" => [45, 90, 125, 150]
 	];
 
-	public static var curRating:String = "F";
-	public static var curCombo:String = "";
+	public static var curRating:String = null;
+	public static var curCombo:String = null;
 
 	public static var gottenJudgements:Map<String, Int> = [];
 	public static var smallestRating:Int;
@@ -243,9 +243,10 @@ class ScoreUtils
 		for (judgement in 0...judges.length)
 			gottenJudgements.set(judges[judgement].name, 0);
 
+		smallestRating = 0;
 		perfectCombo = true;
 		curRating = "N/A";
-		curCombo = "";
+		curCombo = null;
 
 		var preset = Init.trueSettings.get("Timing Preset");
 
