@@ -69,7 +69,6 @@ class Note extends FNFSprite
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
 
-	public static var noteScript:ScriptHandler;
 	public static var noteMap:Map<String, ScriptHandler> = new Map();
 
 	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?isSustainNote:Bool = false)
@@ -155,7 +154,7 @@ class Note extends FNFSprite
 		if (tooLate || (parentNote != null && parentNote.tooLate))
 			alpha = 0.3;
 
-		noteCall('update', [elapsed]);
+		noteCall(this.noteType, 'update', [elapsed]);
 	}
 
 	public static function resetNote(framesArg:String, changeable:String = '', assetModifier:String, newNote:Note)
@@ -324,20 +323,23 @@ class Note extends FNFSprite
 	}
 
 	public function noteHit()
-		noteCall('onHit', [this]);
+		noteCall(this.noteType, 'onHit', [this]);
 
 	public function noteMiss()
-		noteCall('onMiss', [this]);
+		noteCall(this.noteType, 'onMiss', [this]);
 
 	public function stepHit(curStep:Int)
-		noteCall('onStep', [this, curStep]);
+		noteCall(this.noteType, 'onStep', [this, curStep]);
 
 	public function beatHit(curBeat:Int)
-		noteCall('onBeat', [this, curBeat]);
+		noteCall(this.noteType, 'onBeat', [this, curBeat]);
 
-	function noteCall(name:String, args:Array<Dynamic>)
+	function noteCall(type:String, name:String, args:Array<Dynamic>)
 	{
-		if (noteScript != null)
+		if (noteMap.exists(type))
+		{
+			var noteScript:ScriptHandler = noteMap.get(type);
 			noteScript.call(name, args);
+		}
 	}
 }

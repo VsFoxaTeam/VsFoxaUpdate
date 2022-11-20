@@ -167,7 +167,7 @@ class Events
 
 	inline public static function returnValue3(event:String):Array<String>
 	{
-		if (loadedEvents.get(event) != null)
+		if (loadedEvents.exists(event))
 		{
 			var script:ScriptHandler = loadedEvents.get(event);
 			var scriptCall = script.call('returnValue3', []);
@@ -183,7 +183,7 @@ class Events
 
 	inline public static function returnEventDescription(event:String):String
 	{
-		if (loadedEvents.get(event) != null)
+		if (loadedEvents.exists(event))
 		{
 			var script:ScriptHandler = loadedEvents.get(event);
 			var descString = script.call('returnDescription', []);

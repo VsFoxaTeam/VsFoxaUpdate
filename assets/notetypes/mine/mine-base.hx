@@ -8,16 +8,17 @@ function generateNote(newNote)
 	newNote.animation.play(stringSect + 'Scroll');
 
 	newNote.isMine = true;
+	newNote.noteSuffix = "miss";
+
 	newNote.setGraphicSize(Std.int(newNote.width * 0.8));
 	newNote.updateHitbox();
 }
 
 function generateSustain(newNote)
-{
 	newNote.kill();
-}
 
 function onHit(newNote)
 {
 	PlayState.health -= 0.0875;
+	game.decreaseCombo(true);
 }

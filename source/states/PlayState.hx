@@ -313,10 +313,6 @@ class PlayState extends MusicBeatState
 		ratingPlacement.set();
 		comboPlacement.set();
 
-		// cache shit
-		displayScore(0, false, true);
-		//
-
 		stageGroup = new FlxTypedGroup<Stage>();
 		add(stageGroup);
 
@@ -411,6 +407,19 @@ class PlayState extends MusicBeatState
 			strumLines.members[i].cameras = [strumHUD[i]];
 		}
 		add(strumLines);
+
+		// cache shit
+		displayScore(0, false, true);
+		for (note in unspawnNotes)
+		{
+			for (strumline in strumLines)
+			{
+				var splash:NoteSplash = createSplash(note.noteType, 0, strumline);
+				if (splash != null)
+					splash.alpha = 0.000001;
+			}
+		}
+		//
 
 		uiHUD = new ClassHUD();
 		uiHUD.alpha = 0;
@@ -816,15 +825,6 @@ class PlayState extends MusicBeatState
 				if (strumline.autoplay && receptor.animation.curAnim.name == 'confirm' && receptor.animation.curAnim.finished)
 					receptor.playAnim('static', true);
 			}
-
-			if (strumline.splashNotes != null)
-			{
-				for (i in 0...strumline.splashNotes.length)
-				{
-					strumline.splashNotes.members[i].x = strumline.receptors.members[i].x - 48;
-					strumline.splashNotes.members[i].y = strumline.receptors.members[i].y + (Note.swagWidth / 6) - 56;
-				}
-			}
 		}
 
 		// if the song is generated
@@ -1061,6 +1061,14 @@ class PlayState extends MusicBeatState
 						}
 					}
 				}
+
+				// create note splash if you hit a "sick" note;
+				if (!coolNote.isSustainNote && foundRating == 0 || coolNote.noteSplash)
+					createSplash(coolNote.noteType, coolNote.noteData, strumline);
+				else if (!strumline.autoplay)
+					// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
+					if (ScoreUtils.perfectCombo)
+						ScoreUtils.perfectCombo = false;
 			}
 
 			if (!coolNote.isSustainNote)
@@ -1068,7 +1076,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function missNoteCheck(?includeAnimation:Bool = false, direction:Int = 0, strumline:Strumline, popMiss:Bool = false, lockMiss:Bool = false)
+	public function missNoteCheck(?includeAnimation:Bool = false, direction:Int = 0, strumline:Strumline, popMiss:Bool = false, lockMiss:Bool = false)
 	{
 		if (strumline.autoplay)
 			return;
@@ -1150,7 +1158,8 @@ class PlayState extends MusicBeatState
 				if (strumline.displayJudges)
 					notesPressedAutoplay.push(daNote);
 
-				goodNoteHit(daNote, strumline);
+				if (!daNote.isMine)
+					goodNoteHit(daNote, strumline);
 			}
 		}
 
@@ -1266,14 +1275,6 @@ class PlayState extends MusicBeatState
 		// set up the rating
 		var ratingScore:Int = 50;
 
-		// create note splash if you hit a "sick" note;
-		if (ratingID == 0 || coolNote.noteSplash)
-			createSplash(coolNote, strumline);
-		else if (!strumline.autoplay)
-			// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
-			if (ScoreUtils.perfectCombo)
-				ScoreUtils.perfectCombo = false;
-
 		var gottenRating = strumline.autoplay ? 0 : ratingID;
 
 		displayScore(gottenRating, late);
@@ -1284,15 +1285,24 @@ class PlayState extends MusicBeatState
 		ScoreUtils.score += ratingScore;
 	}
 
-	public function createSplash(coolNote:Note, strumline:Strumline)
+	public function createSplash(noteType:String, noteData:Int, strumline:Strumline):NoteSplash
 	{
-		// play animation in existing notesplashes
-		var noteSplashRandom:String = (Std.string((FlxG.random.int(0, 1) + 1)));
+		var note = Note.noteMap.get(noteType);
+		for (i in 0...strumLines.length)
+			strumLines.members[i].splashNotes.cameras = [strumHUD[i]];
+
 		if (strumline.splashNotes != null)
-			strumline.splashNotes.members[coolNote.noteData].playAnim('anim' + noteSplashRandom, true);
+		{
+			var noteSplash:NoteSplash = ForeverAssets.generateNoteSplashes(strumline.splashNotes, assetModifier, changeableSkin, noteType, noteData);
+			noteSplash.x = strumline.receptors.members[noteData].x;
+			noteSplash.y = strumline.receptors.members[noteData].y;
+			noteSplash.cameras = strumline.splashNotes.members[noteData].cameras;
+			return noteSplash;
+		}
+		return null;
 	}
 
-	function decreaseCombo(?popMiss:Bool = false)
+	public function decreaseCombo(?popMiss:Bool = false)
 	{
 		// painful if statement
 		if (ScoreUtils.combo > 5 && gf.animOffsets.exists('sad'))
@@ -1382,6 +1392,11 @@ class PlayState extends MusicBeatState
 			if (id > ScoreUtils.smallestRating)
 				ScoreUtils.smallestRating = id;
 		}
+		else
+		{
+			rating.alpha = 0.00001;
+			timing.alpha = 0.00001;
+		}
 
 		// COMBO
 		var comboString:String = Std.string(ScoreUtils.combo);
@@ -1414,6 +1429,9 @@ class PlayState extends MusicBeatState
 				numScore.y += 50;
 			}
 			numScore.x += 100;
+
+			if (cache)
+				numScore.alpha = 0.00001;
 
 			if (Init.trueSettings.get("Simply Judgements"))
 			{

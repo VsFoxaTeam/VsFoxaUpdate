@@ -8,6 +8,7 @@ import base.FeatherDependencies.ScriptHandler;
 import base.ScoreUtils;
 import dependency.FNFSprite;
 import flixel.FlxG;
+import flixel.util.FlxSort;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.group.FlxSpriteGroup;
@@ -243,16 +244,15 @@ class ForeverAssets
 		return timing;
 	}
 
-	public static function generateNoteSplashes(asset:String, group:FlxTypedSpriteGroup<NoteSplash>, assetModifier:String = 'base',
-			changeableSkin:String = 'default', noteType:String = 'default', noteData:Int):NoteSplash
+	public static function generateNoteSplashes(grpSplash:FlxTypedSpriteGroup<NoteSplash>, assetModifier:String = 'base', changeableSkin:String = 'default',
+			noteType:String = 'default', noteData:Int):NoteSplash
 	{
 		//
-		var tempSplash:NoteSplash = group.recycle(NoteSplash, function()
+		var tempSplash:NoteSplash = grpSplash.recycle(NoteSplash, function()
 		{
 			var splash:NoteSplash = new NoteSplash(noteData);
 			return splash;
 		});
-		tempSplash.zDepth = -Conductor.songPosition;
 
 		switch (assetModifier)
 		{
@@ -272,19 +272,18 @@ class ForeverAssets
 				{
 					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						Note.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
-						Note.noteScript.call('generateSplash', [tempSplash, noteData]);
+						Note.noteMap.set(noteType, new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')));
+						Note.noteMap.get(noteType).call('generateSplash', [tempSplash, noteData]);
 						// trace('Splash Module loaded: $noteType-$assetModifier');
 					}
 				}
 				catch (e)
 				{
-					Note.noteScript = null;
 					// trace('[SPLASH ERROR] $e');
 
-					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, '$noteType/skins', 'notetypes'),
-						'notetypes'), true,
-						210, 210);
+					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('noteSplashes', assetModifier, changeableSkin, '$noteType/skins',
+						'notetypes'), 'notetypes'),
+						true, 210, 210);
 					tempSplash.animation.add('anim1', [
 						(noteData * 2 + 1),
 						8 + (noteData * 2 + 1),
@@ -305,6 +304,8 @@ class ForeverAssets
 				}
 		}
 
+		tempSplash.zDepth = -Conductor.songPosition;
+		grpSplash.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 		return tempSplash;
 	}
 
@@ -351,14 +352,13 @@ class ForeverAssets
 				{
 					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						Note.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
-						Note.noteScript.call('generateReceptor', [uiReceptor]);
+						Note.noteMap.set(noteType, new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')));
+						Note.noteMap.get(noteType).call('generateReceptor', [uiReceptor]);
 						// trace('Receptor Module loaded: $noteType-$assetModifier');
 					}
 				}
 				catch (e)
 				{
-					Note.noteScript = null;
 					// trace('[RECEPTOR ERROR] $e');
 
 					// probably gonna revise this and make it possible to add other arrow types but for now it's just pixel and normal
@@ -439,14 +439,13 @@ class ForeverAssets
 					{
 						if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 						{
-							Note.noteScript = new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'));
-							Note.noteScript.call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
+							Note.noteMap.set(noteType, new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')));
+							Note.noteMap.get(noteType).call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
 							// trace('Note Module loaded: $noteType-$assetModifier');
 						}
 					}
 					catch (e)
 					{
-						Note.noteScript = null;
 						// trace('[NOTE ERROR] $e');
 
 						// load default so the game won't explode in front of you;

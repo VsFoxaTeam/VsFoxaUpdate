@@ -72,8 +72,9 @@ function generateSplash(noteSplash, noteData)
 			24 + (noteData * 2),
 			32 + (noteData * 2)
 		], 24, false);
-		noteSplash.addOffset('anim1', -20, -10);
-		noteSplash.addOffset('anim2', -20, -10);
+
+		noteSplash.addOffset('anim1', 25, 25);
+		noteSplash.addOffset('anim2', 25, 25);
 	}
 	else
 	{
@@ -82,11 +83,13 @@ function generateSplash(noteSplash, noteData)
 		noteSplash.animation.addByPrefix('anim2', 'note impact 2 ' + Receptor.colors[noteData], 24, false);
 		noteSplash.animation.addByPrefix('anim1', 'note impact 1  blue', 24, false); // HE DID IT AGAIN EVERYONE;
 
-		noteSplash.addOffset('anim1', 10, 30);
-		noteSplash.addOffset('anim2', 10, 30);
+		noteSplash.addOffset('anim1', 35, 50);
+		noteSplash.addOffset('anim2', 35, 50);
 		noteSplash.updateHitbox();
-		noteSplash.animation.play('anim1');
 	}
+
+	noteSplash.playAnim('anim' + FlxG.random.int(1, 2));
+	noteSplash.alpha = Init.trueSettings.get("Splash Opacity") * 0.01;
 }
 
 function getSkinPath(?forceSkin:String):String

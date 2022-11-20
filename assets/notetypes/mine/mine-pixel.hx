@@ -7,18 +7,18 @@ function generateNote(newNote)
 	newNote.animation.play(stringSect + 'Scroll');
 
 	newNote.isMine = true;
+	newNote.noteSuffix = "miss";
 	newNote.antialiasing = false;
+
 	newNote.setGraphicSize(Std.int(newNote.width * PlayState.daPixelZoom));
 	newNote.updateHitbox();
 }
 
 function generateSustain(newNote)
-{
 	newNote.kill();
-}
-
 
 function onHit(newNote)
 {
 	PlayState.health -= 0.0875;
+	game.decreaseCombo(true);
 }

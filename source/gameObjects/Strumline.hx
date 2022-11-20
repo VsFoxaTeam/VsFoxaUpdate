@@ -105,15 +105,6 @@ class Strumline extends FlxSpriteGroup
 				receptor.y = receptor.initialY;
 				receptor.alpha = receptor.setAlpha;
 			}
-
-			if (displayJudges)
-			{
-				var noteSplash:NoteSplash = null;
-				noteSplash = ForeverAssets.generateNoteSplashes('noteSplashes', splashNotes, PlayState.assetModifier, PlayState.changeableSkin, i);
-
-				if (noteSplash != null)
-					splashNotes.add(noteSplash);
-			}
 		}
 
 		if (Init.trueSettings.get("Clip Style").toLowerCase() == 'stepmania')
@@ -122,7 +113,7 @@ class Strumline extends FlxSpriteGroup
 		if (Init.trueSettings.get("Clip Style").toLowerCase() == 'fnf')
 			add(holdsGroup);
 		add(notesGroup);
-		if (splashNotes != null)
+		if (displaySplashes)
 			add(splashNotes);
 	}
 
