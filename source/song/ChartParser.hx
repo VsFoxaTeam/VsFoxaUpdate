@@ -40,10 +40,12 @@ class ChartParser
 						case "Hurt Note":
 							songNotes[3] = 'mine';
 						case "Hey!":
+							songNotes[3] = 'default';
 							songNotes[5] = 'hey'; // animation;
 						case 'Alt Animation':
+							songNotes[3] = 'default';
 							songNotes[4] = '-alt'; // animation string;
-						default:
+						case "GF Sing":
 							songNotes[3] = 'default';
 					}
 

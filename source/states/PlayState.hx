@@ -1122,7 +1122,7 @@ class PlayState extends MusicBeatState
 		{
 			if (character.animOffsets.exists(stringArrow))
 				character.playAnim(stringArrow, true);
-			if (coolNote.noteTimer >= 0)
+			if (coolNote.noteTimer > 0)
 			{
 				character.specialAnim = true;
 				character.heyTimer = coolNote.noteTimer;
