@@ -1,6 +1,7 @@
 package base;
 
 import flixel.FlxG;
+import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import lime.app.Event;
 import openfl.ui.Keyboard;
@@ -153,12 +154,27 @@ class Controls
 		return keysHeld.contains(key) ? PRESSED : RELEASED;
 	}
 
-	inline public static function getKeyString(action:String)
+	public static function getKeyString(action:String, id:Int)
 	{
-		//
-		if (actions.exists(action))
-			return action;
-		return '';
+		var keyString = "";
+
+		if (Controls.actions.exists(action))
+			keyString = returnStringKey(Controls.actions.get(action)[id]);
+		return keyString;
+	}
+
+	public static function returnStringKey(arrayThingy:Dynamic):String
+	{
+		var keyString:String = 'none';
+		if (arrayThingy != null)
+		{
+			var keyDisplay:FlxKey = arrayThingy;
+			keyString = keyDisplay.toString();
+		}
+
+		keyString = keyString.replace(" ", "");
+
+		return keyString;
 	}
 
 	public static function getPressEvent(action:String, type:String = 'justPressed'):Bool

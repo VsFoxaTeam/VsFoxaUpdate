@@ -39,6 +39,11 @@ typedef PortraitDataDef =
 	var borderSize:Null<Float>;
 	var borderColor:Null<Array<Int>>;
 	var shadowOffset:Null<Array<Int>>;
+	// SELECTORS;
+	var showHand:Null<Bool>;
+	var handTexPath:Null<String>;
+	var handTex:Null<String>;
+	var handSize:Null<Float>;
 }
 
 typedef DialogueDataDef =
@@ -62,10 +67,6 @@ typedef BoxDataDef =
 	var singleFrame:Null<Bool>;
 	var doFlip:Null<Bool>;
 	var bgColor:Null<Array<Int>>;
-	var showHand:Bool;
-
-	// var handTexture:String;
-	// var handSize:Float;
 	var states:Null<Dynamic>;
 }
 
@@ -144,18 +145,6 @@ class DialogueBox extends FlxSpriteGroup
 
 		dialogDataCheck();
 
-		var fadeIn = dialogueData.songFadeIn;
-
-		// dialogue song;
-		if (dialogueData.song != null)
-		{
-			dialogueSong = new FlxSound().loadEmbedded(Paths.music(dialogueData.song), false, true);
-			FlxG.sound.list.add(dialogueSong);
-			dialogueSong.fadeIn((fadeIn != null ? fadeIn : 1), 0, 0.8);
-			dialogueSong.persist = true;
-			dialogueSong.looped = true;
-		}
-
 		// background fade
 		bgFade = new FlxSprite(-200, -200).makeGraphic(Std.int(FlxG.width * 1.3), Std.int(FlxG.height * 1.3), FlxColor.BLACK);
 		bgFade.scrollFactor.set();
@@ -186,9 +175,6 @@ class DialogueBox extends FlxSpriteGroup
 			pixelText.shadowOffset.set(portraitData.shadowOffset[0], portraitData.shadowOffset[1]);
 
 			handSelect = new FlxSprite(1042, 590);
-			handSelect.loadGraphic(Paths.image('dialogue/selectors/pixelHand'));
-			handSelect.setGraphicSize(Std.int(handSelect.width * states.PlayState.daPixelZoom * 0.9));
-			handSelect.updateHitbox();
 			handSelect.visible = false;
 		}
 
@@ -199,15 +185,14 @@ class DialogueBox extends FlxSpriteGroup
 		if (pixelText != null)
 		{
 			add(pixelText);
-			if (boxData.showHand)
-				add(handSelect);
+			add(handSelect);
 		}
 
 		alphabetText.visible = dialogueData.boxStyle == "funkin";
 		add(alphabetText);
 
 		// skip text
-		var skipText = new FlxText(100, 670, 1000, "PRESS SHIFT OR END TO SKIP", 20);
+		var skipText = new FlxText(100, 670, 1000, "PRESS " + Controls.getKeyString("skip", 0) + " TO SKIP", 20);
 		skipText.alignment = FlxTextAlign.CENTER;
 
 		skipText.borderStyle = FlxTextBorderStyle.OUTLINE;
@@ -257,6 +242,10 @@ class DialogueBox extends FlxSpriteGroup
 
 				pixelText.completeCallback = function()
 				{
+					handSelect.loadGraphic(Paths.image(portraitData.handTex, portraitData.handTexPath));
+					handSelect.setGraphicSize(Std.int(handSelect.width * portraitData.handSize));
+					handSelect.updateHitbox();
+
 					alphabetText.finishedLine = true;
 					handSelect.visible = true;
 				}
@@ -483,6 +472,15 @@ class DialogueBox extends FlxSpriteGroup
 				else
 					acceptPath = Paths.file("sounds/base/menus/");
 
+				if (portraitData.handTex == null)
+					portraitData.handTex = 'pixelHand';
+		
+				if (portraitData.handTexPath == null)
+					portraitData.handTexPath = 'images/dialogue/selectors';
+		
+				if (portraitData.handSize == null)
+					portraitData.handSize = 6;
+
 				// update bloops
 				if (portraitData.sounds != null)
 				{
@@ -589,13 +587,33 @@ class DialogueBox extends FlxSpriteGroup
 	public function closeDialog()
 	{
 		whenDaFinish();
-
-		var fadeOut = dialogueData.songFadeOut;
-		if (dialogueSong != null)
-			dialogueSong.fadeOut((fadeOut != null ? fadeOut : 2.2), 0);
+		fadeOutMusic();
 
 		alphabetText.playSounds = false;
 		kill();
+	}
+
+	public function fadeInMusic()
+	{
+		var fadeIn = dialogueData.songFadeIn;
+
+		// dialogue song;
+		if (dialogueData.song != null)
+		{
+			dialogueSong = new FlxSound().loadEmbedded(Paths.music(dialogueData.song), false, true);
+			FlxG.sound.list.add(dialogueSong);
+			dialogueSong.fadeIn((fadeIn != null ? fadeIn : 1), 0, 0.8);
+			dialogueSong.persist = true;
+			dialogueSong.looped = true;
+		}
+	}
+
+	public function fadeOutMusic()
+	{
+		var fadeOut = dialogueData.songFadeOut;
+
+		if (dialogueSong != null)
+			dialogueSong.fadeOut((fadeOut != null ? fadeOut : 2.2), 0);
 	}
 
 	public function dialogDataCheck()

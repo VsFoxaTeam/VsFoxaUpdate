@@ -1881,6 +1881,9 @@ class PlayState extends MusicBeatState
 			dialogueBox.cameras = [dialogueHUD];
 			add(dialogueBox);
 
+			if (dialogueBox != null)
+				dialogueBox.fadeInMusic();
+
 			dialogueBox.whenDaFinish = endingSong ? endSong : startCountdown;
 		}
 		else

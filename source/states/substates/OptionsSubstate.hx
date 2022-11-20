@@ -165,7 +165,7 @@ class OptionsSubstate extends MusicBeatSubstate
 				var keyString = "";
 
 				if (Controls.actions.exists(myControls[i]))
-					keyString = getStringKey(Controls.actions.get(myControls[i])[j]);
+					keyString = Controls.returnStringKey(Controls.actions.get(myControls[i])[j]);
 
 				var secondaryText:Alphabet = new Alphabet(0, 0, keyString, false, false);
 				secondaryText.screenCenter();
@@ -182,20 +182,6 @@ class OptionsSubstate extends MusicBeatSubstate
 		add(otherKeys);
 
 		myControls = [];
-	}
-
-	private function getStringKey(arrayThingy:Dynamic):String
-	{
-		var keyString:String = 'none';
-		if (arrayThingy != null)
-		{
-			var keyDisplay:FlxKey = arrayThingy;
-			keyString = keyDisplay.toString();
-		}
-
-		keyString = keyString.replace(" ", "");
-
-		return keyString;
 	}
 
 	private function updateSelection(equal:Int = 0)
@@ -403,7 +389,7 @@ class OptionsSubstate extends MusicBeatSubstate
 
 					// now check if its the key we want to change
 					Controls.actions.get(keyOptions.members[curSelection].text.replace(' ', '_'))[curHorizontalSelection] = checkKey;
-					otherKeys.members[(curSelection * 2) + curHorizontalSelection].text = getStringKey(checkKey);
+					otherKeys.members[(curSelection * 2) + curHorizontalSelection].text = Controls.returnStringKey(checkKey);
 
 					var keyText:String = keyOptions.members[curSelection].text.toLowerCase();
 
