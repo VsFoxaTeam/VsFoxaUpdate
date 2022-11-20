@@ -101,16 +101,21 @@ class Main extends Sprite
 		{
 			if (!gameWeeksMap.exists(weekList[i]))
 			{
-				var week:GameWeek = parseGameWeeks(Paths.file('weeks/' + weekList[i] + '.json'));
-				if (week != null)
+				if (weekList[i].length > 1)
 				{
-					if ((isStory && (!week.hideOnStory && !week.hideUntilUnlocked))
-						|| (!isStory && (!week.hideOnFreeplay && !week.hideUntilUnlocked)))
+					var week:GameWeek = parseGameWeeks(Paths.file('weeks/' + weekList[i] + '.json'));
+					if (week != null)
 					{
-						gameWeeksMap.set(weekList[i], week);
-						gameWeeks.push(weekList[i]);
+						if ((isStory && (!week.hideOnStory && !week.hideUntilUnlocked))
+							|| (!isStory && (!week.hideOnFreeplay && !week.hideUntilUnlocked)))
+						{
+							gameWeeksMap.set(weekList[i], week);
+							gameWeeks.push(weekList[i]);
+						}
 					}
 				}
+				else
+					gameWeeks = null;
 			}
 		}
 	}

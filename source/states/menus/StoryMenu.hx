@@ -49,6 +49,10 @@ class StoryMenu extends MusicBeatState
 
 		// load week data;
 		Main.loadGameWeeks(true);
+		
+		if (Main.gameWeeks == null)
+			return Main.switchState(this, new MainMenu('[JSON ERROR] Weeks not Found!'));
+
 		if (curWeek >= Main.gameWeeks.length)
 			curWeek = 0;
 
@@ -193,19 +197,23 @@ class StoryMenu extends MusicBeatState
 		var lerpVal = Main.framerateAdjust(0.5);
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, lerpVal));
 
-		scoreText.text = "WEEK SCORE:" + lerpScore;
+		if (scoreText != null)
+			scoreText.text = "WEEK SCORE:" + lerpScore;
 
 		if (FlxG.sound.music != null && FlxG.sound.music.playing)
 			song.Conductor.songPosition = FlxG.sound.music.time;
 
-		grpLocks.forEach(function(lock:FlxSprite)
+		if (grpLocks != null)
 		{
-			lock.y = grpWeekText.members[lock.ID].y;
-		});
+			grpLocks.forEach(function(lock:FlxSprite)
+			{
+				lock.y = grpWeekText.members[lock.ID].y;
+			});
+		}
 
 		if (!movedBack)
 		{
-			if (!selectedWeek)
+			if (!selectedWeek && (leftArrow != null && rightArrow != null))
 			{
 				if (Controls.getPressEvent("ui_up"))
 					changeWeek(-1);
