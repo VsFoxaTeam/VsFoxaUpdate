@@ -34,6 +34,19 @@ class ChartParser
 					var daNoteAlt:Float = 0;
 					var daNoteType:String = 'default';
 
+					// psych conversion;
+					switch (songNotes[3])
+					{
+						case "Hurt Note":
+							songNotes[3] = 'mine';
+						case "Hey!":
+							songNotes[5] = 'hey'; // animation;
+						case 'Alt Animation':
+							songNotes[4] = '-alt'; // animation string;
+						default:
+							songNotes[3] = 'default';
+					}
+
 					// define the note's type if it is a string;
 					if (songNotes[3] != null && Std.isOfType(songNotes[3], String))
 						daNoteType = songNotes[3];
@@ -58,6 +71,11 @@ class ChartParser
 					swagNote.noteType = daNoteType;
 					swagNote.noteSpeed = songData.speed;
 					swagNote.mustPress = gottaHitNote;
+
+					// set animation parameters for notes!
+					swagNote.noteSuffix = songNotes[4];
+					swagNote.noteString = songNotes[5];
+					swagNote.noteTimer = songNotes[6];
 
 					if (swagNote.noteData > -1) // don't push notes if they are an event??
 						unspawnNotes.push(swagNote);

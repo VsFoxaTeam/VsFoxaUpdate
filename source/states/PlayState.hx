@@ -1111,9 +1111,24 @@ class PlayState extends MusicBeatState
 				altString = '';
 		}
 
-		stringArrow = baseString + altString;
-		character.playAnim(stringArrow, true);
-		character.holdTimer = 0;
+		var noteSuffix:String = coolNote.noteSuffix != null && coolNote.noteSuffix != '' ? coolNote.noteSuffix : '';
+
+		if (coolNote.noteString != null && coolNote.noteString != '')
+			stringArrow = coolNote.noteString;
+		else
+			stringArrow = baseString + altString + noteSuffix;
+
+		if (character != null)
+		{
+			if (character.animOffsets.exists(stringArrow))
+				character.playAnim(stringArrow, true);
+			if (coolNote.noteTimer >= 0)
+			{
+				character.specialAnim = true;
+				character.heyTimer = coolNote.noteTimer;
+			}
+			character.holdTimer = 0;
+		}
 	}
 
 	private function mainControls(daNote:Note, strumline:Strumline):Void

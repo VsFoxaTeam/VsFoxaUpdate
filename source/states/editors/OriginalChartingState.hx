@@ -519,6 +519,9 @@ class OriginalChartingState extends MusicBeatState
 		UI_box.addGroup(tab_group_section);
 	}
 
+	var noteSuffixInput:FlxUIInputText;
+	var noteStringInput:FlxUIInputText;
+	var stepperNoteTimer:FlxUINumericStepper;
 	var stepperSusLength:FlxUINumericStepper;
 	var stepperType:FlxUINumericStepper;
 
@@ -527,24 +530,36 @@ class OriginalChartingState extends MusicBeatState
 		var tab_group_note = new FlxUI(null, UI_box);
 		tab_group_note.name = 'Note';
 
-		stepperSusLength = new FlxUINumericStepper(10, 10, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 16);
+		stepperSusLength = new FlxUINumericStepper(10, 25, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 16);
 		stepperSusLength.value = 0;
 		stepperSusLength.name = 'note_susLength';
+		tab_group_note.add(stepperSusLength);
 		blockPressNumStepper.push(stepperSusLength);
 
-		var applyLength:FlxButton = new FlxButton(100, 10, 'Apply');
-
-		tab_group_note.add(stepperSusLength);
-		tab_group_note.add(applyLength);
-
 		// note types
-		stepperType = new FlxUINumericStepper(10, 30, Conductor.stepCrochet / 125, 0, 0, (Conductor.stepCrochet / 125) + 10); // 10 is placeholder
+		stepperType = new FlxUINumericStepper(10, stepperSusLength.y + 30, Conductor.stepCrochet / 125, 0, 0, (Conductor.stepCrochet / 125) + 10); // 10 is placeholder
 		// I have no idea what i'm doing lmfao
 		stepperType.value = 0;
 		stepperType.name = 'note_type';
+		tab_group_note.add(stepperType);
 		blockPressNumStepper.push(stepperType);
 
-		tab_group_note.add(stepperType);
+		noteSuffixInput = new FlxUIInputText(10, stepperType.y + 35, 180, "");
+		tab_group_note.add(noteSuffixInput);
+		blockPressInputText.push(noteSuffixInput);
+
+		stepperNoteTimer = new FlxUINumericStepper(200, noteSuffixInput.y, 0.1, 0, 0, 10, 1);
+		tab_group_note.add(stepperNoteTimer);
+		blockPressNumStepper.push(stepperNoteTimer);
+
+		noteStringInput = new FlxUIInputText(10, noteSuffixInput.y + 35, 180, "");
+		tab_group_note.add(noteStringInput);
+		blockPressInputText.push(noteStringInput);
+
+		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
+		tab_group_note.add(new FlxText(10, stepperType.y - 15, 0, 'Note Type:'));
+		tab_group_note.add(new FlxText(10, noteSuffixInput.y - 15, 0, 'Note Animation (replaces singing animations):'));
+		tab_group_note.add(new FlxText(10, noteStringInput.y - 15, 0, 'Note Animation Suffix (e.g: -alt, miss):'));
 
 		UI_box.addGroup(tab_group_note);
 		// I'm genuinely tempted to go around and remove every instance of the word "sus" it is genuinely killing me inside
@@ -1261,6 +1276,13 @@ class OriginalChartingState extends MusicBeatState
 			stepperSusLength.value = curSelectedNote[2];
 			if (curSelectedNote[3] != null)
 				curNoteType = 'default';
+
+			if (curSelectedNote[4] != null)
+				curSelectedNote[4] = noteStringInput.text;
+			if (curSelectedNote[5] != null)
+				curSelectedNote[5] = noteSuffixInput.text;
+			if (curSelectedNote[6] != null)
+				curSelectedNote[6] = stepperNoteTimer.value;
 		}
 	}
 
@@ -1294,13 +1316,12 @@ class OriginalChartingState extends MusicBeatState
 			var daNoteType:String = i[3];
 
 			var note:Note = new Note(daStrumTime, daNoteInfo % 4, 0, daNoteType);
-			var stringSect = gameObjects.Strumline.Receptor.colors[note.noteData];
-			note.frames = Paths.getSparrowAtlas('default/skins/default/base/NOTE_assets', 'notetypes');
-			note.animation.addByPrefix(stringSect + 'Scroll', stringSect + '0');
+			Note.resetNote(null, Init.trueSettings.get("Note Skin"), _song.assetModifier, note);
 			note.antialiasing = true;
 
 			note.sustainLength = daSus;
 			note.noteType = daNoteType;
+
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
 			note.x = Math.floor(daNoteInfo * GRID_SIZE + GRID_SIZE);
@@ -1501,8 +1522,11 @@ class OriginalChartingState extends MusicBeatState
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteType = curNoteType; // define notes as the current type
 		var noteSus = 0; // ninja you will NOT get away with this
+		var noteString = noteStringInput.text; // define the note's animation override;
+		var noteSuffix = noteSuffixInput.text; // define the note's animation suffix;
+		var noteTimer = stepperNoteTimer.value; // define the note's animation timer;
 
-		_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, noteType]);
+		_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, noteType, noteSuffix, noteString, noteTimer]);
 
 		curSelectedNote = _song.notes[curSection].sectionNotes[_song.notes[curSection].sectionNotes.length - 1];
 

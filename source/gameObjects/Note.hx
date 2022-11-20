@@ -15,8 +15,11 @@ class Note extends FNFSprite
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
 	public var noteAlt:Float = 0;
+
 	public var noteType:String = 'default';
 	public var noteString:String = "";
+	public var noteSuffix:String = "";
+	public var noteTimer:Float = 0;
 
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
@@ -166,16 +169,19 @@ class Note extends FNFSprite
 				framesArg = 'NOTE_assets';
 		}
 
+		var stringSect = Receptor.colors[newNote.noteData];
+
 		if (assetModifier != 'pixel')
 		{
 			var skinAssetPath:String = ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, '${newNote.noteType}/skins', 'notetypes');
 			newNote.frames = Paths.getSparrowAtlas(skinAssetPath, 'notetypes');
 
-			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'Scroll', Receptor.colors[newNote.noteData] + '0');
-			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'holdend', Receptor.colors[newNote.noteData] + ' hold end');
-			newNote.animation.addByPrefix(Receptor.colors[newNote.noteData] + 'hold', Receptor.colors[newNote.noteData] + ' hold piece');
+			newNote.animation.addByPrefix(stringSect + 'Scroll', stringSect + '0');
+			newNote.animation.addByPrefix(stringSect + 'holdend', stringSect + ' hold end');
+			newNote.animation.addByPrefix(stringSect + 'hold', stringSect + ' hold piece');
 
 			newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // PA god dammit.
+			newNote.animation.play(stringSect + 'Scroll');
 		}
 		else
 		{
@@ -184,14 +190,15 @@ class Note extends FNFSprite
 				var skinAssetPath:String = ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, '${newNote.noteType}/skins', 'notetypes');
 				newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'), true, 7, 6);
 
-				newNote.animation.add(Receptor.colors[newNote.noteData] + 'holdend', [pixelData[newNote.noteData]]);
-				newNote.animation.add(Receptor.colors[newNote.noteData] + 'hold', [pixelData[newNote.noteData] - 4]);
+				newNote.animation.add(stringSect + 'holdend', [pixelData[newNote.noteData]]);
+				newNote.animation.add(stringSect + 'hold', [pixelData[newNote.noteData] - 4]);
 			}
 			else
 			{
 				var skinAssetPath:String = ForeverTools.returnSkinAsset(framesArg, assetModifier, changeable, '${newNote.noteType}/skins', 'notetypes');
 				newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'), true, 17, 17);
-				newNote.animation.add(Receptor.colors[newNote.noteData] + 'Scroll', [pixelData[newNote.noteData]], 12);
+				newNote.animation.add(stringSect + 'Scroll', [pixelData[newNote.noteData]], 12);
+				newNote.animation.play(stringSect + 'Scroll');
 			}
 		}
 	}

@@ -442,10 +442,7 @@ class ChartingState extends MusicBeatState
 	private function generateChartNote(daNoteInfo, daStrumTime, daSus, daNoteAlt, daNoteType, noteSection)
 	{
 		var note:Note = new Note(daStrumTime, daNoteInfo % 4, 0, daNoteType);
-
-		var stringSect = gameObjects.Strumline.Receptor.colors[note.noteData];
-		note.frames = Paths.getSparrowAtlas('default/skins/default/base/NOTE_assets', 'notetypes');
-		note.animation.addByPrefix(stringSect + 'Scroll', stringSect + '0');
+		Note.resetNote(null, Init.trueSettings.get("Note Skin"), _song.assetModifier, note);
 		note.antialiasing = true;
 
 		// I love how there's 3 different engines that use this exact same variable name lmao
