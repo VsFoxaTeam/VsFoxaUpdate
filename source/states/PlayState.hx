@@ -416,7 +416,7 @@ class PlayState extends MusicBeatState
 			{
 				var splash:NoteSplash = createSplash(note.noteType, 0, strumline);
 				if (splash != null)
-					splash.alpha = 0.000001;
+					splash.visible = false;
 			}
 		}
 		//
@@ -1063,7 +1063,7 @@ class PlayState extends MusicBeatState
 				}
 
 				// create note splash if you hit a "sick" note;
-				if (!coolNote.isSustainNote && foundRating == 0 || coolNote.noteSplash)
+				if (!coolNote.isSustainNote && coolNote.mustPress && foundRating == 0 || coolNote.noteSplash)
 					createSplash(coolNote.noteType, coolNote.noteData, strumline);
 				else if (!strumline.autoplay)
 					// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
@@ -1297,6 +1297,7 @@ class PlayState extends MusicBeatState
 			noteSplash.x = strumline.receptors.members[noteData].x;
 			noteSplash.y = strumline.receptors.members[noteData].y;
 			noteSplash.cameras = strumline.splashNotes.members[noteData].cameras;
+			noteSplash.visible = true;
 			return noteSplash;
 		}
 		return null;
