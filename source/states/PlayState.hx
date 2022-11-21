@@ -571,7 +571,7 @@ class PlayState extends MusicBeatState
 		super.destroy();
 	}
 
-	@:isVar public static var songSpeed(get, set):Float = 0;
+	@:isVar public static var songSpeed(get, default):Float = 0;
 
 	inline static function get_songSpeed()
 		return FlxMath.roundDecimal(songSpeed, 2);
@@ -1490,6 +1490,10 @@ class PlayState extends MusicBeatState
 	private function generateSong(dataPath:String):Void
 	{
 		var songData = SONG;
+
+		// set the song speed
+		songSpeed = SONG.speed;
+
 		Conductor.changeBPM(songData.bpm);
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
