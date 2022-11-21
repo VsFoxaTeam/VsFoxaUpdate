@@ -279,7 +279,7 @@ class StoryMenu extends MusicBeatState
 				weekSongs.push(gameWeek.songs[song].name);
 
 			PlayState.storyPlaylist = (weekSongs != null ? weekSongs : ['test']);
-			PlayState.isStoryMode = true;
+			PlayState.gameplayMode = STORY;
 			selectedWeek = true;
 
 			var diffic:String = '-' + CoolUtil.difficultyFromNumber(curDifficulty).toLowerCase();

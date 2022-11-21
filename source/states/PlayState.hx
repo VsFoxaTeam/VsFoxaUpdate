@@ -41,8 +41,18 @@ import states.substates.GameOverSubstate;
 import dependency.Discord;
 #end
 
+enum GameMode
+{
+	STORY;
+	FREEPLAY;
+	CHARTING;
+}
+
 class PlayState extends MusicBeatState
 {
+	// defines the Gameplay Mode for the game;
+	public static var gameplayMode:GameMode;
+
 	// for Static Access to this Class;
 	public static var main:PlayState;
 
@@ -65,7 +75,6 @@ class PlayState extends MusicBeatState
 	public static var curStage:String = '';
 
 	// Story Mode;
-	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 2;
@@ -116,6 +125,7 @@ class PlayState extends MusicBeatState
 	public static var camHUD:FlxCamera;
 	public static var camGame:FlxCamera;
 	public static var dialogueHUD:FlxCamera;
+	public static var camAlt:FlxCamera;
 
 	private static var prevCamFollow:FlxObject;
 
@@ -273,6 +283,8 @@ class PlayState extends MusicBeatState
 		FlxG.mouse.visible = false;
 
 		main = this;
+
+		trace("Current Gameplay Mode: " + gameplayMode);
 
 		// reset any values and variables that are static
 		resetStatics();
@@ -440,6 +452,10 @@ class PlayState extends MusicBeatState
 		dialogueHUD.bgColor.alpha = 0;
 		FlxG.cameras.add(dialogueHUD, false);
 
+		camAlt = new FlxCamera();
+		camAlt.bgColor.alpha = 0;
+		FlxG.cameras.add(camAlt, false);
+
 		//
 		if (stageBuild.sendMessage)
 		{
@@ -555,7 +571,7 @@ class PlayState extends MusicBeatState
 		{
 			// RESET = Quick Game Over Screen
 			case "reset":
-				if (!startingSong && !isStoryMode)
+				if (!startingSong && gameplayMode != STORY)
 					health = 0;
 			case "left" | "down" | "up" | "right":
 				var actions = ["left", "down", "up", "right"];
@@ -684,7 +700,7 @@ class PlayState extends MusicBeatState
 				if (Controls.getPressEvent("pause") && canPause)
 					pauseGame();
 
-				if (!isStoryMode)
+				if (gameplayMode != STORY)
 				{
 					if (Controls.getPressEvent("autoplay"))
 					{
@@ -701,7 +717,6 @@ class PlayState extends MusicBeatState
 							Main.switchState(this, new states.editors.ChartingState());
 						else
 							Main.switchState(this, new states.editors.OriginalChartingState());
-						PlayState.SONG.validScore = false;
 					}
 
 					if (FlxG.keys.justPressed.EIGHT)
@@ -1773,7 +1788,6 @@ class PlayState extends MusicBeatState
 		Extra functions and stuffs
 	 */
 	/// song end function at the end of the playstate lmao ironic I guess
-	private var endSongEvent:Bool = false;
 
 	function finishSong():Void
 	{
@@ -1793,57 +1807,44 @@ class PlayState extends MusicBeatState
 		canPause = false;
 		endingSong = true;
 
-		if (SONG.validScore)
-			ScoreUtils.saveScore(SONG.song, ScoreUtils.score, storyDifficulty);
-
 		deaths = 0;
 
-		if (!isStoryMode)
+		switch (gameplayMode)
 		{
-			// enable memory cleaning;
-			clearStored = true;
-			Main.switchState(this, new FreeplayMenu());
-		}
-		else
-		{
-			// set the campaign's score higher
-			campaignScore += ScoreUtils.score;
+			case STORY:
+				// set the campaign's score higher
+				campaignScore += ScoreUtils.score;
 
-			// remove a song from the story playlist
-			storyPlaylist.remove(storyPlaylist[0]);
+				// remove the current song from the story playlist
+				storyPlaylist.remove(storyPlaylist[0]);
 
-			// check if there aren't any songs left
-			if ((storyPlaylist.length <= 0) && (!endSongEvent))
-			{
-				// play menu music
-				ForeverTools.resetMenuMusic();
+				// check if there aren't any songs left
+				if ((storyPlaylist.length <= 0))
+				{
+					leavePlayState();
 
-				// enable memory cleaning;
-				clearStored = true;
+					// save the week's score if the score is valid
+					if (SONG.validScore && gameplayMode != CHARTING) // accessing charting mode is impossible on story but you never know;
+						ScoreUtils.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 
-				// set up transitions
-				transIn = FlxTransitionableState.defaultTransIn;
-				transOut = FlxTransitionableState.defaultTransOut;
-
-				// change to the menu state
-				Main.switchState(this, new StoryMenu());
-
-				// save the week's score if the score is valid
-				if (SONG.validScore)
-					ScoreUtils.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
-
-				// flush the save
-				FlxG.save.flush();
-			}
-			else
-				songCutscene(true);
+					// flush the save
+					FlxG.save.flush();
+				}
+				else // if there is, try to play an ending cutscene
+					songCutscene(true);
+			case FREEPLAY:
+				if (SONG.validScore && gameplayMode != CHARTING)
+					ScoreUtils.saveScore(SONG.song, ScoreUtils.score, storyDifficulty);
+				leavePlayState();
+			default:
+				leavePlayState();
 		}
 		//
 	}
 
 	public function callDefaultSongEnd()
 	{
-		if (isStoryMode)
+		if (gameplayMode == STORY)
 		{
 			var difficulty:String = '-' + CoolUtil.difficultyFromNumber(storyDifficulty).toLowerCase();
 			difficulty = difficulty.replace('-normal', '');
@@ -1858,11 +1859,7 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new PlayState());
 		}
 		else
-		{
-			// enable memory cleaning;
-			clearStored = true;
-			Main.switchState(this, new FreeplayMenu());
-		}
+			leavePlayState();
 	}
 
 	var dialogueBox:DialogueBox;
@@ -1931,7 +1928,7 @@ class PlayState extends MusicBeatState
 				case 'never':
 					return false;
 				case 'freeplay only':
-					if (!isStoryMode)
+					if (gameplayMode != STORY)
 						return true;
 					else
 						return false;
@@ -1961,11 +1958,7 @@ class PlayState extends MusicBeatState
 
 		camHUD.visible = true;
 
-		var targetUIAlpha:Float = 1;
-		if (!Init.trueSettings.get('Opaque UI'))
-			targetUIAlpha = 0.8;
-
-		FlxTween.tween(uiHUD, {alpha: targetUIAlpha}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
+		FlxTween.tween(uiHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
 
 		startedCountdown = true;
 
@@ -2022,6 +2015,30 @@ class PlayState extends MusicBeatState
 				Conductor.shouldStartSong = true;
 			}
 		}, 5);
+	}
+
+	public function leavePlayState()
+	{
+		// play menu music
+		ForeverTools.resetMenuMusic();
+
+		// enable memory cleaning;
+		clearStored = true;
+
+		// set up transitions
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
+
+		// change to the menu state
+		switch (gameplayMode)
+		{
+			case STORY:
+				Main.switchState(this, new StoryMenu());
+			case FREEPLAY:
+				Main.switchState(this, new FreeplayMenu());
+			case CHARTING:
+				Main.switchState(this, new states.editors.OriginalChartingState());
+		}
 	}
 
 	override function add(Object:FlxBasic):FlxBasic
@@ -2135,6 +2152,11 @@ class PlayState extends MusicBeatState
 			setVar('dialogueHUD', dialogueHUD);
 		if (strumHUD != null)
 			setVar('strumHUD', strumHUD);
+		if (camAlt != null)
+		{
+			setVar('camAlt', camAlt);
+			setVar('camOther', camAlt); // psych users going craazy rn;
+		}
 		if (uiHUD != null)
 			setVar('ui', uiHUD);
 

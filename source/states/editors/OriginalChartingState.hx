@@ -111,6 +111,8 @@ class OriginalChartingState extends MusicBeatState
 	{
 		super.create();
 
+		PlayState.gameplayMode = CHARTING;
+
 		blockPressInputText = [];
 		blockPressNumStepper = [];
 		blockPressDropDown = [];

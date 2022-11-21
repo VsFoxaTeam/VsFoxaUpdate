@@ -68,6 +68,12 @@ class ScriptHandler extends SScript
 		// OTHER
 		set('GraphicsShader', openfl.display.GraphicsShader);
 		set('ShaderFilter', openfl.filters.ShaderFilter);
+
+		// ENUMS AND TYPEDEFINES;
+		set('GameMode', states.PlayState.GameMode);
+		set('isStoryMode', states.PlayState.gameplayMode == STORY);
+		set('isChartingMode', states.PlayState.gameplayMode == CHARTING);
+		set('isFreeplayMode', states.PlayState.gameplayMode == FREEPLAY);
 	}
 
 	public static function callScripts(moduleArray:Array<ScriptHandler>):Array<ScriptHandler>

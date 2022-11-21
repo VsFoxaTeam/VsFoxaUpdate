@@ -60,6 +60,8 @@ class ChartingState extends MusicBeatState
 	{
 		//
 		super.create();
+		
+		PlayState.gameplayMode = CHARTING;
 
 		generateBackground();
 

@@ -267,7 +267,7 @@ class FreeplayMenu extends MusicBeatState
 
 			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].name.toLowerCase());
 
-			PlayState.isStoryMode = false;
+			PlayState.gameplayMode = FREEPLAY;
 			PlayState.storyDifficulty = curDifficulty;
 			PlayState.storyWeek = songs[curSelected].week;
 

@@ -33,6 +33,12 @@ class PauseSubstate extends MusicBeatSubstate
 
 		toOptions = false;
 
+		if (PlayState.gameplayMode == CHARTING)
+		{
+			menuItems.insert(2, "Back to Charter");
+			menuItems.insert(3, "Leave Charter Mode");
+		}
+
 		mutex = new Mutex();
 		Thread.create(function()
 		{
@@ -122,6 +128,11 @@ class PauseSubstate extends MusicBeatSubstate
 					close();
 				case "Restart Song":
 					Main.switchState(this, new PlayState());
+				case "Back to Charter":
+					Main.switchState(this, new states.editors.OriginalChartingState());
+				case "Leave Charter Mode":
+					PlayState.gameplayMode = FREEPLAY;
+					Main.switchState(this, new PlayState());
 				case "Exit to options":
 					toOptions = true;
 					Main.switchState(this, new OptionsMenu());
@@ -130,7 +141,7 @@ class PauseSubstate extends MusicBeatSubstate
 					PlayState.resetMusic();
 					PlayState.deaths = 0;
 
-					if (PlayState.isStoryMode)
+					if (PlayState.gameplayMode == STORY)
 						Main.switchState(this, new StoryMenu());
 					else
 						Main.switchState(this, new FreeplayMenu());
