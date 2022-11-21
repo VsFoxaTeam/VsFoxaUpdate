@@ -44,7 +44,7 @@
 	<source path="source" />
 	<assets path="assets" />
 
-	<assets path="FE-CrashDialog.exe" type="template" if="windows release" />
+	<assets path="Feather Crash Dialog.exe" type="template" if="windows release" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 

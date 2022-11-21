@@ -265,7 +265,7 @@ class Main extends Sprite
 		dateNow = StringTools.replace(dateNow, " ", "_");
 		dateNow = StringTools.replace(dateNow, ":", "'");
 
-		path = "crash/" + "FE_" + dateNow + ".txt";
+		path = "crash/" + "Feather_" + dateNow + ".txt";
 
 		for (stackItem in callStack)
 		{
@@ -289,7 +289,7 @@ class Main extends Sprite
 		Sys.println(errMsgPrint);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		var crashDialoguePath:String = "FE-CrashDialog";
+		var crashDialoguePath:String = "Feather Crash Dialog";
 
 		#if windows
 		crashDialoguePath += ".exe";
