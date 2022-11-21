@@ -12,9 +12,9 @@ import sys.io.File;
 
 enum abstract CharacterOrigin(String) to String
 {
-	var FOREVER_FEATHER;
-	var PSYCH_ENGINE;
-	var FUNKIN_COCOA;
+	var FOREVER_FEATHER = "forever_feather";
+	var PSYCH_ENGINE = "psych_engine";
+	var FUNKIN_COCOA = "funkin_cocoa";
 }
 
 typedef CharacterData =

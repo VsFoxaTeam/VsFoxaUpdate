@@ -29,7 +29,6 @@ class HealthIcon extends FlxSprite
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
 	}
 
-	// dynamic, to avoid having 31 billion if statements;
 	public dynamic function updateAnim(health:Float)
 	{
 		if (health < 20)

@@ -86,7 +86,7 @@ class Init extends FlxState
 			['UI', 'Notes']
 		],
 		'Colored Health Bar' => [
-			false,
+			true,
 			Checkmark,
 			'Whether the Health Bar should be colored after the Icons.',
 			NOT_FORCED,
