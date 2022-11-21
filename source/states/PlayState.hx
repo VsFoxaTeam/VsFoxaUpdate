@@ -1277,9 +1277,9 @@ class PlayState extends MusicBeatState
 		var gottenRating = strumline.autoplay ? 0 : ratingID;
 
 		if (gottenRating != 0)
-		// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
-		if (ScoreUtils.perfectCombo)
-			ScoreUtils.perfectCombo = false;
+			// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
+			if (ScoreUtils.perfectCombo)
+				ScoreUtils.perfectCombo = false;
 
 		displayScore(gottenRating, late);
 		uiHUD.colorHighlight(gottenRating, ScoreUtils.perfectCombo);

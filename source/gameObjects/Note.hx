@@ -237,7 +237,7 @@ class Note extends FNFSprite
 		/*
 			I have to credit like 3 different people for these LOL they were a hassle
 			but its gede pixl and scarlett, thank you SO MUCH for baring with me
-			*/
+		 */
 		final quantArray:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
 
 		var curBPM:Float = Conductor.bpm;

@@ -1325,7 +1325,7 @@ class OriginalChartingState extends MusicBeatState
 			Note.resetNote(null, Init.trueSettings.get("Note Skin"), _song.assetModifier, note);
 			note.antialiasing = true;
 
-			//var note:Note = ForeverAssets.generateArrow(null, _song.assetModifier, daStrumTime, daNoteInfo % 4, 0, daNoteType);
+			// var note:Note = ForeverAssets.generateArrow(null, _song.assetModifier, daStrumTime, daNoteInfo % 4, 0, daNoteType);
 
 			note.sustainLength = daSus;
 			note.noteType = daNoteType;
