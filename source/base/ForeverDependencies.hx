@@ -272,9 +272,19 @@ class ForeverAssets
 				{
 					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						Note.noteMap.set(noteType, new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')));
-						Note.noteMap.get(noteType).call('generateSplash', [tempSplash, noteData]);
-						// trace('Splash Module loaded: $noteType-$assetModifier');
+						var possibleModules:Array<String> = [
+							Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
+							Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
+						];
+						for (module in possibleModules)
+						{
+							if (FileSystem.exists(module))
+							{
+								Note.noteMap.set(noteType, new ScriptHandler(module));
+								Note.noteMap.get(noteType).call('generateSplash', [tempSplash, noteData]);
+								// trace('Splash Module loaded: $noteType-$assetModifier');
+							}
+						}
 					}
 				}
 				catch (e)
@@ -352,9 +362,19 @@ class ForeverAssets
 				{
 					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						Note.noteMap.set(noteType, new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')));
-						Note.noteMap.get(noteType).call('generateReceptor', [uiReceptor]);
-						// trace('Receptor Module loaded: $noteType-$assetModifier');
+						var possibleModules:Array<String> = [
+							Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
+							Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
+						];
+						for (module in possibleModules)
+						{
+							if (FileSystem.exists(module))
+							{
+								Note.noteMap.set(noteType, new ScriptHandler(module));
+								Note.noteMap.get(noteType).call('generateReceptor', [uiReceptor]);
+								// trace('Receptor Module loaded: $noteType-$assetModifier');
+							}
+						}
 					}
 				}
 				catch (e)
@@ -439,9 +459,19 @@ class ForeverAssets
 					{
 						if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 						{
-							Note.noteMap.set(noteType, new ScriptHandler(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')));
-							Note.noteMap.get(noteType).call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
-							// trace('Note Module loaded: $noteType-$assetModifier');
+							var possibleModules:Array<String> = [
+								Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
+								Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
+							];
+							for (module in possibleModules)
+							{
+								if (FileSystem.exists(module))
+								{
+									Note.noteMap.set(noteType, new ScriptHandler(module));
+									Note.noteMap.get(noteType).call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
+									// trace('Note Module loaded: $noteType-$assetModifier');
+								}
+							}
 						}
 					}
 					catch (e)
