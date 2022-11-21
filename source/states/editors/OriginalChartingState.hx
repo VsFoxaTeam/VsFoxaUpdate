@@ -105,7 +105,7 @@ class OriginalChartingState extends MusicBeatState
 
 	public var blockPressInputText:Array<FlxUIInputText>;
 	public var blockPressNumStepper:Array<FlxUINumericStepper>;
-	public var blockPressScrolling:Array<FlxUIDropDownMenu>;
+	public var blockPressDropDown:Array<FlxUIDropDownMenu>;
 
 	override function create()
 	{
@@ -113,7 +113,7 @@ class OriginalChartingState extends MusicBeatState
 
 		blockPressInputText = [];
 		blockPressNumStepper = [];
-		blockPressScrolling = [];
+		blockPressDropDown = [];
 
 		curSection = Std.int(lastSection);
 
@@ -288,7 +288,7 @@ class OriginalChartingState extends MusicBeatState
 			});
 		player1DropDown.dropDirection = Down;
 		player1DropDown.selectedLabel = _song.player1;
-		blockPressScrolling.push(player1DropDown);
+		blockPressDropDown.push(player1DropDown);
 
 		var gfVersionDropDown = new FlxUIDropDownMenu(player1DropDown.x, player1DropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true),
 			function(character:String)
@@ -298,7 +298,7 @@ class OriginalChartingState extends MusicBeatState
 			});
 		gfVersionDropDown.dropDirection = Down;
 		gfVersionDropDown.selectedLabel = _song.gfVersion;
-		blockPressScrolling.push(gfVersionDropDown);
+		blockPressDropDown.push(gfVersionDropDown);
 
 		var player2DropDown = new FlxUIDropDownMenu(player1DropDown.x, gfVersionDropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true),
 			function(character:String)
@@ -308,7 +308,7 @@ class OriginalChartingState extends MusicBeatState
 			});
 		player2DropDown.dropDirection = Down;
 		player2DropDown.selectedLabel = _song.player2;
-		blockPressScrolling.push(player2DropDown);
+		blockPressDropDown.push(player2DropDown);
 
 		var stageDropDown = new FlxUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true),
 			function(stage:String)
@@ -317,7 +317,7 @@ class OriginalChartingState extends MusicBeatState
 			});
 		stageDropDown.dropDirection = Down;
 		stageDropDown.selectedLabel = _song.stage;
-		blockPressScrolling.push(stageDropDown);
+		blockPressDropDown.push(stageDropDown);
 
 		var assetModifierDropDown = new FlxUIDropDownMenu(stageDropDown.x, gfVersionDropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(assetModifiers, true),
 			function(asset:String)
@@ -326,7 +326,7 @@ class OriginalChartingState extends MusicBeatState
 			});
 		assetModifierDropDown.dropDirection = Down;
 		assetModifierDropDown.selectedLabel = _song.assetModifier;
-		blockPressScrolling.push(assetModifierDropDown);
+		blockPressDropDown.push(assetModifierDropDown);
 
 		playTicksBf = new FlxUICheckBox(check_mute_inst.x, check_mute_inst.y + 25, null, null, 'Play Hitsounds (Boyfriend - in editor)', 100);
 		playTicksBf.checked = false;
@@ -410,7 +410,7 @@ class OriginalChartingState extends MusicBeatState
 			descText.text = Events.returnEventDescription(Events.eventArray[selectedEvent]);
 		});
 		eventDropDown.dropDirection = Down;
-		blockPressScrolling.push(eventDropDown);
+		blockPressDropDown.push(eventDropDown);
 
 		var text:FlxText = new FlxText(20, 90, 0, "Value 1:");
 		tab_group_event.add(text);
@@ -523,6 +523,7 @@ class OriginalChartingState extends MusicBeatState
 	var noteStringInput:FlxUIInputText;
 	var stepperNoteTimer:FlxUINumericStepper;
 	var stepperSusLength:FlxUINumericStepper;
+	var tempNoteDropDown:FlxUIDropDownMenu;
 	var stepperType:FlxUINumericStepper;
 
 	function addNoteUI():Void
@@ -533,34 +534,39 @@ class OriginalChartingState extends MusicBeatState
 		stepperSusLength = new FlxUINumericStepper(10, 25, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 16);
 		stepperSusLength.value = 0;
 		stepperSusLength.name = 'note_susLength';
-		tab_group_note.add(stepperSusLength);
 		blockPressNumStepper.push(stepperSusLength);
 
-		// note types
-		stepperType = new FlxUINumericStepper(10, stepperSusLength.y + 30, Conductor.stepCrochet / 125, 0, 0,
-			(Conductor.stepCrochet / 125) + 10); // 10 is placeholder
-		// I have no idea what i'm doing lmfao
-		stepperType.value = 0;
-		stepperType.name = 'note_type';
-		tab_group_note.add(stepperType);
-		blockPressNumStepper.push(stepperType);
+		var noteTypes:Array<String> = CoolUtil.returnAssetsLibrary('notetypes', 'assets');
 
-		noteSuffixInput = new FlxUIInputText(10, stepperType.y + 35, 180, "");
-		tab_group_note.add(noteSuffixInput);
+		tempNoteDropDown = new FlxUIDropDownMenu(10, stepperSusLength.y + 30, FlxUIDropDownMenu.makeStrIdLabelArray(noteTypes, false), function(type:String)
+		{
+			curNoteType = type;
+			if (curSelectedNote != null)
+			{
+				curSelectedNote[3] = curNoteType;
+				updateGrid();
+			}
+		});
+		blockPressDropDown.push(tempNoteDropDown);
+
+		noteSuffixInput = new FlxUIInputText(10, tempNoteDropDown.y + 35, 180, "");
 		blockPressInputText.push(noteSuffixInput);
 
 		stepperNoteTimer = new FlxUINumericStepper(200, noteSuffixInput.y, 0.1, 0, 0, 10, 1);
-		tab_group_note.add(stepperNoteTimer);
 		blockPressNumStepper.push(stepperNoteTimer);
 
 		noteStringInput = new FlxUIInputText(10, noteSuffixInput.y + 35, 180, "");
-		tab_group_note.add(noteStringInput);
 		blockPressInputText.push(noteStringInput);
 
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
-		tab_group_note.add(new FlxText(10, stepperType.y - 15, 0, 'Note Type:'));
+		tab_group_note.add(new FlxText(10, tempNoteDropDown.y - 15, 0, 'Note Type:'));
 		tab_group_note.add(new FlxText(10, noteSuffixInput.y - 15, 0, 'Note Animation (replaces singing animations):'));
 		tab_group_note.add(new FlxText(10, noteStringInput.y - 15, 0, 'Note Animation Suffix (e.g: -alt, miss):'));
+		tab_group_note.add(stepperSusLength);
+		tab_group_note.add(noteStringInput);
+		tab_group_note.add(noteSuffixInput);
+		tab_group_note.add(stepperNoteTimer);
+		tab_group_note.add(tempNoteDropDown);
 
 		UI_box.addGroup(tab_group_note);
 		// I'm genuinely tempted to go around and remove every instance of the word "sus" it is genuinely killing me inside
@@ -703,8 +709,6 @@ class OriginalChartingState extends MusicBeatState
 				case 'note_susLength': // STOP POSTING ABOUT AMONG US
 					curSelectedNote[2] = nums.value; // change the currently selected note's length
 					updateGrid(); // oh btw I know sus stands for sustain it just bothers me
-				case 'note_type':
-					curNoteType = 'default';
 				// set the new note type for when placing notes next!
 				case 'section_bpm':
 					_song.notes[curSection].bpm = Std.int(nums.value); // redefine the section's bpm
@@ -913,11 +917,8 @@ class OriginalChartingState extends MusicBeatState
 					break;
 				}
 			}
-		}
 
-		if (!lockedBinds)
-		{
-			for (dropDownMenu in blockPressScrolling)
+			for (dropDownMenu in blockPressDropDown)
 			{
 				if (dropDownMenu.dropPanel.visible)
 				{
@@ -1274,16 +1275,20 @@ class OriginalChartingState extends MusicBeatState
 	{
 		if (curSelectedNote != null)
 		{
-			stepperSusLength.value = curSelectedNote[2];
-			if (curSelectedNote[3] != null)
-				curNoteType = 'default';
+			if (curSelectedNote[1] > -1) // if the note data is valid;
+			{
+				stepperSusLength.value = curSelectedNote[2];
 
-			if (curSelectedNote[4] != null)
-				curSelectedNote[4] = noteStringInput.text;
-			if (curSelectedNote[5] != null)
-				curSelectedNote[5] = noteSuffixInput.text;
-			if (curSelectedNote[6] != null)
-				curSelectedNote[6] = stepperNoteTimer.value;
+				if (curSelectedNote[3] != null)
+					curNoteType = tempNoteDropDown.selectedLabel;
+
+				if (curSelectedNote[4] != null)
+					curSelectedNote[4] = noteStringInput.text;
+				if (curSelectedNote[5] != null)
+					curSelectedNote[5] = noteSuffixInput.text;
+				if (curSelectedNote[6] != null)
+					curSelectedNote[6] = stepperNoteTimer.value;
+			}
 		}
 	}
 
@@ -1340,6 +1345,18 @@ class OriginalChartingState extends MusicBeatState
 					note.y + GRID_SIZE).makeGraphic(8, Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, gridBG.height)));
 				curRenderedSustains.add(sustainVis);
 			}
+
+			// attach a text to their respective notetype;
+			if (daNoteType != "default")
+			{
+				var typeName:AbsoluteText = new AbsoluteText(100, daNoteType);
+				typeName.setForm(24);
+				typeName.offsetX = -32;
+				typeName.offsetY = 6;
+				typeName.borderSize = 1;
+				curRenderedTexts.add(typeName);
+				typeName.parent = note;
+			}
 		}
 		updateEventGrid();
 	}
@@ -1347,8 +1364,8 @@ class OriginalChartingState extends MusicBeatState
 	private function addSection(lengthInSteps:Int = 16, sectionBeats:Float = 4):Void
 	{
 		var sec:SwagSection = {
-			sectionBeats: sectionBeats,
 			lengthInSteps: lengthInSteps,
+			sectionBeats: sectionBeats,
 			bpm: _song.bpm,
 			changeBPM: false,
 			mustHitSection: true,

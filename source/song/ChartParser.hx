@@ -70,6 +70,9 @@ class ChartParser
 					// create the new note
 					var swagNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
 
+					// set the song speed
+					PlayState.songSpeed = songData.speed;
+
 					swagNote.noteType = daNoteType;
 					swagNote.noteSpeed = songData.speed;
 					swagNote.mustPress = gottaHitNote;
@@ -122,6 +125,7 @@ class ChartParser
 		}
 		catch (e)
 		{
+			trace("Chart Parsing Error: " + e);
 			return [];
 		}
 	}

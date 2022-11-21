@@ -14,6 +14,9 @@ function generateNote(newNote)
 	newNote.updateHitbox();
 }
 
+function generateSplash(splashNote, noteData)
+	splashNote.kill();
+
 function generateSustain(newNote)
 	newNote.kill();
 
