@@ -75,6 +75,7 @@ function generateSustain(newNote)
 		newNote.animation.add('holdend', [1 + (newNote.noteQuant * 4)]);
 		newNote.animation.add('rollhold', [2 + (newNote.noteQuant * 4)]);
 		newNote.animation.add('rollend', [3 + (newNote.noteQuant * 4)]);
+		newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 
 		newNote.playAnim('holdend');
 		if (newNote.prevNote != null && newNote.prevNote.isSustainNote)
@@ -86,13 +87,13 @@ function generateSustain(newNote)
 		newNote.animation.addByPrefix(stringSect + 'holdend', stringSect + ' hold end');
 		newNote.animation.addByPrefix(stringSect + 'hold', stringSect + ' hold piece');
 		newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // PA god dammit.
+		newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 
 		newNote.playAnim(stringSect + 'holdend');
 		if (newNote.prevNote != null && newNote.prevNote.isSustainNote)
 			newNote.prevNote.playAnim(stringSect + 'hold');
 	}
 
-	newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 	newNote.antialiasing = true;
 	newNote.updateHitbox();
 }
