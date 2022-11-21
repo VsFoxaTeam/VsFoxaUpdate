@@ -2027,11 +2027,14 @@ class PlayState extends MusicBeatState
 
 	public function leavePlayState()
 	{
-		// play menu music
-		ForeverTools.resetMenuMusic();
+		if (gameplayMode != CHARTING)
+		{
+			// play menu music
+			ForeverTools.resetMenuMusic();
 
-		// enable memory cleaning;
-		clearStored = true;
+			// enable memory cleaning;
+			clearStored = true;
+		}
 
 		// set up transitions
 		transIn = FlxTransitionableState.defaultTransIn;
