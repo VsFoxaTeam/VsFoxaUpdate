@@ -260,7 +260,7 @@ class StoryMenu extends MusicBeatState
 
 		if (!lockedWeek)
 		{
-			if (stopspamming == false)
+			if (!stopspamming)
 			{
 				FlxG.sound.play(Paths.sound('base/menus/confirmMenu'));
 
@@ -282,19 +282,34 @@ class StoryMenu extends MusicBeatState
 			PlayState.gameplayMode = STORY;
 			selectedWeek = true;
 
-			var diffic:String = '-' + CoolUtil.difficultyFromNumber(curDifficulty).toLowerCase();
-			diffic = diffic.replace('-normal', '');
+			var song:String = PlayState.storyPlaylist[0];
+			var diff:String = '-' + CoolUtil.difficultyFromNumber(curDifficulty);
 
-			PlayState.storyDifficulty = curDifficulty;
-			CoolUtil.difficultyString = CoolUtil.difficultyFromNumber(curDifficulty);
+			if (!sys.FileSystem.exists(Paths.songJson(song, song + '-' + CoolUtil.defaultDifficulty.toLowerCase())))
+				CoolUtil.defaultDifficulty = '';
 
-			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
-			PlayState.storyWeek = curWeek;
-			PlayState.campaignScore = 0;
-			new FlxTimer().start(1, function(tmr:FlxTimer)
+			if (curDifficulty == 1)
+				diff = CoolUtil.defaultDifficulty;
+
+			if (song != null && diff != null)
 			{
-				Main.switchState(this, new PlayState());
-			});
+				PlayState.SONG = Song.loadFromJson(song.toLowerCase() + diff, song);
+				CoolUtil.difficultyString = CoolUtil.difficultyFromNumber(curDifficulty);
+
+				PlayState.storyDifficulty = curDifficulty;
+				PlayState.storyWeek = curWeek;
+				PlayState.campaignScore = 0;
+
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					Main.switchState(this, new PlayState());
+				});
+			}
+			else
+			{
+				stopspamming = false;
+				selectedWeek = false;
+			}
 		}
 	}
 
@@ -305,8 +320,8 @@ class StoryMenu extends MusicBeatState
 		curDifficulty += change;
 
 		if (curDifficulty < 0)
-			curDifficulty = CoolUtil.difficultyLength - 1;
-		if (curDifficulty > CoolUtil.difficultyLength - 1)
+			curDifficulty = CoolUtil.difficultyArray.length - 1;
+		if (curDifficulty > CoolUtil.difficultyArray.length - 1)
 			curDifficulty = 0;
 
 		var coolDifficulty:String = CoolUtil.difficultyArray[curDifficulty];

@@ -422,11 +422,11 @@ class PlayState extends MusicBeatState
 
 		// cache shit
 		displayScore(0, false, true);
-		for (note in unspawnNotes)
+		for (uniqueNote in unspawnNotes)
 		{
 			for (strumline in strumLines)
 			{
-				var splash:NoteSplash = createSplash(note.noteType, 0, strumline);
+				var splash:NoteSplash = createSplash(uniqueNote.noteType, 0, strumline);
 				if (splash != null)
 					splash.visible = false;
 			}
@@ -1846,13 +1846,20 @@ class PlayState extends MusicBeatState
 	{
 		if (gameplayMode == STORY)
 		{
-			var difficulty:String = '-' + CoolUtil.difficultyFromNumber(storyDifficulty).toLowerCase();
-			difficulty = difficulty.replace('-normal', '');
+			//
+			var song:String = PlayState.storyPlaylist[0];
+			var diff:String = '-' + CoolUtil.difficultyFromNumber(storyDifficulty);
+
+			if (!sys.FileSystem.exists(Paths.songJson(song, song + '-' + CoolUtil.defaultDifficulty.toLowerCase())))
+				CoolUtil.defaultDifficulty = '';
+
+			if (storyDifficulty == 1)
+				diff = CoolUtil.defaultDifficulty;
 
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 
-			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
+			PlayState.SONG = Song.loadFromJson(song.toLowerCase() + diff, song);
 			ForeverTools.killMusic([songMusic, vocals]);
 
 			// deliberately did not use the main.switchstate as to not unload the assets

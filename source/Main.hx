@@ -23,7 +23,7 @@ typedef GameWeek =
 {
 	var songs:Array<WeekSong>;
 	var characters:Array<String>;
-	var ?difficulties:Array<String>;
+	@:optional var difficulties:Array<String>; // wip
 	var attachedImage:String;
 	var storyName:String;
 	var startsLocked:Bool;
