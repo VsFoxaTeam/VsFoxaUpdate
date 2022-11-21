@@ -1065,10 +1065,6 @@ class PlayState extends MusicBeatState
 				// create note splash if you hit a "sick" note;
 				if (!coolNote.isSustainNote && coolNote.mustPress && foundRating == 0 || coolNote.noteSplash)
 					createSplash(coolNote.noteType, coolNote.noteData, strumline);
-				else if (!strumline.autoplay)
-					// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
-					if (ScoreUtils.perfectCombo)
-						ScoreUtils.perfectCombo = false;
 			}
 
 			if (!coolNote.isSustainNote)
@@ -1277,10 +1273,15 @@ class PlayState extends MusicBeatState
 
 		var gottenRating = strumline.autoplay ? 0 : ratingID;
 
+		if (gottenRating != 0)
+		// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
+		if (ScoreUtils.perfectCombo)
+			ScoreUtils.perfectCombo = false;
+
 		displayScore(gottenRating, late);
 		uiHUD.colorHighlight(gottenRating, ScoreUtils.perfectCombo);
-		ScoreUtils.updateInfo(Std.int(ScoreUtils.judges[ratingID].accuracy));
 
+		ScoreUtils.updateInfo(Std.int(ScoreUtils.judges[ratingID].accuracy));
 		ratingScore = ScoreUtils.judges[ratingID].score;
 		ScoreUtils.score += ratingScore;
 	}
