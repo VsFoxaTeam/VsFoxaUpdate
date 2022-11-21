@@ -1415,7 +1415,8 @@ class PlayState extends MusicBeatState
 		else
 		{
 			rating.alpha = 0.00001;
-			timing.alpha = 0.00001;
+			if (timing != null)
+				timing.alpha = 0.00001;
 		}
 
 		// COMBO
