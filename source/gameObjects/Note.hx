@@ -99,6 +99,7 @@ class Note extends FNFSprite
 			this.noteString = parentNote.noteString;
 			this.noteSuffix = parentNote.noteSuffix;
 			this.noteTimer = parentNote.noteTimer;
+			this.noteQuant = parentNote.noteQuant;
 			this.isMine = parentNote.isMine;
 			while (parentNote.parentNote != null)
 				parentNote = parentNote.parentNote;
@@ -210,118 +211,6 @@ class Note extends FNFSprite
 		newNote.isMine = false;
 	}
 
-	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, noteType, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
-	{
-		var newNote:Note = new Note(strumTime, noteData, noteAlt, noteType, prevNote, isSustainNote);
-		newNote.holdHeight = 0.862;
-
-		// actually determine the quant of the note
-		if (newNote.noteQuant == -1)
-		{
-			/*
-				I have to credit like 3 different people for these LOL they were a hassle
-				but its gede pixl and scarlett, thank you SO MUCH for baring with me
-			 */
-			final quantArray:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
-
-			var curBPM:Float = Conductor.bpm;
-			var newTime = strumTime;
-			for (i in 0...Conductor.bpmChangeMap.length)
-			{
-				if (strumTime > Conductor.bpmChangeMap[i].songTime)
-				{
-					curBPM = Conductor.bpmChangeMap[i].bpm;
-					newTime = strumTime - Conductor.bpmChangeMap[i].songTime;
-				}
-			}
-
-			final beatTimeSeconds:Float = (60 / curBPM); // beat in seconds
-			final beatTime:Float = beatTimeSeconds * 1000; // beat in milliseconds
-			final measureTime:Float = beatTime * 4; // assumed 4 beats per measure?
-
-			final smallestDeviation:Float = measureTime / quantArray[quantArray.length - 1];
-
-			for (quant in 0...quantArray.length)
-			{
-				// please generate this ahead of time and put into array :)
-				// I dont think I will im scared of those
-				final quantTime = (measureTime / quantArray[quant]);
-				if ((newTime #if !neko + Init.trueSettings['Offset'] #end + smallestDeviation) % quantTime < smallestDeviation * 2)
-				{
-					// here it is, the quant, finally!
-					newNote.noteQuant = quant;
-					break;
-				}
-			}
-		}
-
-		// note quants
-		switch (assetModifier)
-		{
-			default:
-				// inherit last quant if hold note
-				if (isSustainNote && prevNote != null)
-					newNote.noteQuant = prevNote.noteQuant;
-				// base quant notes
-				if (!isSustainNote)
-				{
-					// in case you're unfamiliar with these, they're ternary operators, I just dont wanna check for pixel notes using a separate statement
-					var newNoteSize:Int = (assetModifier == 'pixel') ? 17 : 157;
-					var skinAssetPath:String = ForeverTools.returnSkinAsset('NOTE_quants', assetModifier, Init.trueSettings.get("Note Skin"), 'default/skins',
-						'notetypes');
-					newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'), true, newNoteSize, newNoteSize);
-
-					newNote.animation.add('leftScroll', [0 + (newNote.noteQuant * 4)]);
-					// LOL downscroll thats so funny to me
-					newNote.animation.add('downScroll', [1 + (newNote.noteQuant * 4)]);
-					newNote.animation.add('upScroll', [2 + (newNote.noteQuant * 4)]);
-					newNote.animation.add('rightScroll', [3 + (newNote.noteQuant * 4)]);
-				}
-				else
-				{
-					// quant holds
-					var skinAssetPath:String = ForeverTools.returnSkinAsset('HOLD_quants', assetModifier, Init.trueSettings.get("Note Skin"), 'default/skins',
-						'notetypes');
-					newNote.loadGraphic(Paths.image(skinAssetPath, 'notetypes'), true, (assetModifier == 'pixel') ? 17 : 109,
-						(assetModifier == 'pixel') ? 6 : 52);
-					newNote.animation.add('hold', [0 + (newNote.noteQuant * 4)]);
-					newNote.animation.add('holdend', [1 + (newNote.noteQuant * 4)]);
-					newNote.animation.add('rollhold', [2 + (newNote.noteQuant * 4)]);
-					newNote.animation.add('rollend', [3 + (newNote.noteQuant * 4)]);
-				}
-
-				if (assetModifier == 'pixel')
-				{
-					newNote.antialiasing = false;
-					newNote.setGraphicSize(Std.int(newNote.width * PlayState.daPixelZoom));
-					newNote.updateHitbox();
-				}
-				else
-				{
-					newNote.setGraphicSize(Std.int(newNote.width * 0.7));
-					newNote.updateHitbox();
-					newNote.antialiasing = true;
-				}
-				newNote.isMine = false;
-		}
-
-		//
-		if (!isSustainNote)
-			newNote.animation.play(Receptor.actions[noteData] + 'Scroll');
-
-		if (isSustainNote && prevNote != null)
-		{
-			newNote.noteSpeed = prevNote.noteSpeed;
-			newNote.animation.play('holdend');
-			newNote.updateHitbox();
-
-			if (prevNote.isSustainNote)
-				prevNote.animation.play('hold');
-		}
-
-		return newNote;
-	}
-
 	public function noteHit()
 		noteCall(this.noteType, 'onHit', [this]);
 
@@ -341,5 +230,50 @@ class Note extends FNFSprite
 			var noteScript:ScriptHandler = noteMap.get(type);
 			noteScript.call(name, args);
 		}
+	}
+
+	public function determineQuantIndex(strumTime:Float, newNote:Note)
+	{
+		/*
+			I have to credit like 3 different people for these LOL they were a hassle
+			but its gede pixl and scarlett, thank you SO MUCH for baring with me
+			*/
+		final quantArray:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
+
+		var curBPM:Float = Conductor.bpm;
+		var newTime:Float = strumTime;
+
+		final beatTimeSeconds:Float = (60 / curBPM); // beat in seconds
+		final beatTime:Float = beatTimeSeconds * 1000; // beat in milliseconds
+		final measureTime:Float = beatTime * 4; // assumed 4 beats per measure?
+
+		final smallestDeviation:Float = measureTime / quantArray[quantArray.length - 1];
+
+		if (newNote.noteQuant == -1)
+		{
+			for (i in 0...Conductor.bpmChangeMap.length)
+			{
+				if (strumTime > Conductor.bpmChangeMap[i].songTime)
+				{
+					curBPM = Conductor.bpmChangeMap[i].bpm;
+					newTime = strumTime - Conductor.bpmChangeMap[i].songTime;
+				}
+			}
+
+			for (quant in 0...quantArray.length)
+			{
+				// please generate this ahead of time and put into array :)
+				// I dont think I will im scared of those
+				final quantTime = (measureTime / quantArray[quant]);
+				if ((newTime #if !neko + Init.trueSettings['Offset'] #end + smallestDeviation) % quantTime < smallestDeviation * 2)
+				{
+					// here it is, the quant, finally!
+					newNote.noteQuant = quant;
+					break;
+				}
+			}
+		}
+
+		return quantArray.length - 1;
 	}
 }

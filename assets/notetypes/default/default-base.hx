@@ -2,7 +2,7 @@ function generateReceptor(receptor)
 {
 	var stringSect:String = Receptor.actions[receptor.strumData];
 
-	receptor.frames = Paths.getSparrowAtlas(getSkinPath(), 'notetypes');
+	receptor.frames = Paths.getSparrowAtlas(getSkinPath("NOTE_assets", "default"), 'notetypes');
 
 	receptor.animation.addByPrefix('static', 'arrow' + stringSect.toUpperCase());
 	receptor.animation.addByPrefix('pressed', stringSect + ' press', 24, false);
@@ -27,14 +27,33 @@ function generateReceptor(receptor)
 	receptor.addOffset('static');
 	receptor.addOffset('pressed', -2, -2);
 	receptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+	receptor.playAnim('static');
 }
 
 function generateNote(newNote)
 {
 	var stringSect = Receptor.colors[newNote.noteData];
+	var dirSect = Receptor.actions[newNote.noteData];
 
-	newNote.frames = Paths.getSparrowAtlas(getSkinPath(), 'notetypes');
-	newNote.animation.addByPrefix(stringSect + 'Scroll', stringSect + '0');
+	if (StringTools.startsWith(Init.trueSettings.get("Note Skin"), "quant"))
+	{
+		newNote.determineQuantIndex(newNote.strumTime, newNote);
+
+		//
+		newNote.loadGraphic(Paths.image("default/skins/quant/base/NOTE_quants", 'notetypes'), true, 157, 157);
+		newNote.animation.add('leftScroll', [0 + (newNote.noteQuant * 4)]);
+		// LOL downscroll thats so funny to me
+		newNote.animation.add('downScroll', [1 + (newNote.noteQuant * 4)]);
+		newNote.animation.add('upScroll', [2 + (newNote.noteQuant * 4)]);
+		newNote.animation.add('rightScroll', [3 + (newNote.noteQuant * 4)]);
+		newNote.playAnim(dirSect + 'Scroll');
+	}
+	else
+	{
+		newNote.frames = Paths.getSparrowAtlas(getSkinPath('NOTE_assets', 'default'), 'notetypes');
+		newNote.animation.addByPrefix(stringSect + 'Scroll', stringSect + '0');
+		newNote.playAnim(stringSect + 'Scroll');
+	}
 
 	newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 	newNote.antialiasing = true;
@@ -43,10 +62,35 @@ function generateNote(newNote)
 
 function generateSustain(newNote)
 {
-	newNote.frames = Paths.getSparrowAtlas(getSkinPath(), 'notetypes');
-	newNote.animation.addByPrefix(stringSect + 'holdend', stringSect + ' hold end');
-	newNote.animation.addByPrefix(stringSect + 'hold', stringSect + ' hold piece');
-	newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // PA god dammit.
+	var stringSect = Receptor.colors[newNote.noteData];
+
+	if (StringTools.startsWith(Init.trueSettings.get("Note Skin"), "quant"))
+	{
+		newNote.determineQuantIndex(newNote.strumTime, newNote);
+		newNote.holdHeight = 0.862;
+
+		//
+		newNote.loadGraphic(Paths.image("default/skins/quant/base/HOLD_quants", 'notetypes'), true, 109, 52);
+		newNote.animation.add('hold', [0 + (newNote.noteQuant * 4)]);
+		newNote.animation.add('holdend', [1 + (newNote.noteQuant * 4)]);
+		newNote.animation.add('rollhold', [2 + (newNote.noteQuant * 4)]);
+		newNote.animation.add('rollend', [3 + (newNote.noteQuant * 4)]);
+
+		newNote.playAnim('holdend');
+		if (newNote.prevNote != null && newNote.prevNote.isSustainNote)
+			newNote.prevNote.playAnim('hold');
+	}
+	else
+	{
+		newNote.frames = Paths.getSparrowAtlas(getSkinPath('NOTE_assets', 'default'), 'notetypes');
+		newNote.animation.addByPrefix(stringSect + 'holdend', stringSect + ' hold end');
+		newNote.animation.addByPrefix(stringSect + 'hold', stringSect + ' hold piece');
+		newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // PA god dammit.
+
+		newNote.playAnim(stringSect + 'holdend');
+		if (newNote.prevNote != null && newNote.prevNote.isSustainNote)
+			newNote.prevNote.playAnim(stringSect + 'hold');
+	}
 
 	newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 	newNote.antialiasing = true;
@@ -57,7 +101,7 @@ function generateSplash(noteSplash, noteData)
 {
 	if (Init.trueSettings.get("UI Skin") == "forever")
 	{
-		noteSplash.loadGraphic(Paths.image(getSkinPath('noteSplashes'), 'notetypes'), true, 210, 210);
+		noteSplash.loadGraphic(Paths.image(getSkinPath('noteSplashes', 'default'), 'notetypes'), true, 210, 210);
 		noteSplash.animation.add('anim1', [
 			(noteData * 2 + 1),
 			8 + (noteData * 2 + 1),
@@ -78,7 +122,7 @@ function generateSplash(noteSplash, noteData)
 	}
 	else
 	{
-		noteSplash.frames = Paths.getSparrowAtlas(getSkinPath('noteSplashesOG'), 'notetypes');
+		noteSplash.frames = Paths.getSparrowAtlas(getSkinPath('noteSplashesOG', 'default'), 'notetypes');
 		noteSplash.animation.addByPrefix('anim1', 'note impact 1 ' + Receptor.colors[noteData], 24, false);
 		noteSplash.animation.addByPrefix('anim2', 'note impact 2 ' + Receptor.colors[noteData], 24, false);
 		noteSplash.animation.addByPrefix('anim1', 'note impact 1  blue', 24, false); // HE DID IT AGAIN EVERYONE;
@@ -92,5 +136,8 @@ function generateSplash(noteSplash, noteData)
 	noteSplash.alpha = Init.trueSettings.get("Splash Opacity") * 0.01;
 }
 
-function getSkinPath(?forceSkin:String):String
-	return ForeverTools.returnSkinAsset(forceSkin == null ? 'NOTE_assets' : forceSkin, 'base', Init.trueSettings.get("Note Skin"), 'default/skins', 'default');
+function getSkinPath(skin:String, path:String):String
+{
+	var noteSkin = Init.trueSettings.get("Note Skin");
+	return ForeverTools.returnSkinAsset(skin, 'base', noteSkin, 'default/skins', path);
+}

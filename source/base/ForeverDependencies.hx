@@ -268,49 +268,21 @@ class ForeverAssets
 				tempSplash.setGraphicSize(Std.int(tempSplash.width * PlayState.daPixelZoom));
 
 			default:
-				try
+				if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 				{
-					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
+					var possibleModules:Array<String> = [
+						Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
+						Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
+					];
+					for (module in possibleModules)
 					{
-						var possibleModules:Array<String> = [
-							Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
-							Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
-						];
-						for (module in possibleModules)
+						if (FileSystem.exists(module))
 						{
-							if (FileSystem.exists(module))
-							{
-								Note.noteMap.set(noteType, new ScriptHandler(module));
-								Note.noteMap.get(noteType).call('generateSplash', [tempSplash, noteData]);
-								// trace('Splash Module loaded: $noteType-$assetModifier');
-							}
+							Note.noteMap.set(noteType, new ScriptHandler(module));
+							Note.noteMap.get(noteType).call('generateSplash', [tempSplash, noteData]);
+							// trace('Splash Module loaded: $noteType-$assetModifier');
 						}
 					}
-				}
-				catch (e)
-				{
-					// trace('[SPLASH ERROR] $e');
-
-					tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('noteSplashes', assetModifier, changeableSkin, '$noteType/skins',
-						'notetypes'), 'notetypes'),
-						true, 210, 210);
-					tempSplash.animation.add('anim1', [
-						(noteData * 2 + 1),
-						8 + (noteData * 2 + 1),
-						16 + (noteData * 2 + 1),
-						24 + (noteData * 2 + 1),
-						32 + (noteData * 2 + 1)
-					], 24, false);
-					tempSplash.animation.add('anim2', [
-						(noteData * 2),
-						8 + (noteData * 2),
-						16 + (noteData * 2),
-						24 + (noteData * 2),
-						32 + (noteData * 2)
-					], 24, false);
-					tempSplash.animation.play('anim1');
-					tempSplash.addOffset('anim1', -20, -10);
-					tempSplash.addOffset('anim2', -20, -10);
 				}
 		}
 
@@ -435,78 +407,68 @@ class ForeverAssets
 
 		var newNote:Note;
 
-		// gonna improve the system eventually
-		if (changeableSkin.startsWith('quant'))
-			newNote = Note.returnQuantNote(assetModifier, strumTime, noteData, noteAlt, noteType, isSustainNote, prevNote);
-		else
+		newNote = new Note(strumTime, noteData, noteAlt, noteType, prevNote, isSustainNote);
+
+		switch (assetModifier)
 		{
-			newNote = new Note(strumTime, noteData, noteAlt, noteType, prevNote, isSustainNote);
-
-			// newNote.holdHeight = 0.72;
-
-			switch (assetModifier)
-			{
-				case "pixel":
-					if (isSustainNote)
-						Note.resetNote('arrowEnds', changeableSkin, assetModifier, newNote);
-					else
-						Note.resetNote('arrows-pixels', changeableSkin, assetModifier, newNote);
-					newNote.antialiasing = false;
-					newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
-					newNote.updateHitbox();
-				default:
-					try
+			case "pixel":
+				if (isSustainNote)
+					Note.resetNote('arrowEnds', changeableSkin, assetModifier, newNote);
+				else
+					Note.resetNote('arrows-pixels', changeableSkin, assetModifier, newNote);
+				newNote.antialiasing = false;
+				newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
+				newNote.updateHitbox();
+			default:
+				try
+				{
+					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
 					{
-						if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
+						var possibleModules:Array<String> = [
+							Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
+							Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
+						];
+						for (module in possibleModules)
 						{
-							var possibleModules:Array<String> = [
-								Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
-								Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
-							];
-							for (module in possibleModules)
+							if (FileSystem.exists(module))
 							{
-								if (FileSystem.exists(module))
-								{
-									Note.noteMap.set(noteType, new ScriptHandler(module));
-									Note.noteMap.get(noteType).call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
-									// trace('Note Module loaded: $noteType-$assetModifier');
-								}
+								Note.noteMap.set(noteType, new ScriptHandler(module));
+								Note.noteMap.get(noteType).call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
+								// trace('Note Module loaded: $noteType-$assetModifier');
 							}
 						}
 					}
-					catch (e)
-					{
-						// trace('[NOTE ERROR] $e');
+				}
+				catch (e)
+				{
+					// trace('[NOTE ERROR] $e');
 
-						// load default so the game won't explode in front of you;
-						Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
-						newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
-						newNote.updateHitbox();
-					}
+					// load default so the game won't explode in front of you;
+					Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
+					newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
+					newNote.updateHitbox();
+				}
+		}
+
+		if (newNote.frames != null)
+		{
+			if (!isSustainNote)
+			{
+				if (newNote.animation.getByName(Receptor.colors[noteData] + 'Scroll') != null)
+					newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
 			}
 
-			if (newNote.frames != null)
+			if (isSustainNote && prevNote != null)
 			{
-				if (!isSustainNote)
+				newNote.noteSpeed = prevNote.noteSpeed;
+				newNote.alpha = (Init.trueSettings.get('Opaque Holds')) ? 1 : 0.6;
+				if (newNote.animation.getByName(Receptor.colors[noteData] + 'holdend') != null)
+					newNote.animation.play(Receptor.colors[noteData] + 'holdend');
+				newNote.updateHitbox();
+				if (prevNote.isSustainNote)
 				{
-					if (newNote.animation.getByName(Receptor.colors[noteData] + 'Scroll') != null)
-						newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
-				}
-
-				if (isSustainNote && prevNote != null)
-				{
-					newNote.noteSpeed = prevNote.noteSpeed;
-					newNote.alpha = (Init.trueSettings.get('Opaque Holds')) ? 1 : 0.6;
-					if (newNote.animation.getByName(Receptor.colors[noteData] + 'holdend') != null)
-						newNote.animation.play(Receptor.colors[noteData] + 'holdend');
-					newNote.updateHitbox();
-					if (prevNote.isSustainNote)
-					{
-						if (prevNote.animation.getByName(Receptor.colors[prevNote.noteData] + 'hold') != null)
-							prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
-						// prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
-						// prevNote.updateHitbox();
-					}
+					if (prevNote.animation.getByName(Receptor.colors[prevNote.noteData] + 'hold') != null)
+						prevNote.animation.play(Receptor.colors[prevNote.noteData] + 'hold');
 				}
 			}
 		}
