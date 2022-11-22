@@ -46,7 +46,11 @@ class Controls
 		// MISC GAME KEYS
 		"reset" => [Keyboard.R, Keyboard.END],
 		"autoplay" => [Keyboard.NUMBER_6],
-		"skip" => [Keyboard.SHIFT, Keyboard.END]
+		"skip" => [Keyboard.SHIFT, Keyboard.END],
+		//
+		"volUp" => [Keyboard.EQUAL, Keyboard.NUMPAD_ADD],
+		"volDown" => [Keyboard.MINUS, Keyboard.NUMPAD_MULTIPLY],
+		"volMute" => [Keyboard.NUMBER_0, Keyboard.NUMPAD_0],
 	];
 
 	// thing to sort by key ID idk i'm a dummy -gabi
@@ -68,7 +72,11 @@ class Controls
 		// MISC GAME KEYS
 		"reset" => 14,
 		"autoplay" => 15,
-		"skip" => 16
+		"skip" => 16,
+		//
+		"volUp" => 18,
+		"volDown" => 19,
+		"volMute" => 20,
 	];
 
 	public static var actions:Map<String, Array<Key>> = [];
@@ -80,8 +88,7 @@ class Controls
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 
-		if (FlxG.save.data.actionBinds == null)
-			actions = defaultActions;
+		actions = defaultActions;
 	}
 
 	public static function destroy()

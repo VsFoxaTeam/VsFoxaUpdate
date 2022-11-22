@@ -14,6 +14,12 @@ enum SettingTypes
 	Selector;
 }
 
+enum SettingState
+{
+	FORCED; // forced at the default value, doesn't show up on the settings menu;
+	NOT_FORCED;
+}
+
 /**
 	This is the initialisation class. if you ever want to set anything before the game starts or call anything then this is probably your best bet.
 	A lot of this code is just going to be similar to the flixel templates' colorblind filters because I wanted to add support for those as I'll
@@ -31,8 +37,6 @@ class Init extends FlxState
 		3 - offsets, this is unused but it'd bug me if it were set to 0
 		might redo offset code since I didnt make it and it bugs me that it's hardcoded the the last part of the controls menu
 	 */
-	public static var FORCED = 'forced';
-	public static var NOT_FORCED = 'not forced';
 
 	public static var gameSettings:Map<String, Dynamic> = [
 		'Downscroll' => [
@@ -389,6 +393,13 @@ class Init extends FlxState
 		Overlay.updateDisplayInfo(trueSettings.get('FPS Counter'), trueSettings.get('Debug Info'), trueSettings.get('Memory Counter'));
 
 		Main.updateFramerate(trueSettings.get("Framerate Cap"));
+
+		if (Controls.actions.exists("volUp"))
+			FlxG.sound.volumeUpKeys = Controls.actions.get("volUp");
+		if (Controls.actions.exists("volDown"))
+			FlxG.sound.volumeDownKeys = Controls.actions.get("volDown");
+		if (Controls.actions.exists("volMute"))
+			FlxG.sound.muteKeys = Controls.actions.get("volMute");
 
 		///*
 		filters = [];

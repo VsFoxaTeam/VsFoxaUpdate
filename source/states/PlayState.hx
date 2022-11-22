@@ -171,8 +171,6 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 
-	public var legacyGf:Bool = false;
-
 	function resetStatics()
 	{
 		GameOverSubstate.resetDeathVariables();
@@ -388,14 +386,13 @@ class PlayState extends MusicBeatState
 		// initialize ui elements
 		startingSong = true;
 		startedCountdown = true;
-		// canPause = false;
 
 		//
 		var downscroll = Init.trueSettings.get('Downscroll');
 		var centered = Init.trueSettings.get('Centered Notefield');
 
 		var placement = (FlxG.width / 2);
-		var height = (downscroll ? FlxG.height - 200 : 0);
+		var height = (downscroll ? FlxG.height - 175 : 25);
 
 		dadStrums = new Strumline(placement - (FlxG.width / 4), height, [opponent], downscroll, false, true, checkTween(true), false, 4);
 		bfStrums = new Strumline(placement + (!centered ? (FlxG.width / 4) : 0), height, [boyfriend], downscroll, true, false, checkTween(false), true, 4);
@@ -1963,11 +1960,14 @@ class PlayState extends MusicBeatState
 
 	public function leavePlayState()
 	{
-		if (gameplayMode != CHARTING)
+		if (gameplayMode != FREEPLAY)
 		{
 			// play menu music
 			ForeverTools.resetMenuMusic();
+		}
 
+		if (gameplayMode != CHARTING)
+		{
 			// enable memory cleaning;
 			clearStored = true;
 		}

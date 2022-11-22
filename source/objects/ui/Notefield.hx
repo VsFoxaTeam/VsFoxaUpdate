@@ -9,13 +9,14 @@ import song.Conductor;
 import states.PlayState;
 
 /**
- * Notefield Manager, manages spawned notes and sorts through them
+ * the Notefield class manages spawned notes
+ * having neat little functions to control how notes should behave during gameplay
  */
 class Notefield extends FlxTypedGroup<Note>
 {
 	public function sortNotes()
 	{
-		sort(function(noteData, note1, note2)
+		sort(function(noteData:Int, note1:Note, note2:Note)
 		{
 			return FlxSort.byValues(FlxSort.ASCENDING, note1.strumTime, note2.strumTime);
 		});

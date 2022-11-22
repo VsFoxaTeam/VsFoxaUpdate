@@ -38,6 +38,7 @@ typedef CharacterData =
 **/
 class Character extends FNFSprite
 {
+	public var legacyGirlfriend:Bool = false;
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;

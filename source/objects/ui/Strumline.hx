@@ -55,10 +55,10 @@ class Strumline extends FlxSpriteGroup
 		this.keyAmount = keyAmount;
 		this.yPos = yPos;
 
-		reloadReceptors();
+		reloadReceptors(xPos, yPos, doTween);
 	}
 
-	public function reloadReceptors(?xNew:Float, ?yNew:Float, ?skipTween:Bool = false)
+	public function reloadReceptors(xPos:Float, yPos:Float, ?doTween:Bool = true)
 	{
 		receptors.forEachAlive(function(receptor:Receptor)
 		{
@@ -72,14 +72,12 @@ class Strumline extends FlxSpriteGroup
 		});
 		splashNotes.clear();
 
-		doTween = !skipTween;
-
 		for (i in 0...keyAmount)
 		{
 			var addX:Int = PlayState.assetModifier == 'pixel' ? -35 : -20;
 			var addY:Int = PlayState.assetModifier == 'pixel' ? 40 : 25;
 
-			var receptor:Receptor = ForeverAssets.generateUIArrows(addX + (xNew == null ? xPos : xNew), addY + (yNew == null ? yPos : yNew), i,
+			var receptor:Receptor = ForeverAssets.generateUIArrows(addX + xPos, yPos, i,
 				PlayState.assetModifier);
 			receptor.ID = i;
 

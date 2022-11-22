@@ -60,7 +60,7 @@ class FreeplayMenu extends MusicBeatState
 
 	public var loadCustom:Bool = true;
 
-	public function new(?loadCustom)
+	public function new(?loadCustom:Bool = true)
 	{
 		super();
 

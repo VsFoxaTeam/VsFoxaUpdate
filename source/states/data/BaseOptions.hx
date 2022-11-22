@@ -213,7 +213,7 @@ class BaseOptions extends MusicBeatState
 		{
 			var option = groupArray[i];
 
-			if (option.type != null && (Init.gameSettings.get(option.name) == null || Init.gameSettings.get(option.name) != Init.FORCED))
+			if (option.type != null && (Init.gameSettings.get(option.name) == null || Init.gameSettings.get(option.name) != Init.SettingState.FORCED))
 			{
 				var thisOption:Alphabet = new Alphabet(160, 0, option.name, true, false);
 				if (option.type != "divider")
