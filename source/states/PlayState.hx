@@ -1318,7 +1318,9 @@ class PlayState extends MusicBeatState
 				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
 					insert(members.indexOf(strumLines), timing);
 			}
-			FlxTween.tween([rating, timing], {alpha: 0}, (Conductor.stepCrochet) / 1000, {
+
+			FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000);
+			FlxTween.tween(rating, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
 				onComplete: function(tween:FlxTween)
 				{
 					rating.kill();
@@ -1338,8 +1340,9 @@ class PlayState extends MusicBeatState
 			if (lastRating != null)
 				lastRating.kill();
 			lastRating = rating;
-			FlxTween.tween([rating, timing], {y: rating.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
-			FlxTween.tween([rating, timing], {"scale.x": 0, "scale.y": 0}, 0.1, {
+			FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000);
+			FlxTween.tween(rating, {y: rating.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+			FlxTween.tween(timing, {"scale.x": 0, "scale.y": 0}, 0.1, {
 				onComplete: function(tween:FlxTween)
 				{
 					rating.kill();
