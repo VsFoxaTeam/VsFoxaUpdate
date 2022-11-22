@@ -149,31 +149,6 @@ class ForeverAssets
 			judgement.setGraphicSize(Std.int(judgement.width * 0.7));
 		}
 
-		if (!Init.trueSettings.get('Simply Judgements'))
-		{
-			FlxTween.tween(judgement, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
-				onComplete: function(tween:FlxTween)
-				{
-					judgement.kill();
-				},
-				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
-			});
-		}
-		else
-		{
-			if (PlayState.lastRating != null)
-				PlayState.lastRating.kill();
-			PlayState.lastRating = judgement;
-			FlxTween.tween(judgement, {y: judgement.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
-			FlxTween.tween(judgement, {"scale.x": 0, "scale.y": 0}, 0.1, {
-				onComplete: function(tween:FlxTween)
-				{
-					judgement.kill();
-				},
-				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
-			});
-		}
-
 		return judgement;
 	}
 
@@ -214,31 +189,6 @@ class ForeverAssets
 		{
 			timing.antialiasing = true;
 			timing.setGraphicSize(Std.int(timing.width * 0.7));
-		}
-
-		if (!Init.trueSettings.get('Simply Judgements'))
-		{
-			FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
-				onComplete: function(tween:FlxTween)
-				{
-					timing.kill();
-				},
-				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
-			});
-		}
-		else
-		{
-			if (PlayState.lastTiming != null)
-				PlayState.lastTiming.kill();
-			PlayState.lastTiming = timing;
-			FlxTween.tween(timing, {y: timing.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
-			FlxTween.tween(timing, {"scale.x": 0, "scale.y": 0}, 0.1, {
-				onComplete: function(tween:FlxTween)
-				{
-					timing.kill();
-				},
-				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
-			});
 		}
 
 		return timing;

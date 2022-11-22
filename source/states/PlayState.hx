@@ -1221,10 +1221,9 @@ class PlayState extends MusicBeatState
 
 		var gottenRating = strumline.autoplay ? 0 : ratingID;
 
-		if (gottenRating != 0)
-			// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
-			if (ScoreUtils.perfectCombo)
-				ScoreUtils.perfectCombo = false;
+		// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
+		if (gottenRating != 0 && ScoreUtils.perfectCombo)
+			ScoreUtils.perfectCombo = false;
 
 		displayScore(gottenRating, late);
 		uiHUD.colorHighlight(gottenRating, ScoreUtils.perfectCombo);
@@ -1311,11 +1310,43 @@ class PlayState extends MusicBeatState
 			timing.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y + 50);
 		}
 
-		if (!Init.trueSettings.get('Judgement Recycling'))
+		if (!Init.trueSettings.get('Simply Judgements'))
 		{
-			insert(members.indexOf(strumLines), rating);
-			if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
-				insert(members.indexOf(strumLines), timing);
+			if (!Init.trueSettings.get('rating Recycling'))
+			{
+				insert(members.indexOf(strumLines), rating);
+				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
+					insert(members.indexOf(strumLines), timing);
+			}
+			FlxTween.tween([rating, timing], {alpha: 0}, (Conductor.stepCrochet) / 1000, {
+				onComplete: function(tween:FlxTween)
+				{
+					rating.kill();
+					timing.kill();
+				},
+				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+			});
+		}
+		else
+		{
+			if (!Init.trueSettings.get('rating Recycling'))
+			{
+				insert(members.indexOf(strumLines), rating);
+				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
+					insert(members.indexOf(strumLines), timing);
+			}
+			if (lastRating != null)
+				lastRating.kill();
+			lastRating = rating;
+			FlxTween.tween([rating, timing], {y: rating.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+			FlxTween.tween([rating, timing], {"scale.x": 0, "scale.y": 0}, 0.1, {
+				onComplete: function(tween:FlxTween)
+				{
+					rating.kill();
+					timing.kill();
+				},
+				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+			});
 		}
 
 		if (Init.trueSettings.get('Fixed Judgements'))
