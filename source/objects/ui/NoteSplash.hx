@@ -1,4 +1,4 @@
-package gameObjects;
+package objects.ui;
 
 import dependency.FNFSprite;
 

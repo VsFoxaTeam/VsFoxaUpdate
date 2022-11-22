@@ -1,10 +1,10 @@
-package gameObjects;
+package objects.ui;
 
 import base.FeatherDependencies.ScriptHandler;
 import base.ScoreUtils;
 import dependency.FNFSprite;
 import flixel.FlxSprite;
-import gameObjects.Strumline.Receptor;
+import objects.ui.Strumline.Receptor;
 import song.Conductor;
 
 class Note extends FNFSprite

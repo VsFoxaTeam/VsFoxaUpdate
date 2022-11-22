@@ -1,4 +1,4 @@
-package gameObjects.userInterface;
+package objects.ui;
 
 import dependency.FNFSprite;
 import flixel.FlxBasic;
@@ -13,7 +13,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import gameObjects.gameFonts.Alphabet;
+import objects.fonts.Alphabet;
 import openfl.media.Sound;
 
 typedef PortraitDataDef =

@@ -1,9 +1,9 @@
-package gameObjects.gameFonts;
+package objects.fonts;
 
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
-import gameObjects.gameFonts.Alphabet.AlphaCharacter;
+import objects.fonts.Alphabet.AlphaCharacter;
 
 class Dialogue extends FlxSpriteGroup
 {

@@ -1,4 +1,4 @@
-package gameObjects.userInterface.menu;
+package objects.ui.menu;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;

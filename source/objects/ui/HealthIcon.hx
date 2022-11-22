@@ -1,4 +1,4 @@
-package gameObjects.userInterface;
+package objects.ui;
 
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;

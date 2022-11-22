@@ -1,4 +1,4 @@
-package gameObjects.userInterface;
+package objects.ui;
 
 import base.ScoreUtils;
 import flixel.FlxG;

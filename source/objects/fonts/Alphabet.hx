@@ -1,4 +1,4 @@
-package gameObjects.gameFonts;
+package objects.fonts;
 
 import flixel.FlxG;
 import flixel.FlxSprite;

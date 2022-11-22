@@ -9,7 +9,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import gameObjects.gameFonts.Alphabet;
+import objects.fonts.Alphabet;
 import states.MusicBeatState.MusicBeatSubstate;
 import states.menus.*;
 import sys.thread.Mutex;

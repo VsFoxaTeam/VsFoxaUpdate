@@ -48,14 +48,14 @@ class ScriptHandler extends SScript
 		set('FlxTrail', flixel.addons.effects.FlxTrail);
 
 		// CLASSES (FUNKIN);
-		set('Alphabet', gameObjects.gameFonts.Alphabet);
-		set('Boyfriend', gameObjects.Character.Boyfriend);
+		set('Alphabet', objects.fonts.Alphabet);
+		set('Boyfriend', objects.Character.Boyfriend);
 		set('CoolUtil', base.CoolUtil);
-		set('Character', gameObjects.Character);
+		set('Character', objects.Character);
 		set('Conductor', song.Conductor);
-		set('HealthIcon', gameObjects.userInterface.HealthIcon);
-		set('Receptor', gameObjects.Strumline.Receptor);
-		set('Strumline', gameObjects.Strumline);
+		set('HealthIcon', objects.ui.HealthIcon);
+		set('Receptor', objects.ui.Strumline.Receptor);
+		set('Strumline', objects.ui.Strumline);
 		set('game', states.PlayState.main);
 		set('PlayState', states.PlayState);
 		set('Paths', Paths);
@@ -63,7 +63,7 @@ class ScriptHandler extends SScript
 		// CLASSES (FOREVER);
 		set('Init', Init);
 		set('Main', Main);
-		set('Stage', gameObjects.Stage);
+		set('Stage', objects.Stage);
 		set('FNFSprite', dependency.FNFSprite);
 		set('ForeverAssets', base.ForeverDependencies.ForeverAssets);
 		set('ForeverTools', base.ForeverDependencies.ForeverTools);

@@ -1,4 +1,4 @@
-package gameObjects;
+package objects;
 
 import base.FeatherDependencies.ScriptHandler;
 import base.compatibility.PsychChar;

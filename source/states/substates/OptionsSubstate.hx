@@ -9,7 +9,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import gameObjects.gameFonts.Alphabet;
+import objects.fonts.Alphabet;
 import states.MusicBeatState.MusicBeatSubstate;
 
 class OptionsSubstate extends MusicBeatSubstate

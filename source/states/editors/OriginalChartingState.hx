@@ -27,11 +27,11 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
 import flixel.ui.FlxSpriteButton;
 import flixel.util.FlxColor;
-import gameObjects.*;
-import gameObjects.Character;
-import gameObjects.userInterface.*;
 import haxe.Json;
 import lime.utils.Assets;
+import objects.*;
+import objects.Character;
+import objects.ui.*;
 import openfl.display.BlendMode;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -1194,8 +1194,8 @@ class OriginalChartingState extends MusicBeatState
 			rightIcon.destroy();
 			remove(rightIcon);
 		}
-		var boyfriend:gameObjects.Boyfriend = new gameObjects.Boyfriend();
-		var opponent:gameObjects.Character = new gameObjects.Character();
+		var boyfriend:objects.Boyfriend = new objects.Boyfriend();
+		var opponent:objects.Character = new objects.Character();
 
 		boyfriend.setCharacter(0, 0, _song.player1);
 		opponent.setCharacter(0, 0, _song.player2);

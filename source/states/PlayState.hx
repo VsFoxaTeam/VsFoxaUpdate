@@ -24,10 +24,10 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
-import gameObjects.*;
-import gameObjects.Character;
-import gameObjects.Strumline.Receptor;
-import gameObjects.userInterface.*;
+import objects.*;
+import objects.Character;
+import objects.ui.*;
+import objects.ui.Strumline.Receptor;
 import openfl.media.Sound;
 import song.ChartParser;
 import song.Conductor;
@@ -61,6 +61,7 @@ class PlayState extends MusicBeatState
 
 	// Notes;
 	public var unspawnNotes:Array<Note> = [];
+	public var notesGroup:Notefield;
 
 	public static var timedEvents:Array<TimedEvent> = [];
 
@@ -847,85 +848,12 @@ class PlayState extends MusicBeatState
 		{
 			for (strumline in strumLines)
 			{
-				// set the notes x and y
-				var downscrollMultiplier:Int = (strumline.downscroll ? -1 : 1) * FlxMath.signOf(songSpeed);
-
 				strumline.allNotes.forEachAlive(function(daNote:Note)
 				{
 					if (daNote != null)
 					{
-						var roundedSpeed = FlxMath.roundDecimal(daNote.noteSpeed, 2);
-						var receptorPosX:Float = strumline.receptors.members[Math.floor(daNote.noteData)].x;
-						var receptorPosY:Float = strumline.receptors.members[Math.floor(daNote.noteData)].y /* + Note.swagWidth / 6 */;
-						//
-						var psuedoY:Float = (downscrollMultiplier * -((Conductor.songPosition - daNote.strumTime) * (0.45 * roundedSpeed)));
-						var psuedoX = 25 + daNote.noteVisualOffset;
+						notesGroup.noteCalls(daNote, strumline);
 
-						daNote.y = receptorPosY
-							+ daNote.offsetY
-							+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY)
-							+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX);
-						// painful math equation
-						daNote.x = receptorPosX
-							+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX)
-							+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY);
-
-						// also set note rotation
-						daNote.angle = -daNote.noteDirection;
-
-						// shitty note hack I hate it so much
-						var center:Float = receptorPosY + Note.swagWidth / 2;
-						if (daNote.isSustainNote)
-						{
-							var stringSect = Receptor.colors[daNote.noteData];
-
-							daNote.y -= ((daNote.height / 2) * downscrollMultiplier);
-							if ((daNote.animation.getByName(stringSect + 'holdend') != null
-								&& daNote.animation.curAnim.name.endsWith('holdend'))
-								&& (daNote.prevNote != null))
-							{
-								daNote.y -= ((daNote.prevNote.height / 2) * downscrollMultiplier);
-								if (strumline.downscroll)
-								{
-									daNote.y += (daNote.height * 2);
-									if (daNote.endHoldOffset == Math.NEGATIVE_INFINITY)
-									{
-										// set the end hold offset yeah I hate that I fix this like this
-										daNote.endHoldOffset = (daNote.prevNote.y - (daNote.y + daNote.height));
-									}
-									else
-										daNote.y += daNote.endHoldOffset;
-								}
-								else // this system is funny like that
-									daNote.y += ((daNote.height / 2) * downscrollMultiplier);
-							}
-
-							if (downscrollMultiplier < 0)
-							{
-								daNote.flipY = true;
-								if ((daNote.parentNote != null && daNote.parentNote.wasGoodHit)
-									&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= center
-									&& (strumline.autoplay || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
-								{
-									var swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
-									swagRect.height = (center - daNote.y) / daNote.scale.y;
-									swagRect.y = daNote.frameHeight - swagRect.height;
-									daNote.clipRect = swagRect;
-								}
-							}
-							else if (downscrollMultiplier > 0)
-							{
-								if ((daNote.parentNote != null && daNote.parentNote.wasGoodHit)
-									&& daNote.y + daNote.offset.y * daNote.scale.y <= center
-									&& (strumline.autoplay || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
-								{
-									var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-									swagRect.y = (center - daNote.y) / daNote.scale.y;
-									swagRect.height -= swagRect.y;
-									daNote.clipRect = swagRect;
-								}
-							}
-						}
 						// hell breaks loose here, we're using nested scripts!
 						mainControls(daNote, strumline);
 
@@ -1252,6 +1180,14 @@ class PlayState extends MusicBeatState
 		persistentUpdate = false;
 		persistentDraw = true;
 
+		globalManagerPause();
+
+		// open pause substate
+		openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+	}
+
+	public function globalManagerPause()
+	{
 		// stop all tweens and timers
 		FlxTimer.globalManager.forEach(function(tmr:FlxTimer)
 		{
@@ -1264,9 +1200,6 @@ class PlayState extends MusicBeatState
 			if (!twn.finished)
 				twn.active = false;
 		});
-
-		// open pause substate
-		openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 	}
 
 	public static function updateRPC(pausedRPC:Bool)
@@ -1533,6 +1466,9 @@ class PlayState extends MusicBeatState
 
 		FlxG.sound.list.add(songMusic);
 		FlxG.sound.list.add(vocals);
+
+		notesGroup = new Notefield();
+		add(notesGroup);
 
 		// generate the chart
 		unspawnNotes = ChartParser.parseBaseChart(SONG);

@@ -14,7 +14,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import gameObjects.userInterface.menu.*;
+import objects.ui.menu.*;
 import song.Song;
 import states.MusicBeatState;
 

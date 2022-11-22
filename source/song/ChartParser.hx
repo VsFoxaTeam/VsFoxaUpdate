@@ -1,7 +1,7 @@
 package song;
 
 import flixel.util.FlxSort;
-import gameObjects.Note;
+import objects.ui.Note;
 import song.SongFormat.SwagSong;
 import song.SongFormat.TimedEvent;
 import states.PlayState;

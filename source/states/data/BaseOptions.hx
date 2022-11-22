@@ -5,9 +5,9 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
-import gameObjects.gameFonts.Alphabet;
-import gameObjects.userInterface.menu.Checkmark;
-import gameObjects.userInterface.menu.Selector;
+import objects.fonts.Alphabet;
+import objects.ui.menu.Checkmark;
+import objects.ui.menu.Selector;
 import states.MusicBeatState;
 import states.data.OptionsData.GroupData;
 

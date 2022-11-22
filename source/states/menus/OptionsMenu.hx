@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
-import gameObjects.gameFonts.Alphabet;
+import objects.fonts.Alphabet;
 import states.data.BaseOptions;
 import states.data.OptionsData;
 
