@@ -94,3 +94,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for Text Fonts on Dialogue;
 - Chart Editor Tab Fixes;
 - Finished Base Game Cutscenes.
+
+--------------------------
+### 14/11/22 - 22/11/22
+- Rewritten Options Menu.
+- Freeplay no longer keeps playing music when you leave (unless holding SHIFT)
+- [WIP] Added Character Offset Editor
+- Fully Scripted Notetypes (with Psych Conversion support)
+- Rewrote Accuracy as an Array with a Typedefine
+- Judgement Timing Presets
+- Optimized Daddy Dereast and BF Sprites
+- New Judgement Image Format
+- Notetypes per song (add a `notetypes` folder inside your songs folder and put scripts there!)
+- [SOURCE] Gameplay Modes (Story, Freeplay, Charting)
+- Charts now search for a chart with the `-normal` Difficulty Suffix
+- New Crash Dialogue
+- [WIP] Custom Difficulties
