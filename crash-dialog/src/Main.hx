@@ -15,7 +15,7 @@ class Main
 	 */
 	static final quotes:Array<String> = [
 		"Blueballed. - gedehari",
-		"fuck flixel rendering stop using like 40 gigs of ram to load 2 spritesheets",
+		"fuck flixel rendering stop using like 40 gigs of ram to load 2 spritesheets -doggo",
 		"*Bwoomp* your game crashed. :( - Senshi_Z",
 		"bababoey - Amanddica",
 		"Goodbye cruel world - ShadowMario",
