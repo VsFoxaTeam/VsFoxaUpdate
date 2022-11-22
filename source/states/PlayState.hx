@@ -171,9 +171,6 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 
-	// whether time was skipped, used to avoid misses when "traveling through time";
-	public var usedTimeTravel:Bool = false;
-
 	function resetStatics()
 	{
 		GameOverSubstate.resetDeathVariables();
