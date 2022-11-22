@@ -403,7 +403,7 @@ class Character extends FNFSprite
 			trace('Could not define Sprite Type, Uncaught Error: ' + e);
 		}
 
-		// frame overrides because having
+		// frame overrides because why not;
 		setVar('setFrames', function(newFrames:String, newFramesPath:String)
 		{
 			if (newFrames != null || newFrames != '')
