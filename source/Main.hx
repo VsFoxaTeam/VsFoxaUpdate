@@ -279,7 +279,7 @@ class Main extends Sprite
 			}
 		}
 
-		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/BeastlyGhost/Forever-Engine-Feather";
+		errMsg += "\nUncaught Error: " + e.error + " - Please report this error to the\nGitHub page https://github.com/BeastlyGhost/Forever-Engine-Feather";
 
 		if (!FileSystem.exists("crash/"))
 			FileSystem.createDirectory("crash/");
@@ -289,7 +289,7 @@ class Main extends Sprite
 		Sys.println(errMsgPrint);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		var crashDialoguePath:String = "Feather Crash Dialog";
+		var crashDialoguePath:String = "FF-CrashDialog";
 
 		#if windows
 		crashDialoguePath += ".exe";

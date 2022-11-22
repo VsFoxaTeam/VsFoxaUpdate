@@ -4,17 +4,17 @@ import dependency.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
-import flixel.addons.text.FlxTypeText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import flixel.system.FlxSound;
-import openfl.media.Sound;
 import gameObjects.gameFonts.Alphabet;
+import openfl.media.Sound;
 
 typedef PortraitDataDef =
 {

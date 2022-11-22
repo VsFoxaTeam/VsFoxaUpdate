@@ -40,6 +40,24 @@ class Song
 
 	public static function parseSong(rawJson:String, rawEvent:String):SwagSong
 	{
+		if (rawJson == null)
+			return cast {
+				song: "ERROR, CHECK YOUR CHART JSON!",
+				player1: "placeholder",
+				player2: "placeholder",
+				gfVersion: "placeholder",
+				stage: "",
+				speed: 1,
+				bpm: 100,
+				notes: [],
+				events: [],
+				noteSkin: "",
+				splashSkin: "noteSplashes",
+				needsVoices: false,
+				validScore: false,
+				assetModifier: "base"
+			};
+
 		var oldSong:SwagSong = cast Json.parse(rawJson).song;
 		oldSong.validScore = true;
 		oldSong.copy = function()
@@ -51,14 +69,14 @@ class Song
 				gfVersion: oldSong.gfVersion,
 				stage: oldSong.stage,
 				speed: oldSong.speed,
+				bpm: oldSong.bpm,
 				notes: oldSong.notes,
+				events: [],
+				splashSkin: oldSong.splashSkin,
 				noteSkin: oldSong.noteSkin,
 				needsVoices: oldSong.needsVoices,
-				bpm: oldSong.bpm,
 				validScore: true,
-				assetModifiler: oldSong.assetModifier,
-				splashSkin: oldSong.splashSkin,
-				events: [],
+				assetModifier: oldSong.assetModifier,
 			};
 		};
 

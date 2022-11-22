@@ -148,14 +148,13 @@ class StoryMenu extends MusicBeatState
 		leftArrow.animation.play('idle');
 		difficultySelectors.add(leftArrow);
 
-		if (lastDifficulty == '')
-			lastDifficulty = 'NORMAL';
-		curDifficulty = Math.round(Math.max(0, CoolUtil.difficultyArray.indexOf(lastDifficulty)));
-
 		//
 		sprDifficulty = new FlxSprite(0, leftArrow.y);
 		sprDifficulty.antialiasing = true;
 		difficultySelectors.add(sprDifficulty);
+
+		if (lastDifficulty == '' || lastDifficulty == null)
+			lastDifficulty = CoolUtil.defaultDifficulty;
 
 		rightArrow = new FlxSprite(leftArrow.x + 376, leftArrow.y);
 		rightArrow.frames = ui_tex;
@@ -317,14 +316,11 @@ class StoryMenu extends MusicBeatState
 
 	function changeDifficulty(change:Int = 0):Void
 	{
-		curDifficulty += change;
+		var week = Main.gameWeeksMap.get(Main.gameWeeks[curWeek]);
+		CoolUtil.difficulties = week.difficulties == null ? CoolUtil.difficultyArray : week.difficulties;
+		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, CoolUtil.difficulties.length - 1);
 
-		if (curDifficulty < 0)
-			curDifficulty = CoolUtil.difficultyArray.length - 1;
-		if (curDifficulty > CoolUtil.difficultyArray.length - 1)
-			curDifficulty = 0;
-
-		var coolDifficulty:String = CoolUtil.difficultyArray[curDifficulty];
+		var coolDifficulty:String = CoolUtil.difficulties[curDifficulty];
 		var diffGraphic:FlxGraphic = Paths.image('menus/base/storymenu/difficulties/' + CoolUtil.swapSpaceDash(coolDifficulty));
 
 		if (sprDifficulty.graphic != diffGraphic)
@@ -356,12 +352,7 @@ class StoryMenu extends MusicBeatState
 
 	function changeWeek(change:Int = 0):Void
 	{
-		curWeek += change;
-
-		if (curWeek >= Main.gameWeeks.length)
-			curWeek = 0;
-		if (curWeek < 0)
-			curWeek = Main.gameWeeks.length - 1;
+		curWeek = FlxMath.wrap(curWeek + change, 0, Main.gameWeeks.length - 1);
 
 		var lockedWeek:Bool = checkProgression(Main.gameWeeks[curWeek]);
 		difficultySelectors.visible = !lockedWeek;
@@ -384,6 +375,7 @@ class StoryMenu extends MusicBeatState
 
 		FlxG.sound.play(Paths.sound('base/menus/scrollMenu'));
 
+		changeDifficulty();
 		updateText();
 	}
 

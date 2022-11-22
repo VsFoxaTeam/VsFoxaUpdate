@@ -7,44 +7,33 @@ import sys.FileSystem;
 
 class CoolUtil
 {
-	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD"];
-	public static var difficultyString:String = 'NORMAL'; // shows on HUD / Pause
+	public static var difficulties:Array<String> = []; // Custom Difficulties;
+	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD"]; // Default Difficulties;
+	public static var difficultyString:String = 'NORMAL'; // shows on HUD / Pause;
 
 	public static var defaultDifficulty:String = 'NORMAL';
 
 	inline public static function difficultyFromNumber(number:Int):String
-	{
-		return difficultyArray[number];
-	}
+		return difficulties[number];
 
 	inline public static function boundTo(value:Float, minValue:Float, maxValue:Float):Float
-	{
 		return Math.max(minValue, Math.min(maxValue, value));
-	}
 
 	inline public static function dashToSpace(string:String):String
-	{
 		return string.replace("-", " ");
-	}
 
 	inline public static function spaceToDash(string:String):String
-	{
 		return string.replace(" ", "-");
-	}
 
 	inline public static function swapSpaceDash(string:String):String
-	{
 		return StringTools.contains(string, '-') ? dashToSpace(string) : spaceToDash(string);
-	}
 
 	inline public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = Assets.getText(path).trim().split('\n');
 
 		for (i in 0...daList.length)
-		{
 			daList[i] = daList[i].trim();
-		}
 
 		return daList;
 	}
@@ -93,9 +82,7 @@ class CoolUtil
 		var swagOffsets:Array<Array<String>> = [];
 
 		for (i in firstArray)
-		{
 			swagOffsets.push(i.split('--'));
-		}
 
 		return swagOffsets;
 	}

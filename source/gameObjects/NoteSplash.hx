@@ -1,6 +1,5 @@
 package gameObjects;
 
-import base.FeatherDependencies.ScriptHandler;
 import dependency.FNFSprite;
 
 /**

@@ -9,7 +9,6 @@ import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
-import song.Conductor;
 import states.PlayState;
 
 class ClassHUD extends FlxSpriteGroup

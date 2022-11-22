@@ -3,6 +3,7 @@ package states.substates;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -165,12 +166,7 @@ class PauseSubstate extends MusicBeatSubstate
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
-		if (curSelected >= menuItems.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
 
 		var bullShit:Int = 0;
 
@@ -180,13 +176,8 @@ class PauseSubstate extends MusicBeatSubstate
 			bullShit++;
 
 			item.alpha = 0.6;
-			// item.setGraphicSize(Std.int(item.width * 0.8));
-
 			if (item.targetY == 0)
-			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
-			}
 		}
 		//
 	}

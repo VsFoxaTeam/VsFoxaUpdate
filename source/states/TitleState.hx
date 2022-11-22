@@ -13,6 +13,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -28,7 +29,6 @@ import lime.app.Application;
 import openfl.Assets;
 import song.Conductor;
 import states.MusicBeatState;
-import flixel.input.keyboard.FlxKey;
 
 /**
 	I hate this state so much that I gave up after trying to rewrite it 3 times and just copy pasted the original code

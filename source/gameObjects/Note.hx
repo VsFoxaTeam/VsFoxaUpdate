@@ -6,7 +6,6 @@ import dependency.FNFSprite;
 import flixel.FlxSprite;
 import gameObjects.Strumline.Receptor;
 import song.Conductor;
-import states.PlayState;
 
 class Note extends FNFSprite
 {

@@ -1,6 +1,5 @@
 package states.editors;
 
-import flixel.math.FlxPoint;
 import dependency.Discord;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -14,6 +13,8 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.animation.FlxAnimation;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -674,13 +675,7 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 	function changeSelection(change:Int = 0)
 	{
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = characters.length - 1;
-		if (curSelected >= characters.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, characters.length - 1);
 
 		for (i in 0...iconArray.length)
 			iconArray[i].alpha = 0.6;

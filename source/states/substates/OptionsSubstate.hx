@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
+import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import gameObjects.gameFonts.Alphabet;
@@ -189,12 +190,9 @@ class OptionsSubstate extends MusicBeatSubstate
 		if (equal != curSelection)
 			FlxG.sound.play(Paths.sound('base/menus/scrollMenu'));
 		var prevSelection:Int = curSelection;
-		curSelection = equal;
+
 		// wrap the current selection
-		if (curSelection < 0)
-			curSelection = keyOptions.length - 1;
-		else if (curSelection >= keyOptions.length)
-			curSelection = 0;
+		curSelection = FlxMath.wrap(equal, 0, keyOptions.length - 1);
 
 		//
 		for (i in 0...keyOptions.length)

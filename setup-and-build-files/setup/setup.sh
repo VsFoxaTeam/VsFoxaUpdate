@@ -9,6 +9,7 @@ haxelib install flixel
 haxelib run lime setup flixel
 haxelib run lime setup
 haxelib install flixel-tools
+haxelib install flixel-addons 2.12.0
 haxelib run flixel-tools setup
 haxelib install hxcpp-debug-server
 haxelib git SScript https://github.com/AltronMaxX/SScript

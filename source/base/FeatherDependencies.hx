@@ -1,5 +1,12 @@
 package base;
 
+typedef MenuStruct =
+{
+	// goo goo gah gah
+	var mainState:String; // defines the state the game should start on;
+	var menuOrder:Array<String>; // for the main menu, defines button order;
+}
+
 /*
 	Feather Dependencies unifies ScriptHandler and Events into a single class;
 	both handle Script-related things and can be modified as you wish;

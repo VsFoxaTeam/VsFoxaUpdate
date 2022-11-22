@@ -1,14 +1,15 @@
 package states.data;
 
-import flixel.FlxBasic;
-import states.data.OptionsData.GroupData;
-import gameObjects.gameFonts.Alphabet;
 import dependency.Discord;
+import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
+import gameObjects.gameFonts.Alphabet;
 import gameObjects.userInterface.menu.Checkmark;
 import gameObjects.userInterface.menu.Selector;
 import states.MusicBeatState;
+import states.data.OptionsData.GroupData;
 
 /**
  * The Base Options class manages Option Attachments;
@@ -152,13 +153,7 @@ class BaseOptions extends MusicBeatState
 	{
 		// direction increment finder
 		var directionIncrement = ((newSelection < curSelected) ? -1 : 1);
-
-		curSelected = newSelection;
-
-		if (curSelected < 0)
-			curSelected = activeGroup.length - 1;
-		else if (curSelected >= activeGroup.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(newSelection, 0, activeGroup.length - 1);
 
 		// define the description;
 		if (Init.gameSettings.get(alphabetGroup.members[curSelected].text) != null)
@@ -177,7 +172,6 @@ class BaseOptions extends MusicBeatState
 			bullShit++;
 
 			item.alpha = 0.6;
-
 			if (item.targetY == 0)
 				item.alpha = 1;
 

@@ -2,8 +2,8 @@ package base;
 
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
-import openfl.events.KeyboardEvent;
 import lime.app.Event;
+import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
 enum KeyState

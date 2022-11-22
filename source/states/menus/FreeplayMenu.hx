@@ -58,6 +58,15 @@ class FreeplayMenu extends MusicBeatState
 	private var existingSongs:Array<String> = [];
 	private var existingDifficulties:Array<Array<String>> = [];
 
+	public var loadCustom:Bool = true;
+
+	public function new(?loadCustom)
+	{
+		super();
+
+		this.loadCustom = loadCustom;
+	}
+
 	override function create()
 	{
 		super.create();
@@ -72,7 +81,7 @@ class FreeplayMenu extends MusicBeatState
 			if you wish to hardcode your weeks, make sure to look through the Main State
 		**/
 
-		loadSongs(true); // set to false in case you don't want custom songs;
+		loadSongs(loadCustom); // set to false in case you don't want custom songs;
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menus/base/menuDesat'));
 		add(bg);
@@ -186,7 +195,7 @@ class FreeplayMenu extends MusicBeatState
 	public function addSong(songName:String, weekNum:Int, songCharacter:String, songColor:FlxColor)
 	{
 		var coolDifficultyArray = [];
-		for (i in CoolUtil.difficultyArray)
+		for (i in CoolUtil.difficulties)
 			if (FileSystem.exists(Paths.songJson(songName, songName + '-' + i))
 				|| (FileSystem.exists(Paths.songJson(songName, songName)) && i == "NORMAL"))
 				coolDifficultyArray.push(i);
@@ -262,10 +271,11 @@ class FreeplayMenu extends MusicBeatState
 
 		if (accepted)
 		{
-			var poop:String = ScoreUtils.formatSong(songs[curSelected].name.toLowerCase(),
-				CoolUtil.difficultyArray.indexOf(existingDifficulties[curSelected][curDifficulty]));
+			var song = songs[curSelected].name.toLowerCase();
 
-			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].name.toLowerCase());
+			var poop:String = ScoreUtils.formatSong(song, CoolUtil.difficulties.indexOf(existingDifficulties[curSelected][curDifficulty]));
+
+			PlayState.SONG = Song.loadFromJson(poop, song);
 
 			PlayState.gameplayMode = FREEPLAY;
 			PlayState.storyDifficulty = curDifficulty;
@@ -333,13 +343,7 @@ class FreeplayMenu extends MusicBeatState
 	function changeSelection(change:Int = 0)
 	{
 		FlxG.sound.play(Paths.sound('base/menus/scrollMenu'), 0.4);
-
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = songs.length - 1;
-		if (curSelected >= songs.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
 
 		intendedScore = ScoreUtils.getScore(songs[curSelected].name, curDifficulty);
 
