@@ -105,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Judgement Timing Presets
 - Optimized Daddy Dereast and BF Sprites
 - New Judgement Image Format
-- Notetypes per song (add a `notetypes` folder inside your songs folder and put scripts there!)
+- Notetypes per song (add a `notetypes` folder inside your song's chart folder and put scripts there!)
 - [SOURCE] Gameplay Modes (Story, Freeplay, Charting)
 - Charts now search for a chart with the `-normal` Difficulty Suffix
 - New Crash Dialogue
