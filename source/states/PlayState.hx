@@ -171,6 +171,9 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 
+	// whether time was skipped, used to avoid misses when "traveling through time";
+	public var usedTimeTravel:Bool = false;
+
 	function resetStatics()
 	{
 		GameOverSubstate.resetDeathVariables();
@@ -796,9 +799,9 @@ class PlayState extends MusicBeatState
 
 			noteCalls();
 			parseEventColumn();
-
-			callFunc('postUpdate', [elapsed]);
 		}
+
+		callFunc('postUpdate', [elapsed]);
 	}
 
 	var isDead:Bool = false;
@@ -1960,18 +1963,6 @@ class PlayState extends MusicBeatState
 
 	public function leavePlayState()
 	{
-		if (gameplayMode != FREEPLAY)
-		{
-			// play menu music
-			ForeverTools.resetMenuMusic();
-		}
-
-		if (gameplayMode != CHARTING)
-		{
-			// enable memory cleaning;
-			clearStored = true;
-		}
-
 		// set up transitions
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
@@ -1981,10 +1972,14 @@ class PlayState extends MusicBeatState
 		{
 			case STORY:
 				Main.switchState(this, new StoryMenu());
+				ForeverTools.resetMenuMusic();
+				clearStored = true;
 			case FREEPLAY:
 				Main.switchState(this, new FreeplayMenu());
+				clearStored = true;
 			case CHARTING:
-				Main.switchState(this, new states.editors.OriginalChartingState());
+				openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,
+					["Back to Charter", "Leave Charter Mode"]));
 		}
 	}
 

@@ -14,7 +14,7 @@ import states.PlayState;
  */
 class Notefield extends FlxTypedGroup<Note>
 {
-	public function sortNotes()
+	public function noteSorting()
 	{
 		sort(function(noteData:Int, note1:Note, note2:Note)
 		{

@@ -37,7 +37,6 @@ class Init extends FlxState
 		3 - offsets, this is unused but it'd bug me if it were set to 0
 		might redo offset code since I didnt make it and it bugs me that it's hardcoded the the last part of the controls menu
 	 */
-
 	public static var gameSettings:Map<String, Dynamic> = [
 		'Downscroll' => [
 			false,

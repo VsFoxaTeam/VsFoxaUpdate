@@ -19,7 +19,7 @@ class PauseSubstate extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Exit to options', 'Exit to menu'];
+	var menuItems:Array<String>;
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
@@ -28,16 +28,23 @@ class PauseSubstate extends MusicBeatSubstate
 
 	var mutex:Mutex;
 
-	public function new(x:Float, y:Float)
+	public function new(x:Float, y:Float, ?itemStack:Array<String>)
 	{
 		super();
 
+		if (itemStack == null)
+			itemStack = ['Resume', 'Restart Song', 'Exit to options', 'Exit to menu'];
+
 		toOptions = false;
+
+		menuItems = itemStack;
 
 		if (PlayState.gameplayMode == CHARTING)
 		{
-			menuItems.insert(2, "Back to Charter");
-			menuItems.insert(3, "Leave Charter Mode");
+			if (!menuItems.contains("Back to Charter"))
+				menuItems.insert(2, "Back to Charter");
+			if (!menuItems.contains("Leave Charter Mode"))
+				menuItems.insert(3, "Leave Charter Mode");
 		}
 
 		mutex = new Mutex();
@@ -166,7 +173,8 @@ class PauseSubstate extends MusicBeatSubstate
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
+		if (menuItems != null)
+			curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
 
 		var bullShit:Int = 0;
 
