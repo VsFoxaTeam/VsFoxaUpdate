@@ -55,7 +55,6 @@ class Main extends Sprite
 	public static var gameVersion:String = '0.3.1';
 	public static var featherVersion:String = '0.1';
 
-	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
 	var infoConsole:Console; // intiialize the on-screen console for script debug traces before creating it.
@@ -155,24 +154,10 @@ class Main extends Sprite
 		// if you've used gamemaker you'll probably understand the term surface better
 		// this defines the surface bounds
 
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
-
-		if (zoom == -1)
-		{
-			var ratioX:Float = stageWidth / gameWidth;
-			var ratioY:Float = stageHeight / gameHeight;
-			zoom = Math.min(ratioX, ratioY);
-			gameWidth = Math.ceil(stageWidth / zoom);
-			gameHeight = Math.ceil(stageHeight / zoom);
-			// this just kind of sets up the camera zoom in accordance to the surface width and camera zoom.
-			// if set to negative one, it is done so automatically, which is the default.
-		}
-
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		addChild(new FlxGame(gameWidth, gameHeight, Init, #if (flixel < "5.0.0") zoom, #end framerate, framerate, skipSplash)); // and create it afterwards
+		addChild(new FlxGame(gameWidth, gameHeight, Init, framerate, framerate, skipSplash)); // and create it afterwards
 
 		// initialize the game controls;
 		Controls.init();
