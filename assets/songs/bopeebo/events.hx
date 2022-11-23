@@ -3,8 +3,8 @@ function beatHit(curBeat)
 	if (curBeat % 8 == 7)
 	{
 		playHey("gf", 0.6);
-	    playHey("bf", 0.6);
-    }
+		playHey("bf", 0.6);
+	}
 }
 
 function playHey(character:String = "boyfriend", timer:Float = 0.6)

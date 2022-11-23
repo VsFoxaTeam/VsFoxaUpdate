@@ -77,8 +77,8 @@ class FreeplayMenu extends MusicBeatState
 		Main.loadGameWeeks(false);
 
 		/**
-			Wanna add songs? they are on the Weeks Folder inside the assets folder
-			if you wish to hardcode your weeks, make sure to look through the Main State
+		 * Wanna add songs? they are on the Weeks Folder inside the assets folder
+		 * if you wish to hardcode your weeks, make sure to look through the Main State
 		**/
 
 		loadSongs(loadCustom); // set to false in case you don't want custom songs;

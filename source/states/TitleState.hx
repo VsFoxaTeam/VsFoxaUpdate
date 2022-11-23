@@ -31,10 +31,10 @@ import song.Conductor;
 import states.MusicBeatState;
 
 /**
-	I hate this state so much that I gave up after trying to rewrite it 3 times and just copy pasted the original code
-	with like minor edits so it actually runs in forever engine. I'll redo this later, I've said that like 12 times now
-
-	I genuinely fucking hate this code no offense ninjamuffin I just dont like it and I don't know why or how I should rewrite it
+ * I hate this state so much that I gave up after trying to rewrite it 3 times and just copy pasted the original code
+ * with like minor edits so it actually runs in forever engine. I'll redo this later, I've said that like 12 times now
+ * 
+ * I genuinely fucking hate this code no offense ninjamuffin I just dont like it and I don't know why or how I should rewrite it
 **/
 class TitleState extends MusicBeatState
 {

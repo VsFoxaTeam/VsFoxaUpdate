@@ -6,7 +6,7 @@ package base;
  */
 import base.FeatherDependencies.ScriptHandler;
 import base.ScoreUtils;
-import dependency.FNFSprite;
+import dependency.FNFUtils.FNFSprite;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -31,8 +31,8 @@ import states.PlayState;
 import sys.FileSystem;
 
 /**
-	Forever Assets is a class that manages the different asset types, basically a compilation of switch statements that are
-	easy to edit for your own needs. Most of these are just static functions that return information
+ * Forever Assets is a class that manages the different asset types, basically a compilation of switch statements that are
+ * easy to edit for your own needs. Most of these are just static functions that return information
 **/
 class ForeverAssets
 {
@@ -369,10 +369,9 @@ class ForeverAssets
 	}
 
 	/**
-		Notes!
+	 * Notes!
 	**/
-	public static function generateArrow(framesArg, assetModifier, strumTime, noteData, noteType, ?isSustainNote:Bool = false,
-			?prevNote:Note = null):Note
+	public static function generateArrow(framesArg, assetModifier, strumTime, noteData, noteType, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
 		if (framesArg == null || framesArg.length < 1)
 			framesArg = 'NOTE_assets';
@@ -460,7 +459,7 @@ class ForeverAssets
 	}
 
 	/**
-		Checkmarks!
+	 * Checkmarks!
 	**/
 	public static function generateCheckmark(x:Float, y:Float, asset:String, assetModifier:String = 'base', changeableSkin:String = 'default',
 			baseLibrary:String)
@@ -508,8 +507,8 @@ class ForeverAssets
 }
 
 /**
-	This class is used as an extension to many other forever engine stuffs, please don't delete it as it is not only exclusively used in forever engine
-	custom stuffs, and is instead used globally.
+ * This class is used as an extension to many other forever engine stuffs, please don't delete it as it is not only exclusively used in forever engine
+ * custom stuffs, and is instead used globally.
 **/
 class ForeverTools
 {

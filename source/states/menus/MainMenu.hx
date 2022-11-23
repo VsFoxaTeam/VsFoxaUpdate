@@ -21,10 +21,10 @@ import states.MusicBeatState;
 using StringTools;
 
 /**
-	This is the main menu state! Not a lot is going to change about it so it'll remain similar to the original, but I do want to condense some code and such.
-	Get as expressive as you can with this, create your own menu!
-
-	I really need to make a structure to manage and customize menus haha @BeastlyGhost
+ * This is the main menu state! Not a lot is going to change about it so it'll remain similar to the original, but I do want to condense some code and such.
+ * Get as expressive as you can with this, create your own menu!
+ * 
+ * I really need to make a structure to manage and customize menus haha @BeastlyGhost
 **/
 class MainMenu extends MusicBeatState
 {

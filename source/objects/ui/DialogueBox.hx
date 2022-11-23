@@ -1,6 +1,6 @@
 package objects.ui;
 
-import dependency.FNFSprite;
+import dependency.FNFUtils.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;

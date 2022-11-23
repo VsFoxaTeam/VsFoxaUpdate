@@ -1,9 +1,11 @@
 package states;
 
-import dependency.FNFUIState;
+import dependency.FNFUtils.FNFTransition;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSubState;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.ui.FlxUIState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import song.Conductor;
@@ -15,7 +17,7 @@ import song.Conductor;
 	I'm not going to change any of this because I don't truly understand how songplaying works, 
 	I mostly just wanted to rewrite the actual gameplay side of things.
  */
-class MusicBeatState extends FNFUIState
+class MusicBeatState extends FlxUIState
 {
 	public var lastStep:Int = 0;
 	public var lastBeat:Int = 0;
@@ -44,6 +46,9 @@ class MusicBeatState extends FNFUIState
 		Controls.keyEventRelease.add(keyEventRelease);
 
 		camBeat = FlxG.camera;
+
+		if (!FlxTransitionableState.skipNextTransOut)
+			openSubState(new FNFTransition(0.5, true));
 
 		super.create();
 

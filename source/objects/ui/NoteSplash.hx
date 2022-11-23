@@ -1,9 +1,9 @@
 package objects.ui;
 
-import dependency.FNFSprite;
+import dependency.FNFUtils.FNFSprite;
 
 /**
-	Create the note splashes in week 7 whenever you get a sick!
+ * Create the note splashes in week 7 whenever you get a sick!
 **/
 class NoteSplash extends FNFSprite
 {

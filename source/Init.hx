@@ -6,7 +6,7 @@ import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
 
 /** 
-	Enumerator for settingtypes
+ * Enumerator for settingtypes
 **/
 enum SettingTypes
 {
@@ -21,9 +21,9 @@ enum SettingState
 }
 
 /**
-	This is the initialisation class. if you ever want to set anything before the game starts or call anything then this is probably your best bet.
-	A lot of this code is just going to be similar to the flixel templates' colorblind filters because I wanted to add support for those as I'll
-	most likely need them for skater, and I think it'd be neat if more mods were more accessible.
+ * This is the initialisation class. if you ever want to set anything before the game starts or call anything then this is probably your best bet.
+ * A lot of this code is just going to be similar to the flixel templates' colorblind filters because I wanted to add support for those as I'll
+ * most likely need them for skater, and I think it'd be neat if more mods were more accessible.
 **/
 class Init extends FlxState
 {

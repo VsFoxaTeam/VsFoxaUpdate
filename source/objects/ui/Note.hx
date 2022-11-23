@@ -2,7 +2,7 @@ package objects.ui;
 
 import base.FeatherDependencies.ScriptHandler;
 import base.ScoreUtils;
-import dependency.FNFSprite;
+import dependency.FNFUtils.FNFSprite;
 import flixel.FlxSprite;
 import objects.ui.Strumline.Receptor;
 import song.Conductor;

@@ -57,10 +57,10 @@ class CoolUtil
 		return [for (i in min...max) i];
 
 	/**
-		Returns an array with the files of the specified directory.
-		Example usage:
-		var fileArray:Array<String> = CoolUtil.absoluteDirectory('scripts');
-		trace(fileArray); -> ['mods/scripts/modchart.hx', 'assets/scripts/script.hx']
+	 * Returns an array with the files of the specified directory.
+	 * Example usage:
+	 * var fileArray:Array<String> = CoolUtil.absoluteDirectory('scripts');
+	 * trace(fileArray); -> ['mods/scripts/modchart.hx', 'assets/scripts/script.hx']
 	**/
 	inline public static function absoluteDirectory(file:String):Array<String>
 	{

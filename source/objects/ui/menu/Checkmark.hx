@@ -1,6 +1,6 @@
 package objects.ui.menu;
 
-import dependency.FNFSprite;
+import dependency.FNFUtils.FNFSprite;
 
 class Checkmark extends FNFSprite
 {

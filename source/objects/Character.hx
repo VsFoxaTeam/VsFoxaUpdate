@@ -1,7 +1,7 @@
 package objects;
 
 import base.FeatherDependencies.ScriptHandler;
-import dependency.FNFSprite;
+import dependency.FNFUtils.FNFSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import objects.CharacterData.CharacterOrigin;
@@ -13,7 +13,7 @@ import sys.FileSystem;
 import sys.io.File;
 
 /**
-	The character class initialises any and all characters that exist within gameplay.
+ * The character class initialises any and all characters that exist within gameplay.
 **/
 class Character extends FNFSprite
 {

@@ -8,10 +8,10 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 
 /**
-	Overlay that displays FPS and memory usage.
-
-	Based on this tutorial:
-	https://keyreal-code.github.io/haxecoder-tutorials/17_displaying_fps_and_memory_usage_using_openfl.html
+ * Overlay that displays FPS and memory usage.
+ * 
+ * Based on this tutorial:
+ * https://keyreal-code.github.io/haxecoder-tutorials/17_displaying_fps_and_memory_usage_using_openfl.html
 **/
 class Overlay extends TextField
 {
@@ -84,16 +84,16 @@ class Overlay extends TextField
 }
 
 /**
-	Console Overlay that gives information such as traced lines, like a Command Prompt/Terminal
-	author @superpowers04
-	support Super Engine - https://github.com/superpowers04/Super-Engine
+ * Console Overlay that gives information such as traced lines, like a Command Prompt/Terminal
+ * author @superpowers04
+ * support Super Engine - https://github.com/superpowers04/Super-Engine
  */
 class Console extends TextField
 {
 	public static var instance:Console = new Console();
 
 	/**
-		The current frame rate, expressed using frames-per-second
+	 * The current frame rate, expressed using frames-per-second
 	**/
 	public var currentFPS(default, null):Int;
 

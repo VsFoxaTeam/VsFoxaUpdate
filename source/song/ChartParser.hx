@@ -7,10 +7,10 @@ import song.SongFormat.TimedEvent;
 import states.PlayState;
 
 /**
-	This is the Chart Parser class. it loads in charts, but also exports charts, the chart parameters are based on the type of chart, 
-	say the base game type loads the base game's charts, the forever chart type loads a custom forever structure chart with custom features,
-	and so on. This class will handle both saving and loading of charts with useful features and scripts that will make things much easier
-	to handle and load, as well as much more modular!
+ * This is the Chart Parser class. it loads in charts, but also exports charts, the chart parameters are based on the type of chart, 
+ * say the base game type loads the base game's charts, the forever chart type loads a custom forever structure chart with custom features,
+ * and so on. This class will handle both saving and loading of charts with useful features and scripts that will make things much easier
+ * to handle and load, as well as much more modular!
 **/
 class ChartParser
 {

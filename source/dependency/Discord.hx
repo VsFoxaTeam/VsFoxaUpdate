@@ -6,8 +6,8 @@ import discord_rpc.DiscordRpc;
 import lime.app.Application;
 
 /**
-	Discord Rich Presence, both heavily based on Izzy Engine and the base game's, as well as with a lot of help 
-	from the creator of izzy engine because I'm dummy and dont know how to program discord
+ * Discord Rich Presence, both heavily based on Izzy Engine and the base game's, as well as with a lot of help 
+ * from the creator of izzy engine because I'm dummy and dont know how to program discord
 **/
 class Discord
 {

@@ -6,8 +6,8 @@ import sys.FileSystem;
 // Abstract Enumerator for Asset Types;
 enum abstract AssetType(String) to String
 {
-    var MODULE = "module";
-    var SPARROW = "sparrow";
+	var MODULE = "module";
+	var SPARROW = "sparrow";
 	var IMAGE = "image";
 	var SOUND = "sound";
 	var FONT = "font";
@@ -15,13 +15,13 @@ enum abstract AssetType(String) to String
 
 class FeatherAssets
 {
-    /*
-        https://github.com/BeastlyGhost/Test-Project/blob/master/src/Assets.hx
-        WIP;
-    */
+	/*
+		https://github.com/BeastlyGhost/Test-Project/blob/master/src/Assets.hx
+		WIP;
+	 */
 }
 
 class FeatherModules extends FeatherAssets
 {
-    //
+	//
 }

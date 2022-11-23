@@ -3,7 +3,7 @@ package states;
 import base.FeatherDependencies.Events;
 import base.FeatherDependencies.ScriptHandler;
 import base.ScoreUtils;
-import dependency.FNFSprite;
+import dependency.FNFUtils.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -1206,7 +1206,7 @@ class PlayState extends MusicBeatState
 		/*
 			this might be a note hit memory leak, so it's good to check on this later
 			@BeastlyGhost
-		*/
+		 */
 
 		if (strumline.splashNotes != null)
 		{
