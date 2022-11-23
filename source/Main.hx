@@ -3,9 +3,9 @@ package;
 import base.*;
 import base.Overlay.Console;
 import dependency.Discord;
+import dependency.FNFGame;
 import dependency.FNFTransition;
 import flixel.FlxG;
-import flixel.FlxGame;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
@@ -55,6 +55,8 @@ class Main extends Sprite
 	public static var gameVersion:String = '0.3.1';
 	public static var featherVersion:String = '0.1';
 
+	public static var game:FNFGame;
+
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
 	var infoConsole:Console; // intiialize the on-screen console for script debug traces before creating it.
@@ -63,33 +65,32 @@ class Main extends Sprite
 	public static var gameWeeks:Array<String> = [];
 
 	// heres gameweeks set up!
-
 	// in case you wanna hardcode weeks
+
 	/* public static function loadHardcodedWeeks()
-	{
-		gameWeeksMap = [
-			"myWeek" => {
-				songs: [
-					{
-						"name": "Bopeebo",
-						"opponent": "dad",
-						"colors": [129, 100, 223]
-					}
-				],
+		{
+			gameWeeksMap = [
+				"myWeek" => {
+					songs: [
+						{
+							"name": "Bopeebo",
+							"opponent": "dad",
+							"colors": [129, 100, 223]
+						}
+					],
 
-				attachedImage: "week1",
-				storyName: "vs. DADDY DEAREST",
-				characters: ["dad", "bf", "gf"],
+					attachedImage: "week1",
+					storyName: "vs. DADDY DEAREST",
+					characters: ["dad", "bf", "gf"],
 
-				startsLocked: false,
-				hideOnStory: false,
-				hideOnFreeplay: false,
-				hideUntilUnlocked: false
-			}
-		];
-		gameWeeks.push('myWeek');
-	} */
-
+					startsLocked: false,
+					hideOnStory: false,
+					hideOnFreeplay: false,
+					hideUntilUnlocked: false
+				}
+			];
+			gameWeeks.push('myWeek');
+	}*/
 	public static function loadGameWeeks(isStory:Bool)
 	{
 		gameWeeksMap.clear();
@@ -159,7 +160,8 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		addChild(new FlxGame(gameWidth, gameHeight, Init, framerate, framerate, skipSplash)); // and create it afterwards
+		game = new FNFGame(gameWidth, gameHeight, Init, framerate, framerate, skipSplash);
+		addChild(game); // and create it afterwards
 
 		// initialize the game controls;
 		Controls.init();

@@ -128,61 +128,66 @@ class FreeplayMenu extends MusicBeatState
 		// load in all songs that exist in folder
 		var folderSongs:Array<String> = CoolUtil.returnAssetsLibrary('songs', 'assets');
 
-		for (i in 0...Main.gameWeeks.length)
+		try
 		{
-			// is the week locked?;
-			if (checkProgression(Main.gameWeeks[i]))
-				continue;
-
-			var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[i]);
-
-			var storedSongs:Array<String> = [];
-			var storedIcons:Array<String> = [];
-			var storedColors:Array<FlxColor> = [];
-
-			if (!gameWeek.hideOnFreeplay)
+			for (i in 0...Main.gameWeeks.length)
 			{
-				//
-				for (i in 0...gameWeek.songs.length)
+				// is the week locked?;
+				if (checkProgression(Main.gameWeeks[i]))
+					continue;
+
+				var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[i]);
+
+				var storedSongs:Array<String> = [];
+				var storedIcons:Array<String> = [];
+				var storedColors:Array<FlxColor> = [];
+
+				if (!gameWeek.hideOnFreeplay)
 				{
-					var songInfo = gameWeek.songs[i];
-
-					storedSongs.push(songInfo.name);
-					storedIcons.push(songInfo.opponent);
-
 					//
-					if (songInfo.colors != null)
-						storedColors.push(FlxColor.fromRGB(songInfo.colors[0], songInfo.colors[1], songInfo.colors[2]));
-					else
-						storedColors.push(FlxColor.WHITE);
+					for (i in 0...gameWeek.songs.length)
+					{
+						var songInfo = gameWeek.songs[i];
+
+						storedSongs.push(songInfo.name);
+						storedIcons.push(songInfo.opponent);
+
+						//
+						if (songInfo.colors != null)
+							storedColors.push(FlxColor.fromRGB(songInfo.colors[0], songInfo.colors[1], songInfo.colors[2]));
+						else
+							storedColors.push(FlxColor.WHITE);
+					}
+
+					// actually add the week;
+					addWeek(storedSongs, i, storedIcons, storedColors);
 				}
 
-				// actually add the week;
-				addWeek(storedSongs, i, storedIcons, storedColors);
+				// add week songs to the existing songs array;
+				for (j in storedSongs)
+					existingSongs.push(j.toLowerCase());
 			}
 
-			// add week songs to the existing songs array;
-			for (j in storedSongs)
-				existingSongs.push(j.toLowerCase());
-		}
-
-		if (includeCustom)
-		{
-			for (i in folderSongs)
+			if (includeCustom)
 			{
-				if (!existingSongs.contains(i.toLowerCase()))
+				for (i in folderSongs)
 				{
-					var icon:String = 'gf';
-					var chartExists:Bool = FileSystem.exists(Paths.songJson(i, i));
-					if (chartExists)
+					if (!existingSongs.contains(i.toLowerCase()))
 					{
-						var castSong:SwagSong = Song.loadFromJson(i, i);
-						icon = (castSong != null) ? castSong.player2 : 'gf';
-						addSong(CoolUtil.spaceToDash(castSong.song), 1, icon, FlxColor.WHITE);
+						var icon:String = 'gf';
+						var chartExists:Bool = FileSystem.exists(Paths.songJson(i, i));
+						if (chartExists)
+						{
+							var castSong:SwagSong = Song.loadFromJson(i, i);
+							icon = (castSong != null) ? castSong.player2 : 'gf';
+							addSong(CoolUtil.spaceToDash(castSong.song), 1, icon, FlxColor.WHITE);
+						}
 					}
 				}
 			}
 		}
+		catch (e)
+			return Main.game.forceSwitch(new MainMenu('[FREEPLAY ERROR] Songs not Found! ($e)'));
 	}
 
 	function checkProgression(week:String):Bool

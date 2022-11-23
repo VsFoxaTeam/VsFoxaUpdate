@@ -126,19 +126,18 @@ class ChartParser
 		}
 	}
 
-	public static function parseEvents(events:Array<Array<Dynamic>>):Array<TimedEvent>
+	public static function parseEvents(data:Array<Dynamic>):Array<TimedEvent>
 	{
 		return try
 		{
 			var timedEvents:Array<TimedEvent> = [];
-			for (i in events)
+			for (event in data)
 			{
 				var newEvent:TimedEvent = cast {
-					strumTime: i[0],
-					event: i[1][0][0],
-					val1: i[1][0][1],
-					val2: i[1][0][2],
-					val3: i[1][0][3]
+					name: event[0],
+					step: event[1],
+					values: event[2][0],
+					/*colors: event[2][1],*/
 				};
 				timedEvents.push(newEvent);
 			}
@@ -146,7 +145,7 @@ class ChartParser
 			{
 				timedEvents.sort(function(Obj1:TimedEvent, Obj2:TimedEvent):Int
 				{
-					return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+					return FlxSort.byValues(FlxSort.ASCENDING, Obj1.step, Obj2.step);
 				});
 			}
 			timedEvents;

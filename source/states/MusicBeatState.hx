@@ -162,7 +162,7 @@ class MusicBeatState extends FNFUIState
 	var textField:FlxText;
 	var fieldTween:FlxTween;
 
-	public function logTrace(input:String, duration:Float, traceOnConsole:Bool = true, ?cam:FlxCamera)
+	public function logTrace(input:String, duration:Float, traceOnConsole:Bool = true)
 	{
 		if (traceOnConsole)
 			trace(input);
@@ -192,8 +192,7 @@ class MusicBeatState extends FNFUIState
 			textField.setBorderStyle(OUTLINE, 0xFF000000, 2);
 			textField.alpha = 0;
 			textField.screenCenter(X);
-			if (cam != null)
-				textField.cameras = [cam];
+			textField.scrollFactor.set();
 			add(textField);
 
 			fieldTween = FlxTween.tween(textField, {alpha: 1}, 0.2, {

@@ -14,7 +14,24 @@ import states.PlayState;
  */
 class Notefield extends FlxTypedGroup<Note>
 {
-	public function noteSorting()
+	inline public function callNotes(strum:Strumline, mustPressStrum:Strumline, groupStrums:FlxTypedGroup<Strumline>)
+	{
+		if ((members[0] != null) && ((members[0].strumTime - Conductor.songPosition) < 3500))
+		{
+			var dunceNote:Note = members[0];
+			var strumline:Strumline = (dunceNote.mustPress ? strum : mustPressStrum);
+
+			PlayState.main.callFunc('noteSpawn', [dunceNote, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
+
+			// push note to its correct strumline
+			groupStrums.members[
+				Math.floor((dunceNote.noteData + (dunceNote.mustPress ? 4 : 0)) / strumline.keyAmount)
+			].addNote(dunceNote);
+			members.splice(members.indexOf(dunceNote), 1);
+		}
+	}
+
+	inline public function noteSorting()
 	{
 		sort(function(noteData:Int, note1:Note, note2:Note)
 		{

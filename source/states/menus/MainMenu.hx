@@ -24,7 +24,7 @@ using StringTools;
 	This is the main menu state! Not a lot is going to change about it so it'll remain similar to the original, but I do want to condense some code and such.
 	Get as expressive as you can with this, create your own menu!
 
-	I really need to make a structure to manage and customize menus haha -gabi
+	I really need to make a structure to manage and customize menus haha @BeastlyGhost
 **/
 class MainMenu extends MusicBeatState
 {
@@ -133,6 +133,9 @@ class MainMenu extends MusicBeatState
 		versionShit.setFormat(Paths.font("vcr"), 16, 0xFFFFFFFF, ForeverTools.setTextAlign('left'), FlxTextBorderStyle.OUTLINE, 0xFF000000);
 		versionShit.scrollFactor.set();
 		add(versionShit);
+
+		if (logContent != null && logContent.length > 1)
+			logTrace('$logContent', 3);
 
 		//
 	}

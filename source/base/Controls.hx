@@ -53,7 +53,7 @@ class Controls
 		"volMute" => [Keyboard.NUMBER_0, Keyboard.NUMPAD_0],
 	];
 
-	// thing to sort by key ID idk i'm a dummy -gabi
+	// thing to sort by key ID idk i'm a dummy @BeastlyGhost
 	// I was gonna try & optimize it via inlining but nvm it's not done yet -memehoovy
 	public static var actionSort:Map<String, Int> = [
 		// NOTE KEYS

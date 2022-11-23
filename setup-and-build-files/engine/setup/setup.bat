@@ -30,7 +30,7 @@ haxelib install flixel
 haxelib run lime setup flixel
 haxelib run lime setup
 haxelib install flixel-tools
-haxelib install flixel-addons 2.12.0
+haxelib install flixel-addons
 haxelib run flixel-tools setup
 TIMEOUT 4 >nul
 echo Press any key to continue once you have finished installing HaxeFlixel.

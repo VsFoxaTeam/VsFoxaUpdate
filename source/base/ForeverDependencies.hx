@@ -7,10 +7,12 @@ package base;
 import base.FeatherDependencies.ScriptHandler;
 import base.ScoreUtils;
 import dependency.FNFSprite;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.system.FlxSound;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.tweens.FlxEase;
@@ -117,11 +119,16 @@ class ForeverAssets
 		}
 		var judgement:FNFSprite;
 		if (assetGroup != null && Init.trueSettings.get('Judgements Recycling'))
-			judgement = assetGroup.recycle(FNFSprite);
+			judgement = assetGroup.recycle(FNFSprite, function()
+			{
+				var rating:FNFSprite = new FNFSprite();
+				rating.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true, width, height);
+				return rating;
+			});
 		else
-			judgement = new FNFSprite();
+			judgement = new FNFSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true,
+				width, height);
 
-		judgement.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true, width, height);
 		judgement.alpha = 1;
 		judgement.screenCenter();
 		judgement.x = (FlxG.width * 0.55) - 40;
@@ -132,11 +139,12 @@ class ForeverAssets
 			judgement.velocity.y = -FlxG.random.int(140, 175);
 			judgement.velocity.x = -FlxG.random.int(0, 10);
 		}
+
 		judgement.animation.add('sick-perfect', [0]);
 		for (i in 0...ScoreUtils.judges.length)
 			judgement.animation.add(ScoreUtils.judges[i].name, [i + 1]);
 
-		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-pefect' : '');
+		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-perfect' : '');
 
 		judgement.animation.play(ScoreUtils.judges[id].name + perfectString);
 
@@ -500,7 +508,10 @@ class ForeverAssets
 **/
 class ForeverTools
 {
-	// set up maps and stuffs
+	/**
+	 * [Resets the Main Menu Music]
+	 * @param resetVolume - whether the song should fade in
+	 */
 	inline public static function resetMenuMusic(resetVolume:Bool = false)
 	{
 		// make sure the music is playing
@@ -535,6 +546,31 @@ class ForeverTools
 		}
 
 		return realAsset;
+	}
+
+	/**
+	 * hehe funny variable names
+	 * 
+	 * Handles PlayState's camera zooming events
+	 * @param leCam - Target Camera
+	 * @param daZaza - Default Camera Zoom
+	 * @param forceZaza - Forced Paramaters for Zooming / Changing Angle
+	 */
+	inline public static function cameraBumpingZooms(leCam:FlxCamera, daZaza:Float = 1.05, ?forceZaza:Array<Float>)
+	{
+		var easeLerp = 1 - Main.framerateAdjust(0.05);
+
+		if (forceZaza == null)
+			forceZaza = [0, 0, 0, 0];
+
+		if (leCam != null)
+		{
+			// camera stuffs
+			leCam.zoom = FlxMath.lerp(daZaza + forceZaza[0], leCam.zoom, easeLerp);
+
+			// not even forceZoom anymore but still
+			leCam.angle = FlxMath.lerp(0 + forceZaza[2], leCam.angle, easeLerp);
+		}
 	}
 
 	inline public static function killMusic(songsArray:Array<FlxSound>)
