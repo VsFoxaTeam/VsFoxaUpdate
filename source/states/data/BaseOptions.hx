@@ -228,6 +228,7 @@ class BaseOptions extends MusicBeatState
 					thisOption.screenCenter(X);
 					thisOption.forceX = thisOption.x;
 					thisOption.yAdd = -55;
+					thisOption.scrollFactor.set();
 				}
 				thisOption.targetY = i;
 				thisOption.disableX = true;
@@ -269,10 +270,12 @@ class BaseOptions extends MusicBeatState
 						// checkmark
 						var checkmark = ForeverAssets.generateCheckmark(10, option.y, 'checkboxThingie', 'base', Init.trueSettings.get("UI Skin"), 'UI');
 						checkmark.playAnim(Std.string(Init.trueSettings.get(option.text)) + ' finished');
+						checkmark.scrollFactor.set();
 						tempMap.set(option, checkmark);
 					case Init.SettingTypes.Selector:
 						// selector
 						var selector:Selector = new Selector(10, option.y, option.text, Init.gameSettings.get(option.text)[4]);
+						selector.scrollFactor.set();
 						tempMap.set(option, selector);
 					default:
 						// dont do ANYTHING

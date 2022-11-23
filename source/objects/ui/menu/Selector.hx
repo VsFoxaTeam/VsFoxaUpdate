@@ -83,7 +83,7 @@ class Selector extends FlxTypedSpriteGroup<FlxSprite>
 		leftSelector.x = x + shiftX;
 		leftSelector.y = y + 35;
 
-		rightSelector.x = leftSelector.x + name.length * 50 + shiftX / 4;
+		rightSelector.x = leftSelector.x + name.length * 53 + shiftX / 4;
 		rightSelector.y = leftSelector.y;
 
 		// i kinda fixed that one visual bug lol -stilic
