@@ -63,9 +63,9 @@ class Main extends Sprite
 	public static var gameWeeks:Array<String> = [];
 
 	// heres gameweeks set up!
-	// in case you wanna hardcode weeks
 
-	public static function loadHardcodedWeeks()
+	// in case you wanna hardcode weeks
+	/* public static function loadHardcodedWeeks()
 	{
 		gameWeeksMap = [
 			"myWeek" => {
@@ -88,12 +88,14 @@ class Main extends Sprite
 			}
 		];
 		gameWeeks.push('myWeek');
-	}
+	} */
 
 	public static function loadGameWeeks(isStory:Bool)
 	{
 		gameWeeksMap.clear();
 		gameWeeks = [];
+
+		// loadHardcodedWeeks();
 
 		var weekList:Array<String> = CoolUtil.coolTextFile(Paths.txt('weeks/weekList'));
 		for (i in 0...weekList.length)
