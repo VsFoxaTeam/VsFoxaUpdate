@@ -312,4 +312,26 @@ class ScoreUtils
 		if (newTiming != 0 /* && newTiming <= judges[rating].timingCap*/)
 			judges[rating].timing = newTiming;
 	}
+
+	public static function increaseCombo()
+	{
+		if (combo < 0)
+			combo = 0;
+		combo += 1;
+	}
+
+	public static function decreaseCombo()
+	{
+		if (combo > 0)
+			combo = 0; // bitch lmao
+		else
+			combo--;
+
+		// misses
+		score -= 10;
+		misses++;
+
+		perfectCombo = false;
+		updateInfo(0);
+	}
 }

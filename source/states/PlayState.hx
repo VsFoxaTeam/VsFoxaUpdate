@@ -1018,9 +1018,6 @@ class PlayState extends MusicBeatState
 
 		var baseString = 'sing' + Receptor.actions[coolNote.noteData].toUpperCase();
 
-		// I tried doing xor and it didnt work lollll
-		if (coolNote.noteAlt > 0)
-			altString = '-alt';
 		if (((SONG.notes[curSection] != null) && (SONG.notes[curSection].altAnim)) && (character.animOffsets.exists(baseString + '-alt')))
 		{
 			if (altString != '-alt')
@@ -1180,11 +1177,17 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	private function popUpScore(ratingID:Int, late:Bool, strumline:Strumline, coolNote:Note)
+	private function increaseScore(ratingID:Int)
 	{
 		// set up the rating
 		var ratingScore:Int = 50;
+		ScoreUtils.updateInfo(Std.int(ScoreUtils.judges[ratingID].accuracy));
+		ratingScore = ScoreUtils.judges[ratingID].score;
+		ScoreUtils.score += ratingScore;
+	}
 
+	private function popUpScore(ratingID:Int, late:Bool, strumline:Strumline, coolNote:Note)
+	{
 		var gottenRating = strumline.autoplay ? 0 : ratingID;
 
 		// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
@@ -1193,25 +1196,25 @@ class PlayState extends MusicBeatState
 
 		displayScore(gottenRating, late);
 		uiHUD.colorHighlight(gottenRating, ScoreUtils.perfectCombo);
-
-		ScoreUtils.updateInfo(Std.int(ScoreUtils.judges[ratingID].accuracy));
-		ratingScore = ScoreUtils.judges[ratingID].score;
-		ScoreUtils.score += ratingScore;
 	}
 
 	public function createSplash(noteType:String, noteData:Int, strumline:Strumline):NoteSplash
 	{
-		var note = Note.noteMap.get(noteType);
+		if (Init.trueSettings.get("Splash Opacity") <= 0)
+			return null;
+
 		for (i in 0...strumLines.length)
 			strumLines.members[i].splashNotes.cameras = [strumHUD[i]];
 
+		/*
+			this might be a note hit memory leak, so it's good to check on this later
+			@BeastlyGhost
+		*/
+
 		if (strumline.splashNotes != null)
 		{
-			var noteSplash:NoteSplash = ForeverAssets.generateNoteSplashes(strumline.splashNotes, assetModifier, changeableSkin, noteType, noteData);
-			noteSplash.x = strumline.receptors.members[noteData].x;
-			noteSplash.y = strumline.receptors.members[noteData].y;
+			var noteSplash:NoteSplash = ForeverAssets.generateNoteSplashes(strumline, assetModifier, changeableSkin, noteType, noteData);
 			noteSplash.cameras = strumline.splashNotes.members[noteData].cameras;
-			noteSplash.visible = true;
 			return noteSplash;
 		}
 		return null;
@@ -1223,24 +1226,14 @@ class PlayState extends MusicBeatState
 		if (ScoreUtils.combo > 5 && gf.animOffsets.exists('sad'))
 			gf.playAnim('sad');
 
-		if (ScoreUtils.combo > 0)
-			ScoreUtils.combo = 0; // bitch lmao
-		else
-			ScoreUtils.combo--;
-
-		// misses
-		ScoreUtils.score -= 10;
-		ScoreUtils.misses++;
+		ScoreUtils.decreaseCombo();
+		healthCall(ScoreUtils.judges[4].health);
 
 		// display negative combo
 		if (popMiss)
 			displayScore(4, true);
 
 		uiHUD.colorHighlight(4, false);
-		healthCall(ScoreUtils.judges[4].health);
-
-		ScoreUtils.perfectCombo = false;
-		ScoreUtils.updateInfo(0);
 	}
 
 	function increaseCombo(?baseRating:Int, ?direction = 0, ?strumline:Strumline)
@@ -1250,9 +1243,8 @@ class PlayState extends MusicBeatState
 		{
 			if (ScoreUtils.judges[baseRating].accuracy > 0)
 			{
-				if (ScoreUtils.combo < 0)
-					ScoreUtils.combo = 0;
-				ScoreUtils.combo += 1;
+				ScoreUtils.increaseCombo();
+				increaseScore(baseRating);
 			}
 			else
 				missNoteCheck(true, direction, strumline, false, Init.trueSettings.get("Display Miss Judgement"));
@@ -1265,10 +1257,11 @@ class PlayState extends MusicBeatState
 	public function displayScore(id:Int, late:Bool, ?preload:Bool = false)
 	{
 		//
-		var rating = ForeverAssets.generateRating(ScoreUtils.judges[id].name, judgementsGroup, id, late, assetModifier, changeableSkin, 'UI');
-		rating.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y);
-
+		var rating:FNFSprite = null;
 		var timing:FNFSprite = null;
+
+		rating = ForeverAssets.generateRating(ScoreUtils.judges[id].name, judgementsGroup, id, late, assetModifier, changeableSkin, 'UI');
+		rating.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y);
 
 		if (Init.trueSettings.get("Display Timings"))
 		{
@@ -1276,12 +1269,9 @@ class PlayState extends MusicBeatState
 			timing.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y + 50);
 		}
 
-		if (!Init.trueSettings.get('Judgement Recycling'))
-		{
-			insert(members.indexOf(strumLines), rating);
-			if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
-				insert(members.indexOf(strumLines), timing);
-		}
+		insert(members.indexOf(strumLines), rating);
+		if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
+			insert(members.indexOf(strumLines), timing);
 
 		if (rating != null)
 		{
@@ -1388,7 +1378,6 @@ class PlayState extends MusicBeatState
 
 	function healthCall(?ratingMultiplier:Float = 0)
 	{
-		// health += 0.012;
 		var healthBase:Float = 0.06;
 		health += (healthBase * (ratingMultiplier / 100));
 	}
@@ -1420,12 +1409,10 @@ class PlayState extends MusicBeatState
 
 	private function generateSong(dataPath:String):Void
 	{
-		var songData = SONG;
-
 		// set the song speed
 		songSpeed = SONG.speed;
 
-		Conductor.changeBPM(songData.bpm);
+		Conductor.changeBPM(SONG.bpm);
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		songDetails = CoolUtil.dashToSpace(SONG.song) + ' - ' + CoolUtil.difficultyString;
@@ -1475,7 +1462,7 @@ class PlayState extends MusicBeatState
 			var line:TimedEvent = timedEvents[0];
 			if (line != null)
 			{
-				if (Conductor.songPosition <= line.step + delay)
+				if (Conductor.songPosition < line.step + delay)
 					break;
 
 				eventTrigger(line.name, line.values);
@@ -1691,9 +1678,7 @@ class PlayState extends MusicBeatState
 
 			paused = false;
 
-			///*
 			updateRPC(false);
-			// */
 		}
 
 		Paths.clearUnusedMemory();
@@ -1704,7 +1689,7 @@ class PlayState extends MusicBeatState
 	/*
 		Extra functions and stuffs
 	 */
-	/// song end function at the end of the playstate lmao ironic I guess
+	// song end function at the end of the playstate lmao ironic I guess
 
 	function finishSong():Void
 	{

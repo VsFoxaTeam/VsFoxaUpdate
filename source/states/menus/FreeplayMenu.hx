@@ -130,13 +130,13 @@ class FreeplayMenu extends MusicBeatState
 
 		try
 		{
-			for (i in 0...Main.gameWeeks.length)
+			for (i in 0...Main.weeks.length)
 			{
 				// is the week locked?;
-				if (checkProgression(Main.gameWeeks[i]))
+				if (checkProgression(Main.weeks[i]))
 					continue;
 
-				var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[i]);
+				var gameWeek = Main.weeksMap.get(Main.weeks[i]);
 
 				var storedSongs:Array<String> = [];
 				var storedIcons:Array<String> = [];
@@ -187,13 +187,13 @@ class FreeplayMenu extends MusicBeatState
 			}
 		}
 		catch (e)
-			return Main.game.forceSwitch(new MainMenu('[FREEPLAY ERROR] Songs not Found! ($e)'));
+			return Main.baseGame.forceSwitch(new MainMenu('[FREEPLAY ERROR] Songs not Found! ($e)'));
 	}
 
 	function checkProgression(week:String):Bool
 	{
 		// here we check if the target week is locked;
-		var weekProgress = Main.gameWeeksMap.get(week);
+		var weekProgress = Main.weeksMap.get(week);
 		return weekProgress.startsLocked;
 	}
 

@@ -5,7 +5,6 @@ typedef GroupData =
 	var name:String;
 	var type:String;
 	@:optional var description:String;
-	@:optional var previousSection:String; // for accessing groups inside groups;
 }
 
 /**
@@ -34,8 +33,8 @@ class OptionsData
 		//
 		{name: "Meta Settings", type: "divider"},
 		//
-		{name: 'Skip Text', type: "option"},
 		{name: 'Auto Pause', type: "option"},
+		{name: 'Skip Text', type: "option"},
 		{name: 'Framerate Cap', type: "option"},
 		{name: 'FPS Counter', type: "option"},
 		{name: 'Memory Counter', type: "option"},
@@ -70,24 +69,27 @@ class OptionsData
 		{name: "User Interface", type: "divider"},
 		//
 		{name: "UI Skin", type: "option"},
-		{name: "Fixed Judgements", type: "option"},
-		{name: "Simply Judgements", type: "option"},
-		{name: "Display Miss Judgement", type: "option"},
-		{name: "Display Timings", type: "option"},
-		//
-		{name: "Performance and Text", type: "divider"},
-		//
-		{name: "Counter", type: "option"},
-		{name: "Judgement Recycling", type: "option"},
-		{name: 'Display Accuracy', type: "option"},
-		{name: "Accuracy Hightlight", type: "option"},
+		{name: "Note Skin", type: "option"},
+		{name: "Clip Style", type: "option"},
 		//
 		{name: "Note and Holds", type: "divider"},
 		//
-		{name: "Note Skin", type: "option"},
-		{name: "Clip Style", type: "option"},
 		{name: "Arrow Opacity", type: "option"},
 		{name: "Hold Opacity", type: "option"},
 		{name: "Splash Opacity", type: "option"},
+		//
+		{name: "Judgements and Combo", type: "divider"},
+		//
+		{name: "Fixed Judgements", type: "option"},
+		{name: "Simply Judgements", type: "option"},
+		{name: "Judgement Recycling", type: "option"},
+		{name: "Display Miss Judgement", type: "option"},
+		{name: "Display Timings", type: "option"},
+		//
+		{name: "Text Display", type: "divider"},
+		//
+		{name: "Counter", type: "option"},
+		{name: 'Display Accuracy', type: "option"},
+		{name: "Accuracy Hightlight", type: "option"},
 	];
 }

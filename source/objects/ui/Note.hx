@@ -13,7 +13,6 @@ class Note extends FNFSprite
 
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
-	public var noteAlt:Float = 0;
 
 	public var noteType:String = 'default';
 	public var noteString:String = "";
@@ -32,10 +31,6 @@ class Note extends FNFSprite
 	public var ignoreNote:Bool = false;
 	public var noteSplash:Bool = false;
 	public var isMine:Bool = false;
-
-	// only useful for charting stuffs
-	public var chartSustain:FlxSprite = null;
-	public var rawNoteData:Int;
 
 	// not set initially
 	public var noteQuant:Int = -1;
@@ -70,13 +65,12 @@ class Note extends FNFSprite
 
 	public static var noteMap:Map<String, ScriptHandler> = new Map();
 
-	public function new(strumTime:Float, noteData:Int, noteAlt:Float, noteType:String, ?prevNote:Note, ?isSustainNote:Bool = false)
+	public function new(strumTime:Float, noteData:Int, noteType:String, ?prevNote:Note, ?isSustainNote:Bool = false)
 	{
 		this.prevNote = prevNote;
 		this.isSustainNote = isSustainNote;
 		this.strumTime = strumTime;
 		this.noteData = noteData;
-		this.noteAlt = noteAlt;
 
 		if (prevNote == null)
 			prevNote = this;

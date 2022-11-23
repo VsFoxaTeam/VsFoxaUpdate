@@ -23,6 +23,7 @@ import flixel.util.FlxSort;
 import objects.ui.Note;
 import objects.ui.NoteSplash;
 import objects.ui.Strumline.Receptor;
+import objects.ui.Strumline;
 import objects.ui.menu.Checkmark;
 import openfl.display.BlendMode;
 import song.Conductor;
@@ -212,15 +213,19 @@ class ForeverAssets
 		return timing;
 	}
 
-	public static function generateNoteSplashes(grpSplash:FlxTypedSpriteGroup<NoteSplash>, assetModifier:String = 'base', changeableSkin:String = 'default',
+	public static function generateNoteSplashes(strumline:Strumline, assetModifier:String = 'base', changeableSkin:String = 'default',
 			noteType:String = 'default', noteData:Int):NoteSplash
 	{
 		//
-		var tempSplash:NoteSplash = grpSplash.recycle(NoteSplash, function()
+		var tempSplash:NoteSplash = strumline.splashNotes.recycle(NoteSplash, function()
 		{
 			var splash:NoteSplash = new NoteSplash(noteData);
 			return splash;
 		});
+
+		tempSplash.visible = true;
+		tempSplash.x = strumline.receptors.members[noteData].x;
+		tempSplash.y = strumline.receptors.members[noteData].y;
 
 		switch (assetModifier)
 		{
@@ -255,7 +260,7 @@ class ForeverAssets
 		}
 
 		tempSplash.zDepth = -Conductor.songPosition;
-		grpSplash.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
+		strumline.splashNotes.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 		return tempSplash;
 	}
 
@@ -366,7 +371,7 @@ class ForeverAssets
 	/**
 		Notes!
 	**/
-	public static function generateArrow(framesArg, assetModifier, strumTime, noteData, noteAlt, noteType, ?isSustainNote:Bool = false,
+	public static function generateArrow(framesArg, assetModifier, strumTime, noteData, noteType, ?isSustainNote:Bool = false,
 			?prevNote:Note = null):Note
 	{
 		if (framesArg == null || framesArg.length < 1)
@@ -375,7 +380,7 @@ class ForeverAssets
 
 		var newNote:Note;
 
-		newNote = new Note(strumTime, noteData, noteAlt, noteType, prevNote, isSustainNote);
+		newNote = new Note(strumTime, noteData, noteType, prevNote, isSustainNote);
 
 		switch (assetModifier)
 		{

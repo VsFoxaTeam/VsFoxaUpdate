@@ -256,9 +256,7 @@ class TitleState extends MusicBeatState
 
 		// hi game, please stop crashing its kinda annoyin, thanks!
 		if (pressedEnter && !skippedIntro && initialized)
-		{
 			skipIntro();
-		}
 
 		super.update(elapsed);
 	}
@@ -313,10 +311,7 @@ class TitleState extends MusicBeatState
 		if (gfDance != null)
 		{
 			danceLeft = !danceLeft;
-			if (danceLeft)
-				gfDance.animation.play('danceRight');
-			else
-				gfDance.animation.play('danceLeft');
+			gfDance.animation.play('dance' + (danceLeft ? 'Left' : 'Right'));
 		}
 
 		FlxG.log.add(curBeat);
@@ -364,6 +359,7 @@ class TitleState extends MusicBeatState
 
 			if (!Init.trueSettings.get('Disable Flashing Lights'))
 				FlxG.camera.flash(FlxColor.WHITE, 4);
+			deleteCoolText();
 			remove(credGroup);
 			skippedIntro = true;
 		}

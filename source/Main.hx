@@ -40,36 +40,44 @@ typedef WeekSong =
 	var colors:Array<Int>;
 }
 
+typedef GameStruct =
+{
+	var width:Int;
+	var height:Int;
+	var mainState:Class<FlxState>;
+	var framerate:Int;
+	var skipSplash:Bool;
+	var versionFE:String;
+	var versionFF:String;
+}
+
 // Here we actually import the states and metadata, and just the metadata.
 // It's nice to have modularity so that we don't have ALL elements loaded at the same time.
 // at least that's how I think it works. I could be stupid!
 class Main extends Sprite
 {
-	// class action variables
-	public static var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	public static var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	public static var game:GameStruct = {
+		width: 1280, // game window width
+		height: 720, // game window height
+		mainState: states.TitleState, // the initial state the game should start at
+		framerate: 60, // the game's default framerate
+		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
+		versionFE: "0.3.1", // version of Forever Engine Legacy
+		versionFF: "0.1", // version of Forever Engine Feather
+	};
 
-	public static var mainClassState:Class<FlxState> = states.TitleState; // Determine the main class state of the game
-	public static var framerate:Int = 60; // How many frames per second the game should run at.
+	public static var baseGame:FNFGame;
 
-	public static var gameVersion:String = '0.3.1';
-	public static var featherVersion:String = '0.1';
+	private static var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
+	private static var infoConsole:Console; // intiialize the on-screen console for script debug traces before creating it.
 
-	public static var game:FNFGame;
-
-	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
-	var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
-	var infoConsole:Console; // intiialize the on-screen console for script debug traces before creating it.
-
-	public static var gameWeeksMap:Map<String, GameWeek> = [];
-	public static var gameWeeks:Array<String> = [];
-
-	// heres gameweeks set up!
-	// in case you wanna hardcode weeks
+	// weeks set up!
+	public static var weeksMap:Map<String, GameWeek> = [];
+	public static var weeks:Array<String> = [];
 
 	/* public static function loadHardcodedWeeks()
 		{
-			gameWeeksMap = [
+			weeksMap = [
 				"myWeek" => {
 					songs: [
 						{
@@ -93,15 +101,15 @@ class Main extends Sprite
 	}*/
 	public static function loadGameWeeks(isStory:Bool)
 	{
-		gameWeeksMap.clear();
-		gameWeeks = [];
+		weeksMap.clear();
+		weeks = [];
 
 		// loadHardcodedWeeks();
 
 		var weekList:Array<String> = CoolUtil.coolTextFile(Paths.txt('weeks/weekList'));
 		for (i in 0...weekList.length)
 		{
-			if (!gameWeeksMap.exists(weekList[i]))
+			if (!weeksMap.exists(weekList[i]))
 			{
 				if (weekList[i].length > 1)
 				{
@@ -111,13 +119,13 @@ class Main extends Sprite
 						if ((isStory && (!week.hideOnStory && !week.hideUntilUnlocked))
 							|| (!isStory && (!week.hideOnFreeplay && !week.hideUntilUnlocked)))
 						{
-							gameWeeksMap.set(weekList[i], week);
-							gameWeeks.push(weekList[i]);
+							weeksMap.set(weekList[i], week);
+							weeks.push(weekList[i]);
 						}
 					}
 				}
 				else
-					gameWeeks = null;
+					weeks = null;
 			}
 		}
 	}
@@ -160,8 +168,8 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		game = new FNFGame(gameWidth, gameHeight, Init, framerate, framerate, skipSplash);
-		addChild(game); // and create it afterwards
+		baseGame = new FNFGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash);
+		addChild(baseGame); // and create it afterwards
 
 		// initialize the game controls;
 		Controls.init();
@@ -210,7 +218,7 @@ class Main extends Sprite
 	public static function switchState(curState:FlxState, target:FlxState)
 	{
 		// Custom made Trans in
-		mainClassState = Type.getClass(target);
+		Main.game.mainState = Type.getClass(target);
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
 			curState.openSubState(new FNFTransition(0.35, false));

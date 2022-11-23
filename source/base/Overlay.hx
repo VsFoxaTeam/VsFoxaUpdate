@@ -33,7 +33,7 @@ class Overlay extends TextField
 		autoSize = LEFT;
 		selectable = false;
 
-		defaultTextFormat = new TextFormat(Paths.font("vcr"), 18, 0xFFFFFF);
+		defaultTextFormat = new TextFormat(Paths.font("vcr"), 16, 0xFFFFFF);
 		text = "";
 
 		addEventListener(Event.ENTER_FRAME, update);
@@ -70,8 +70,8 @@ class Overlay extends TextField
 		{
 			text = '' // set up the text itself
 				+ (displayFps ? times.length + " FPS\n" : '') // Framerate
-			#if !neko + (displayExtra ? Main.mainClassState + "\n" : '') #end // Current Game State
-			+ (displayMemory ? '${getInterval(mem)} / ${getInterval(memPeak)}\n' : ''); // Current and Total Memory Usage
+			#if !neko + (displayExtra ? Main.game.mainState + "\n" : '') #end // Current Game State
+			+ (displayMemory ? '${getInterval(mem)} // ${getInterval(memPeak)}\n' : ''); // Current and Total Memory Usage
 		}
 	}
 

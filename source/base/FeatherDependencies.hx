@@ -111,7 +111,7 @@ class ScriptHandler extends SScript
 							catch (e)
 							{
 								//
-								Main.game.forceSwitch(new states.menus.MainMenu('[MAIN GAME]: $e'));
+								Main.baseGame.forceSwitch(new states.menus.MainMenu('[MAIN GAME]: $e'));
 							}
 						}
 					}
@@ -159,7 +159,7 @@ class Events
 				catch (e)
 				{
 					// have to use FlxG instead of main since this isn't a class;
-					Main.game.forceSwitch(new states.menus.MainMenu('[CHART EVENT]: Uncaught Error: $e'));
+					Main.baseGame.forceSwitch(new states.menus.MainMenu('[CHART EVENT]: Uncaught Error: $e'));
 				}
 			}
 		}

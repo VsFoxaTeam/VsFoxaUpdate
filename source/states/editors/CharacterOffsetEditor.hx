@@ -22,6 +22,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import objects.Character;
+import objects.CharacterData;
 import objects.fonts.Alphabet;
 import objects.ui.HealthIcon;
 import openfl.events.Event;

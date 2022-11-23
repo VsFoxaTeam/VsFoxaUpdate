@@ -50,10 +50,10 @@ class StoryMenu extends MusicBeatState
 		// load week data;
 		Main.loadGameWeeks(true);
 
-		if (Main.gameWeeks == null)
-			return Main.game.forceSwitch(new MainMenu('[JSON ERROR] Weeks not Found!'));
+		if (Main.weeks == null)
+			return Main.baseGame.forceSwitch(new MainMenu('[JSON ERROR] Weeks not Found!'));
 
-		if (curWeek >= Main.gameWeeks.length)
+		if (curWeek >= Main.weeks.length)
 			curWeek = 0;
 
 		transIn = FlxTransitionableState.defaultTransIn;
@@ -96,10 +96,10 @@ class StoryMenu extends MusicBeatState
 		add(grpLocks);
 
 		var weekID:Int = 0;
-		for (i in 0...Main.gameWeeks.length)
+		for (i in 0...Main.weeks.length)
 		{
-			var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[i]);
-			var lockedWeek:Bool = checkProgression(Main.gameWeeks[i]);
+			var gameWeek = Main.weeksMap.get(Main.weeks[i]);
+			var lockedWeek:Bool = checkProgression(Main.weeks[i]);
 
 			if (!lockedWeek && (!gameWeek.hideOnStory && !gameWeek.hideUntilUnlocked))
 			{
@@ -127,7 +127,7 @@ class StoryMenu extends MusicBeatState
 			}
 		}
 
-		var weekChars = Main.gameWeeksMap.get(Main.gameWeeks[curWeek]).characters;
+		var weekChars = Main.weeksMap.get(Main.weeks[curWeek]).characters;
 		for (char in 0...3)
 		{
 			var list = weekChars[char];
@@ -187,7 +187,7 @@ class StoryMenu extends MusicBeatState
 	inline function checkProgression(week:String):Bool
 	{
 		// here we check if the target week is locked;
-		var weekProgress = Main.gameWeeksMap.get(week);
+		var weekProgress = Main.weeksMap.get(week);
 		return weekProgress.startsLocked;
 	}
 
@@ -255,7 +255,7 @@ class StoryMenu extends MusicBeatState
 
 	function selectWeek()
 	{
-		var lockedWeek:Bool = checkProgression(Main.gameWeeks[curWeek]);
+		var lockedWeek:Bool = checkProgression(Main.weeks[curWeek]);
 
 		if (!lockedWeek)
 		{
@@ -270,7 +270,7 @@ class StoryMenu extends MusicBeatState
 				stopspamming = true;
 			}
 
-			var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[curWeek]);
+			var gameWeek = Main.weeksMap.get(Main.weeks[curWeek]);
 			var weekSongs:Array<String> = [];
 
 			// loop through week songs;
@@ -316,7 +316,7 @@ class StoryMenu extends MusicBeatState
 
 	function changeDifficulty(change:Int = 0):Void
 	{
-		var week = Main.gameWeeksMap.get(Main.gameWeeks[curWeek]);
+		var week = Main.weeksMap.get(Main.weeks[curWeek]);
 		CoolUtil.difficulties = week.difficulties == null ? CoolUtil.difficultyArray : week.difficulties;
 		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, CoolUtil.difficulties.length - 1);
 
@@ -352,12 +352,12 @@ class StoryMenu extends MusicBeatState
 
 	function changeWeek(change:Int = 0):Void
 	{
-		curWeek = FlxMath.wrap(curWeek + change, 0, Main.gameWeeks.length - 1);
+		curWeek = FlxMath.wrap(curWeek + change, 0, Main.weeks.length - 1);
 
-		var lockedWeek:Bool = checkProgression(Main.gameWeeks[curWeek]);
+		var lockedWeek:Bool = checkProgression(Main.weeks[curWeek]);
 		difficultySelectors.visible = !lockedWeek;
 
-		var storyName:String = Main.gameWeeksMap.get(Main.gameWeeks[curWeek]).storyName;
+		var storyName:String = Main.weeksMap.get(Main.weeks[curWeek]).storyName;
 		txtWeekTitle.text = storyName.toUpperCase();
 		txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
 
@@ -381,7 +381,7 @@ class StoryMenu extends MusicBeatState
 
 	function updateText()
 	{
-		var gameWeek = Main.gameWeeksMap.get(Main.gameWeeks[curWeek]);
+		var gameWeek = Main.weeksMap.get(Main.weeks[curWeek]);
 		var weekChars = gameWeek.characters;
 
 		for (i in 0...grpWeekCharacters.length)

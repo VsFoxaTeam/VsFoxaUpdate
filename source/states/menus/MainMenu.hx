@@ -129,7 +129,7 @@ class MainMenu extends MusicBeatState
 		updateSelection();
 
 		// from the base game lol
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Forever Engine Feather v" + Main.featherVersion, 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Forever Engine Feather v" + Main.game.versionFF, 12);
 		versionShit.setFormat(Paths.font("vcr"), 16, 0xFFFFFFFF, ForeverTools.setTextAlign('left'), FlxTextBorderStyle.OUTLINE, 0xFF000000);
 		versionShit.scrollFactor.set();
 		add(versionShit);

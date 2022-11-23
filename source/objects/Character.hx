@@ -1,37 +1,16 @@
 package objects;
 
 import base.FeatherDependencies.ScriptHandler;
-import base.compatibility.PsychChar;
 import dependency.FNFSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
+import objects.CharacterData.CharacterOrigin;
+import objects.CharacterData.PsychAnimArray;
+import objects.CharacterData.PsychEngineChar;
 import song.Conductor;
 import states.PlayState;
 import sys.FileSystem;
 import sys.io.File;
-
-enum abstract CharacterOrigin(String) to String
-{
-	var FOREVER_FEATHER = "forever_feather";
-	var PSYCH_ENGINE = "psych_engine";
-	var FUNKIN_COCOA = "funkin_cocoa";
-}
-
-typedef CharacterData =
-{
-	var flipX:Bool;
-	var flipY:Bool;
-	var offsets:Array<Float>;
-	var camOffsets:Array<Float>;
-	var quickDancer:Bool;
-	var singDuration:Float;
-	var headBopSpeed:Int;
-	var healthColor:Array<Float>;
-	var antialiasing:Bool;
-	var adjustPos:Bool;
-	var missColor:Array<Int>; // for fake misses;
-	var icon:String;
-}
 
 /**
 	The character class initialises any and all characters that exist within gameplay.
@@ -641,21 +620,15 @@ class Boyfriend extends Character
 		if (!debugMode)
 		{
 			if (animation.curAnim.name.startsWith('sing'))
-			{
 				holdTimer += elapsed;
-			}
 			else
 				holdTimer = 0;
 
 			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
-			{
 				playAnim('idle', true, false, 10);
-			}
 
 			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
-			{
 				playAnim('deathLoop');
-			}
 		}
 
 		super.update(elapsed);

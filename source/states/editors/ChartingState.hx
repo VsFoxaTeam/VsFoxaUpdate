@@ -217,7 +217,7 @@ class ChartingState extends MusicBeatState
 					// noteCleanup(notesSection, noteStrum, noteData);
 					// _song.notes[notesSection].sectionNotes.push([noteStrum, noteData, noteSus]);
 
-					generateChartNote(noteData, noteStrum, noteSus, 0, 'default', notesSection);
+					generateChartNote(noteData, noteStrum, noteSus, 'default', notesSection);
 
 					// updateSelection(_song.notes[notesSection].sectionNotes[_song.notes[notesSection].sectionNotes.length - 1], notesSection, true);
 					// isPlacing = true;
@@ -387,10 +387,9 @@ class ChartingState extends MusicBeatState
 			for (i in _song.notes[section].sectionNotes)
 			{
 				// note stuffs
-				var daNoteAlt = i[3];
-				var daNoteType = 'default';
+				var daNoteType = i[3];
 
-				generateChartNote(i[1], i[0], i[2], daNoteAlt, daNoteType, section);
+				generateChartNote(i[1], i[0], i[2], daNoteType, section);
 			}
 		}
 		// lolll
@@ -441,14 +440,12 @@ class ChartingState extends MusicBeatState
 		//
 	}
 
-	private function generateChartNote(daNoteInfo, daStrumTime, daSus, daNoteAlt, daNoteType, noteSection)
+	private function generateChartNote(daNoteInfo, daStrumTime, daSus, daNoteType, noteSection)
 	{
-		var note:Note = new Note(daStrumTime, daNoteInfo % 4, 0, daNoteType);
+		var note:Note = new Note(daStrumTime, daNoteInfo % 4, daNoteType);
 		Note.resetNote(null, Init.trueSettings.get("Note Skin"), _song.assetModifier, note);
 		note.antialiasing = true;
 
-		// I love how there's 3 different engines that use this exact same variable name lmao
-		note.rawNoteData = daNoteInfo;
 		note.sustainLength = daSus;
 		note.setGraphicSize(gridSize, gridSize);
 		note.updateHitbox();
@@ -460,10 +457,10 @@ class ChartingState extends MusicBeatState
 		note.y = Math.floor(getYfromStrum(daStrumTime));
 
 		curRenderedNotes.add(note);
-		generateSustain(daStrumTime, daNoteInfo, daSus, daNoteAlt, note);
+		generateSustain(daStrumTime, daNoteInfo, daSus, daNoteType, note);
 	}
 
-	private function generateSustain(daStrumTime:Float = 0, daNoteInfo:Int = 0, daSus:Float = 0, daNoteAlt:Float = 0, note:Note)
+	private function generateSustain(daStrumTime:Float = 0, daNoteInfo:Int = 0, daSus:Float = 0, daNoteType:String = 'default', note:Note)
 	{
 		/*
 			if (daSus > 0)
@@ -471,14 +468,14 @@ class ChartingState extends MusicBeatState
 				//prevNote = note;
 				var constSize = Std.int(gridSize / 3);
 
-				var sustainVis:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, prevNote, true);
+				var sustainVis:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteType, prevNote, true);
 				sustainVis.setGraphicSize(constSize,
 					Math.floor(FlxMath.remapToRange((daSus / 2) - constSize, 0, Conductor.stepCrochet * verticalSize, 0, gridSize * verticalSize)));
 				sustainVis.updateHitbox();
 				sustainVis.x = note.x + constSize;
 				sustainVis.y = note.y + (gridSize / 2);
 
-				var sustainEnd:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, sustainVis, true);
+				var sustainEnd:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteType, sustainVis, true);
 				sustainEnd.setGraphicSize(constSize, constSize);
 				sustainEnd.updateHitbox();
 				sustainEnd.x = sustainVis.x;

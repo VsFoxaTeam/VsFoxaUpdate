@@ -81,13 +81,6 @@ class Init extends FlxState
 			'Darkens non-UI elements, useful if you find the characters and backgrounds distracting.',
 			NOT_FORCED
 		],
-		'Opacity Type' => [
-			'UI',
-			Selector,
-			'Choose whether the filter will be behind the notes or the UI.',
-			NOT_FORCED,
-			['UI', 'Notes']
-		],
 		'Colored Health Bar' => [
 			true,
 			Checkmark,
@@ -188,15 +181,6 @@ class Init extends FlxState
 			NOT_FORCED
 		],
 		'Centered Notefield' => [false, Checkmark, "Center the notes, disables the enemy's notes."],
-		/*
-			"Vanilla Menus" => [
-				false,
-				Checkmark,
-				"Whether to use the old Base Game menus instead of the Custom-made ones",
-				FORCED
-			],
-			// doing later
-		 */
 		'Skip Text' => [
 			'freeplay only',
 			Selector,
@@ -309,7 +293,7 @@ class Init extends FlxState
 		FlxG.mouse.useSystemCursor = true; // Use system cursor because it's prettier
 		FlxG.mouse.visible = false; // Hide mouse on start
 
-		Main.switchState(this, cast Type.createInstance(Main.mainClassState, []));
+		Main.switchState(this, cast Type.createInstance(Main.game.mainState, []));
 	}
 
 	public static function loadSettings():Void

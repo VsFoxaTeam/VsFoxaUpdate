@@ -23,14 +23,10 @@ class ChartParser
 
 			for (section in songData.notes)
 			{
-				var coolSection:Int = Std.int(section.lengthInSteps / 4);
-
 				for (songNotes in section.sectionNotes)
 				{
 					var daStrumTime:Float = #if !neko songNotes[0] - Init.trueSettings['Offset'] /* - | late, + | early */ #else songNotes[0] #end;
 					var daNoteData:Int = Std.int(songNotes[1] % 4);
-					// define the note's animation (in accordance to the original game)!
-					var daNoteAlt:Float = 0;
 					var daNoteType:String = 'default';
 
 					// psych conversion;
@@ -67,7 +63,7 @@ class ChartParser
 						oldNote = null;
 
 					// create the new note
-					var swagNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteAlt, daNoteType);
+					var swagNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteType);
 
 					swagNote.noteType = daNoteType;
 					swagNote.noteSpeed = songData.speed;
@@ -99,7 +95,7 @@ class ChartParser
 								oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 								var sustainNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier,
-									daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteAlt, daNoteType, true, oldNote);
+									daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteType, true, oldNote);
 								sustainNote.mustPress = gottaHitNote;
 								sustainNote.scrollFactor.set();
 
@@ -140,6 +136,18 @@ class ChartParser
 					/*colors: event[2][1],*/
 				};
 				timedEvents.push(newEvent);
+
+				/* Psych Engine Events */
+				for (i in 0...event[1].length)
+				{
+					var psychEvent:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2]];
+					var newEvent:TimedEvent = cast {
+						name: psychEvent[1],
+						step: psychEvent[0],
+						values: [psychEvent[2], psychEvent[3]],
+					};
+					timedEvents.push(newEvent);
+				}
 			}
 			if (timedEvents.length > 1)
 			{

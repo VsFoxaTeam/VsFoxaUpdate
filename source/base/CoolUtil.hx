@@ -1,5 +1,6 @@
 package base;
 
+import haxe.io.Path;
 import lime.utils.Assets;
 #if sys
 import sys.FileSystem;
@@ -31,71 +32,29 @@ class CoolUtil
 	inline public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = Assets.getText(path).trim().split('\n');
-
-		for (i in 0...daList.length)
-			daList[i] = daList[i].trim();
-
-		return daList;
-	}
-
-	inline public static function getOffsetsFromTxt(path:String):Array<Array<String>>
-	{
-		var fullText:String = Assets.getText(path);
-
-		var firstArray:Array<String> = fullText.split('\n');
-		var swagOffsets:Array<Array<String>> = [];
-
-		for (i in firstArray)
-			swagOffsets.push(i.split(' '));
-
-		return swagOffsets;
+		return [for (i in 0...daList.length) daList[i].trim()];
 	}
 
 	public static function returnAssetsLibrary(library:String, ?subDir:String = 'assets/images'):Array<String>
 	{
 		var libraryArray:Array<String> = [];
 
-		try
+		return try
 		{
-			var unfilteredLibrary = FileSystem.readDirectory('$subDir/$library');
-
-			for (folder in unfilteredLibrary)
-			{
+			for (folder in FileSystem.readDirectory('$subDir/$library'))
 				if (!folder.contains('.'))
 					libraryArray.push(folder);
-			}
+			libraryArray;
 		}
 		catch (e)
 		{
 			trace('$subDir/$library is returning null');
-			libraryArray = [];
+			[];
 		}
-
-		return libraryArray;
-	}
-
-	inline public static function getAnimsFromTxt(path:String):Array<Array<String>>
-	{
-		var fullText:String = Assets.getText(path);
-
-		var firstArray:Array<String> = fullText.split('\n');
-		var swagOffsets:Array<Array<String>> = [];
-
-		for (i in firstArray)
-			swagOffsets.push(i.split('--'));
-
-		return swagOffsets;
 	}
 
 	inline public static function numberArray(max:Int, ?min = 0):Array<Int>
-	{
-		var dumbArray:Array<Int> = [];
-		for (i in min...max)
-		{
-			dumbArray.push(i);
-		}
-		return dumbArray;
-	}
+		return [for (i in min...max) i];
 
 	/**
 		Returns an array with the files of the specified directory.
@@ -129,5 +88,14 @@ class CoolUtil
 		}
 
 		return if (directory != null) directory else [];
+	}
+
+	inline public static function normalizePath(path:String):String
+	{
+		path = Path.normalize(Sys.getCwd() + path);
+		#if windows
+		path = path.replace("/", "\\");
+		#end
+		return path;
 	}
 }

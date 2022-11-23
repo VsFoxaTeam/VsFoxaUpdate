@@ -59,11 +59,6 @@ class OriginalChartingState extends MusicBeatState
 	var bpmTxt:FlxText;
 
 	var strumLine:FlxSprite;
-	var curSong:String = 'Dadbattle';
-	var amountSteps:Int = 0;
-	var bullshitUI:FlxGroup;
-
-	var highlight:FlxSprite;
 
 	public static var GRID_SIZE:Int = 40;
 
@@ -582,24 +577,6 @@ class OriginalChartingState extends MusicBeatState
 
 		var gridBlackLine:FlxSprite = new FlxSprite(gridBG.x + GRID_SIZE).makeGraphic(2, Std.int(gridBG.height), FlxColor.BLACK);
 		gridGroup.add(gridBlackLine);
-	}
-
-	function generateUI():Void
-	{
-		while (bullshitUI.members.length > 0)
-		{
-			bullshitUI.remove(bullshitUI.members[0], true);
-		}
-
-		// general shit
-		var title:FlxText = new FlxText(UI_box.x + 20, UI_box.y + 20, 0);
-		bullshitUI.add(title);
-		/* 
-			var loopCheck = new FlxUICheckBox(UI_box.x + 10, UI_box.y + 50, null, null, "Loops", 100, ['loop check']);
-			loopCheck.checked = curNoteSelected.doesLoop;
-			tooltips.add(loopCheck, {title: 'Section looping', body: "Whether or not it's a simon says style section", style: tooltipType});
-			bullshitUI.add(loopCheck);
-		 */
 	}
 
 	function generateBackground():Void
@@ -1182,7 +1159,7 @@ class OriginalChartingState extends MusicBeatState
 			var daSus = i[2];
 			var daNoteType:String = i[3];
 
-			var note:Note = new Note(daStrumTime, daNoteInfo % 4, 0, daNoteType);
+			var note:Note = new Note(daStrumTime, daNoteInfo % 4, daNoteType);
 			Note.resetNote(null, Init.trueSettings.get("Note Skin"), _song.assetModifier, note);
 			note.antialiasing = true;
 

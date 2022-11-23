@@ -1,4 +1,27 @@
-package base.compatibility;
+package objects;
+
+enum abstract CharacterOrigin(String) to String
+{
+	var FOREVER_FEATHER = "forever_feather";
+	var PSYCH_ENGINE = "psych_engine";
+	var FUNKIN_COCOA = "funkin_cocoa";
+}
+
+typedef CharacterData =
+{
+	var flipX:Bool;
+	var flipY:Bool;
+	var offsets:Array<Float>;
+	var camOffsets:Array<Float>;
+	var quickDancer:Bool;
+	var singDuration:Float;
+	var headBopSpeed:Int;
+	var healthColor:Array<Float>;
+	var antialiasing:Bool;
+	var adjustPos:Bool;
+	var missColor:Array<Int>; // for fake misses;
+	var icon:String;
+}
 
 /*
 	FOR PSYCH ENGINE CHARACTER COMPATIBILITY
