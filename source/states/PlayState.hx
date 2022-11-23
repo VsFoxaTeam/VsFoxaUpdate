@@ -549,7 +549,9 @@ class PlayState extends MusicBeatState
 				Conductor.songPosition = previousTime;
 			}
 
-			if (bfStrums.receptors.members[key] != null && bfStrums.receptors.members[key].animation.curAnim.name != 'confirm')
+			if (!startingSong
+				&& bfStrums.receptors.members[key] != null
+				&& bfStrums.receptors.members[key].animation.curAnim.name != 'confirm')
 				bfStrums.receptors.members[key].playAnim('pressed');
 		}
 		else
@@ -1310,64 +1312,55 @@ class PlayState extends MusicBeatState
 			timing.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y + 50);
 		}
 
-		if (!Init.trueSettings.get('Simply Judgements'))
+		if (!Init.trueSettings.get('Judgement Recycling'))
 		{
-			if (!Init.trueSettings.get('rating Recycling'))
-			{
-				insert(members.indexOf(strumLines), rating);
-				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
-					insert(members.indexOf(strumLines), timing);
-			}
-
-			FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000);
-			FlxTween.tween(rating, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
-				onComplete: function(tween:FlxTween)
-				{
-					rating.kill();
-					timing.kill();
-				},
-				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
-			});
-		}
-		else
-		{
-			if (!Init.trueSettings.get('rating Recycling'))
-			{
-				insert(members.indexOf(strumLines), rating);
-				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
-					insert(members.indexOf(strumLines), timing);
-			}
-			if (lastRating != null)
-				lastRating.kill();
-			lastRating = rating;
-			FlxTween.tween(timing, {alpha: 0}, (Conductor.stepCrochet) / 1000);
-			FlxTween.tween(rating, {y: rating.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
-			FlxTween.tween(timing, {"scale.x": 0, "scale.y": 0}, 0.1, {
-				onComplete: function(tween:FlxTween)
-				{
-					rating.kill();
-					timing.kill();
-				},
-				startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
-			});
+			add(rating);
+			if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
+				add(timing);
 		}
 
-		if (Init.trueSettings.get('Fixed Judgements'))
+		if (rating != null)
 		{
-			// bound to camera
-			if (!cache)
+			if (!Init.trueSettings.get('Judgement Recycling'))
+				add(rating);
+
+			if (Init.trueSettings.get("Simply Judgements"))
 			{
-				rating.cameras = [camHUD];
-				if (timing != null)
-					timing.cameras = [camHUD];
+				if (lastRating != null)
+					lastRating.kill();
+				lastRating = rating;
 			}
-			rating.screenCenter();
-			if (timing != null)
-				timing.screenCenter();
+			ForeverTools.tweenJudgeObj(rating);
+		}
+
+		if (timing != null)
+		{
+			if (!Init.trueSettings.get('Judgement Recycling'))
+				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
+					add(timing);
+
+			if (Init.trueSettings.get("Simply Judgements"))
+			{
+				if (lastTiming != null)
+					lastTiming.kill();
+				lastTiming = timing;
+			}
+			ForeverTools.tweenJudgeObj(timing);
 		}
 
 		if (!cache)
 		{
+			if (Init.trueSettings.get('Fixed Judgements'))
+			{
+				// bound to camera
+				rating.cameras = [camHUD];
+				if (timing != null)
+					timing.cameras = [camHUD];
+				rating.screenCenter();
+				if (timing != null)
+					timing.screenCenter();
+			}
+
 			var ratingName = ScoreUtils.judges[id].name;
 
 			// return the actual rating to the array of judgements
@@ -1427,12 +1420,6 @@ class PlayState extends MusicBeatState
 				lastCombo.push(numScore);
 			}
 		}
-
-		// actually sort through the groups;
-		if (judgementsGroup != null)
-			judgementsGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
-		if (comboGroup != null)
-			comboGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 	}
 
 	function healthCall(?ratingMultiplier:Float = 0)

@@ -65,7 +65,6 @@ class ForeverAssets
 			(Std.parseInt(number) != null ? Std.parseInt(number) + 1 : 0) + (!allSicks ? 0 : 11)
 		], 0, false);
 		comboNumbers.animation.play('base');
-		comboNumbers.zDepth = -Conductor.songPosition;
 
 		if (assetModifier == 'pixel')
 		{
@@ -98,6 +97,10 @@ class ForeverAssets
 		}
 		else
 			FlxTween.tween(comboNumbers, {y: comboNumbers.y + 20}, 0.1, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+
+		comboNumbers.zDepth = -Conductor.songPosition;
+		if (assetGroup != null)
+			assetGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 
 		return comboNumbers;
 	}
@@ -136,7 +139,6 @@ class ForeverAssets
 		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-pefect' : '');
 
 		judgement.animation.play(ScoreUtils.judges[id].name + perfectString);
-		judgement.zDepth = -Conductor.songPosition;
 
 		if (assetModifier == 'pixel')
 		{
@@ -148,6 +150,10 @@ class ForeverAssets
 			judgement.antialiasing = true;
 			judgement.setGraphicSize(Std.int(judgement.width * 0.7));
 		}
+
+		judgement.zDepth = -Conductor.songPosition;
+		if (assetGroup != null)
+			assetGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 
 		return judgement;
 	}
@@ -169,11 +175,11 @@ class ForeverAssets
 				timing.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) - 2]);
 		}
 
-		timing.zDepth = -Conductor.songPosition;
 		var timingString = (isLate ? '-late' : '-early');
 
 		timing.animation.play(anim + timingString);
 
+		timing.alpha = 1;
 		timing.visible = (anim != 'sick-perfect' && anim != 'sick' && anim != 'miss');
 		timing.scrollFactor.set(parent.scrollFactor.x, parent.scrollFactor.y);
 		timing.velocity.set(parent.velocity.x, parent.velocity.y);
@@ -190,6 +196,10 @@ class ForeverAssets
 			timing.antialiasing = true;
 			timing.setGraphicSize(Std.int(timing.width * 0.7));
 		}
+
+		timing.zDepth = -Conductor.songPosition;
+		if (assetGroup != null)
+			assetGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 
 		return timing;
 	}
@@ -535,6 +545,34 @@ class ForeverTools
 			// stop
 			songsArray[i].stop();
 			songsArray[i].destroy();
+		}
+	}
+
+	inline public static function tweenJudgeObj(obj:FNFSprite)
+	{
+		if (obj != null)
+		{
+			if (!Init.trueSettings.get('Simply Judgements'))
+			{
+				FlxTween.tween(obj, {alpha: 0}, 0.3, {
+					onComplete: t ->
+					{
+						obj.kill();
+					},
+					startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+				});
+			}
+			else
+			{
+				FlxTween.tween(obj, {y: obj.y + 20}, 0.2, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
+				FlxTween.tween(obj, {"scale.x": 0, "scale.y": 0}, 0.1, {
+					onComplete: t ->
+					{
+						obj.kill();
+					},
+					startDelay: ((Conductor.crochet + Conductor.stepCrochet * 2) / 1000)
+				});
+			}
 		}
 	}
 
