@@ -1,12 +1,13 @@
-package base;
+package base.dependency;
 
 /*
 	Forever Dependencies is a way to unify both ForeverAssets and ForeverTools;
 	it contains data for custom asset skins and generation scripts for asset types;
  */
-import base.FeatherDependencies.ScriptHandler;
-import base.ScoreUtils;
-import dependency.FNFUtils.FNFSprite;
+import base.dependency.FeatherDeps.ScriptHandler;
+import base.song.Conductor;
+import base.utils.FNFUtils.FNFSprite;
+import base.utils.ScoreUtils;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -26,7 +27,6 @@ import objects.ui.Strumline.Receptor;
 import objects.ui.Strumline;
 import objects.ui.menu.Checkmark;
 import openfl.display.BlendMode;
-import song.Conductor;
 import states.PlayState;
 import sys.FileSystem;
 

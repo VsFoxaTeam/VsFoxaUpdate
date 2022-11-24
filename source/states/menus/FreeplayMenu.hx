@@ -1,7 +1,9 @@
 package states.menus;
 
-import base.ScoreUtils;
-import dependency.Discord;
+import base.dependency.Discord;
+import base.song.Song;
+import base.song.SongFormat.SwagSong;
+import base.utils.ScoreUtils;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -12,8 +14,6 @@ import flixel.util.FlxColor;
 import objects.fonts.Alphabet;
 import objects.ui.HealthIcon;
 import openfl.media.Sound;
-import song.Song;
-import song.SongFormat.SwagSong;
 import states.MusicBeatState;
 import sys.FileSystem;
 import sys.thread.Mutex;

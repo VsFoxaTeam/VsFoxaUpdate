@@ -1,4 +1,4 @@
-package base;
+package base.utils;
 
 import haxe.io.Path;
 import lime.utils.Assets;

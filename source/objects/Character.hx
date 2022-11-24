@@ -1,13 +1,13 @@
 package objects;
 
-import base.FeatherDependencies.ScriptHandler;
-import dependency.FNFUtils.FNFSprite;
+import base.dependency.FeatherDeps.ScriptHandler;
+import base.song.Conductor;
+import base.utils.FNFUtils.FNFSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import objects.CharacterData.CharacterOrigin;
 import objects.CharacterData.PsychAnimArray;
 import objects.CharacterData.PsychEngineChar;
-import song.Conductor;
 import states.PlayState;
 import sys.FileSystem;
 import sys.io.File;

@@ -1,6 +1,6 @@
 package objects.ui.menu;
 
-import dependency.FNFUtils.FNFSprite;
+import base.utils.FNFUtils.FNFSprite;
 import haxe.Json;
 import sys.FileSystem;
 import sys.io.File;

@@ -1,6 +1,6 @@
 package objects.ui;
 
-import dependency.FNFUtils.FNFSprite;
+import base.utils.FNFUtils.FNFSprite;
 
 /**
  * Create the note splashes in week 7 whenever you get a sick!

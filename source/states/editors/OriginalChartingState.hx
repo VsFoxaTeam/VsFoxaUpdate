@@ -1,7 +1,10 @@
 package states.editors;
 
-import base.FeatherDependencies.Events;
-import dependency.Discord;
+import base.dependency.Discord;
+import base.dependency.FeatherDeps.Events;
+import base.song.*;
+import base.song.Conductor.BPMChangeEvent;
+import base.song.SongFormat;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -38,9 +41,6 @@ import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
-import song.*;
-import song.Conductor.BPMChangeEvent;
-import song.SongFormat;
 import states.MusicBeatState;
 
 /**

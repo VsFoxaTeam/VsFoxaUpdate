@@ -1,6 +1,7 @@
 package states;
 
-import dependency.FNFUtils.FNFTransition;
+import base.song.Conductor;
+import base.utils.FNFUtils.FNFTransition;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSubState;
@@ -8,7 +9,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
-import song.Conductor;
 
 /* 
 	Music beat state happens to be the first thing on my list of things to add, it just so happens to be the backbone of

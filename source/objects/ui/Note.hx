@@ -1,11 +1,11 @@
 package objects.ui;
 
-import base.FeatherDependencies.ScriptHandler;
-import base.ScoreUtils;
-import dependency.FNFUtils.FNFSprite;
+import base.dependency.FeatherDeps.ScriptHandler;
+import base.song.Conductor;
+import base.utils.FNFUtils.FNFSprite;
+import base.utils.ScoreUtils;
 import flixel.FlxSprite;
 import objects.ui.Strumline.Receptor;
-import song.Conductor;
 
 class Note extends FNFSprite
 {

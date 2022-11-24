@@ -1,11 +1,11 @@
 package objects.ui;
 
+import base.song.Conductor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.util.FlxSort;
 import objects.ui.Strumline;
-import song.Conductor;
 import states.PlayState;
 
 /**

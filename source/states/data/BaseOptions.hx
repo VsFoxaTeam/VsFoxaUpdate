@@ -1,6 +1,6 @@
 package states.data;
 
-import dependency.Discord;
+import base.dependency.Discord;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;

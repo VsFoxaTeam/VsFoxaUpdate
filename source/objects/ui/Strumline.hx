@@ -1,5 +1,6 @@
 package objects.ui;
 
+import base.song.Conductor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -7,7 +8,6 @@ import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxSort;
-import song.Conductor;
 import states.PlayState;
 
 class Strumline extends FlxSpriteGroup

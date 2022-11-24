@@ -1,6 +1,6 @@
-package song;
+package base.song;
 
-import song.SongFormat.SwagSong;
+import base.song.SongFormat.SwagSong;
 
 /*
 	Stuff like this is why this is a mod engine and not a rewrite.

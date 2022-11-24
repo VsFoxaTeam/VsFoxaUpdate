@@ -6,5 +6,5 @@
 //
 using StringTools;
 using base.Controls;
-using base.CoolUtil;
-using base.ForeverDependencies;
+using base.dependency.ForeverDeps;
+using base.utils.CoolUtil;

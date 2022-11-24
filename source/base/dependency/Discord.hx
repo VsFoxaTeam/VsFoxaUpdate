@@ -1,4 +1,4 @@
-package dependency;
+package base.dependency;
 
 #if DISCORD_RPC
 import discord_rpc.DiscordRpc;

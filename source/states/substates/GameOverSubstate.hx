@@ -1,11 +1,11 @@
 package states.substates;
 
+import base.song.Conductor;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import objects.Character;
-import song.Conductor;
 import states.MusicBeatState.MusicBeatSubstate;
 
 class GameOverSubstate extends MusicBeatSubstate

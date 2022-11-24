@@ -1,5 +1,5 @@
 import base.Overlay;
-import base.ScoreUtils;
+import base.utils.ScoreUtils;
 import flixel.FlxG;
 import flixel.FlxState;
 import openfl.filters.BitmapFilter;

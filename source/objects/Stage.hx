@@ -1,7 +1,7 @@
 package objects;
 
-import base.FeatherDependencies.ScriptHandler;
-import dependency.FNFUtils.FNFSprite;
+import base.dependency.FeatherDeps.ScriptHandler;
+import base.utils.FNFUtils.FNFSprite;
 import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;

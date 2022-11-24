@@ -1,8 +1,8 @@
-package song;
+package base.song;
 
+import base.song.SongFormat.SwagSection;
+import base.song.SongFormat.SwagSong;
 import haxe.Json;
-import song.SongFormat.SwagSection;
-import song.SongFormat.SwagSong;
 import sys.io.File;
 
 class Song

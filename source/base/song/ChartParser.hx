@@ -1,9 +1,9 @@
-package song;
+package base.song;
 
+import base.song.SongFormat.SwagSong;
+import base.song.SongFormat.TimedEvent;
 import flixel.util.FlxSort;
 import objects.ui.Note;
-import song.SongFormat.SwagSong;
-import song.SongFormat.TimedEvent;
 import states.PlayState;
 
 /**

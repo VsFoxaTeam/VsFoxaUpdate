@@ -1,9 +1,14 @@
 package states;
 
-import base.FeatherDependencies.Events;
-import base.FeatherDependencies.ScriptHandler;
-import base.ScoreUtils;
-import dependency.FNFUtils.FNFSprite;
+import base.dependency.FeatherDeps.Events;
+import base.dependency.FeatherDeps.ScriptHandler;
+import base.song.ChartParser;
+import base.song.Conductor;
+import base.song.Song;
+import base.song.SongFormat.SwagSong;
+import base.song.SongFormat.TimedEvent;
+import base.utils.FNFUtils.FNFSprite;
+import base.utils.ScoreUtils;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -29,16 +34,11 @@ import objects.Character;
 import objects.ui.*;
 import objects.ui.Strumline.Receptor;
 import openfl.media.Sound;
-import song.ChartParser;
-import song.Conductor;
-import song.Song;
-import song.SongFormat.SwagSong;
-import song.SongFormat.TimedEvent;
 import states.editors.CharacterOffsetEditor;
 import states.menus.*;
 import states.substates.GameOverSubstate;
 #if desktop
-import dependency.Discord;
+import base.dependency.Discord;
 #end
 
 enum GameMode

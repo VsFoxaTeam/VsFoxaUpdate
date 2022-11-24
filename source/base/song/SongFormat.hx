@@ -1,4 +1,4 @@
-package song;
+package base.song;
 
 // stores typedefs for song info and such;
 

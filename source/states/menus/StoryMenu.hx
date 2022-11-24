@@ -1,7 +1,8 @@
 package states.menus;
 
-import base.ScoreUtils;
-import dependency.Discord;
+import base.dependency.Discord;
+import base.song.Song;
+import base.utils.ScoreUtils;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -15,7 +16,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import objects.ui.menu.*;
-import song.Song;
 import states.MusicBeatState;
 
 class StoryMenu extends MusicBeatState
@@ -200,7 +200,7 @@ class StoryMenu extends MusicBeatState
 			scoreText.text = "WEEK SCORE:" + lerpScore;
 
 		if (FlxG.sound.music != null && FlxG.sound.music.playing)
-			song.Conductor.songPosition = FlxG.sound.music.time;
+			base.song.Conductor.songPosition = FlxG.sound.music.time;
 
 		if (grpLocks != null)
 		{

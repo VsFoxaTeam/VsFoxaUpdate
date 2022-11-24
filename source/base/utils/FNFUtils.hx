@@ -1,4 +1,4 @@
-package dependency;
+package base.utils;
 
 import flixel.FlxG;
 import flixel.FlxGame;

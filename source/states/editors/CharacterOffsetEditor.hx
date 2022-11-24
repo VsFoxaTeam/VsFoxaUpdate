@@ -1,6 +1,6 @@
 package states.editors;
 
-import dependency.Discord;
+import base.dependency.Discord;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;

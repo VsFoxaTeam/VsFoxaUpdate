@@ -1,6 +1,6 @@
 package objects.ui;
 
-import base.ScoreUtils;
+import base.utils.ScoreUtils;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
@@ -80,7 +80,7 @@ class ClassHUD extends FlxSpriteGroup
 		cornerMark.setPosition(FlxG.width - (cornerMark.width + 5), 5);
 		add(cornerMark);
 
-		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 40 : 10), 0, '- ${infoDisplay + " [" + diffDisplay}] -');
+		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 40 : 10), 0, '- ${infoDisplay} -');
 		centerMark.setFormat(Paths.font('vcr'), 24, FlxColor.WHITE);
 		centerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		centerMark.screenCenter(X);
@@ -257,13 +257,10 @@ class ClassHUD extends FlxSpriteGroup
 
 	override function add(Object:FlxSprite):FlxSprite
 	{
-		if (Init.trueSettings.get('Disable Antialiasing'))
-		{
-			if (Std.isOfType(Object, FlxText))
-				cast(Object, FlxText).antialiasing = false;
-			if (Std.isOfType(Object, FlxSprite))
-				cast(Object, FlxSprite).antialiasing = false;
-		}
+		if (Std.isOfType(Object, FlxText))
+			cast(Object, FlxText).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+		if (Std.isOfType(Object, FlxSprite))
+			cast(Object, FlxSprite).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		return super.add(Object);
 	}
 }

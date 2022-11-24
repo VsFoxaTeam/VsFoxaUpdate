@@ -1,6 +1,6 @@
 package objects.ui.menu;
 
-import dependency.FNFUtils.FNFSprite;
+import base.utils.FNFUtils.FNFSprite;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import objects.fonts.Alphabet;

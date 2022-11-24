@@ -1,4 +1,4 @@
-package base;
+package base.utils;
 
 import flixel.FlxG;
 import states.PlayState;

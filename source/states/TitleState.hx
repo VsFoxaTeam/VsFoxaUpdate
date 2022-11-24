@@ -1,6 +1,7 @@
 package states;
 
-import dependency.Discord;
+import base.dependency.Discord;
+import base.song.Conductor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -27,7 +28,6 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import objects.fonts.Alphabet;
 import openfl.Assets;
-import song.Conductor;
 import states.MusicBeatState;
 
 /**

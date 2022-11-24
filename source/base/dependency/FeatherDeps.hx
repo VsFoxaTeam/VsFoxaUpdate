@@ -1,4 +1,6 @@
-package base;
+package base.dependency;
+
+import flixel.FlxSprite;
 
 /**
  * Feather Dependencies unifies ScriptHandler and Events into a single class;
@@ -6,6 +8,62 @@ package base;
  * 
  * this class is subjective of change;
 **/
+class FeatherSprite extends FlxSprite
+{
+	public var parentSprite:FlxSprite;
+
+	public var addX:Float = 0;
+	public var addY:Float = 0;
+	public var addAngle:Float = 0;
+	public var addAlpha:Float = 0;
+
+	public var copyParentAngle:Bool = false;
+	public var copyParentAlpha:Bool = false;
+	public var copyParentVisib:Bool = false;
+
+	public function new(fileName:String, ?fileFolder:String, ?fileAnim:String, ?looped:Bool = false)
+	{
+		super();
+
+		if (fileName != null)
+		{
+			if (fileAnim != null)
+			{
+				frames = Paths.getSparrowAtlas(fileName, fileFolder);
+				animation.addByPrefix('static', fileAnim, 24, looped);
+				animation.play('static');
+			}
+			else
+			{
+				loadGraphic(Paths.image(fileName, fileFolder));
+			}
+			antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+			scrollFactor.set();
+		}
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		// set parent sprite stuffs;
+		if (parentSprite != null)
+		{
+			setPosition(parentSprite.x + addX, parentSprite.y + addY);
+			scrollFactor.set(parentSprite.scrollFactor.x, parentSprite.scrollFactor.y);
+
+			if (copyParentAngle)
+				angle = parentSprite.angle + addAngle;
+
+			if (copyParentAlpha)
+				alpha = parentSprite.alpha * addAlpha;
+
+			if (copyParentVisib)
+				visible = parentSprite.visible;
+		}
+	}
+}
+
 class ScriptHandler extends SScript
 {
 	// this just kinda sets up script variables and such;
@@ -43,9 +101,9 @@ class ScriptHandler extends SScript
 		// CLASSES (FUNKIN);
 		set('Alphabet', objects.fonts.Alphabet);
 		set('Boyfriend', objects.Character.Boyfriend);
-		set('CoolUtil', base.CoolUtil);
+		set('CoolUtil', base.utils.CoolUtil);
 		set('Character', objects.Character);
-		set('Conductor', song.Conductor);
+		set('Conductor', base.song.Conductor);
 		set('HealthIcon', objects.ui.HealthIcon);
 		set('Receptor', objects.ui.Strumline.Receptor);
 		set('Strumline', objects.ui.Strumline);
@@ -57,12 +115,12 @@ class ScriptHandler extends SScript
 		set('Init', Init);
 		set('Main', Main);
 		set('Stage', objects.Stage);
-		set('FNFSprite', dependency.FNFUtils.FNFSprite);
-		set('ForeverAssets', base.ForeverDependencies.ForeverAssets);
-		set('ForeverTools', base.ForeverDependencies.ForeverTools);
+		set('FNFSprite', base.utils.FNFUtils.FNFSprite);
+		set('ForeverAssets', base.dependency.ForeverDeps.ForeverAssets);
+		set('ForeverTools', base.dependency.ForeverDeps.ForeverTools);
 
 		// CLASSES (FEATHER);
-		set('FeatherSprite', dependency.FeatherSprite);
+		set('FeatherSprite', base.dependency.FeatherSprite);
 		set('Controls', base.Controls);
 
 		// OTHER

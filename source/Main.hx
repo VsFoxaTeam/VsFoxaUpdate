@@ -2,9 +2,9 @@ package;
 
 import base.*;
 import base.Overlay.Console;
-import dependency.Discord;
-import dependency.FNFUtils.FNFGame;
-import dependency.FNFUtils.FNFTransition;
+import base.dependency.Discord;
+import base.utils.FNFUtils.FNFGame;
+import base.utils.FNFUtils.FNFTransition;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
