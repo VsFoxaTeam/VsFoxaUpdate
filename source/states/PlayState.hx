@@ -1251,21 +1251,10 @@ class PlayState extends MusicBeatState
 	public function displayScore(id:Int, late:Bool, ?preload:Bool = false)
 	{
 		//
-		var rating:FNFSprite = null;
-		var timing:FNFSprite = null;
+		var rating:FNFSprite;
 
-		rating = ForeverAssets.generateRating(ScoreUtils.judges[id].name, judgementsGroup, id, late, assetModifier, changeableSkin, 'UI');
+		rating = ForeverAssets.generateRating(id, judgementsGroup, assetModifier, changeableSkin, 'UI');
 		rating.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y);
-
-		if (Init.trueSettings.get("Display Timings"))
-		{
-			timing = ForeverAssets.generateTimings(ScoreUtils.judges[id].name, late, rating, judgementsGroup, assetModifier, changeableSkin, 'UI');
-			timing.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y + 50);
-		}
-
-		insert(members.indexOf(strumLines), rating);
-		if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
-			insert(members.indexOf(strumLines), timing);
 
 		if (rating != null)
 		{
@@ -1281,32 +1270,13 @@ class PlayState extends MusicBeatState
 			ForeverTools.tweenJudgement(rating);
 		}
 
-		if (timing != null)
-		{
-			if (!Init.trueSettings.get('Judgement Recycling'))
-				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
-					insert(members.indexOf(strumLines), timing);
-
-			if (Init.trueSettings.get("Simply Judgements"))
-			{
-				if (lastTiming != null)
-					lastTiming.kill();
-				lastTiming = timing;
-			}
-			ForeverTools.tweenJudgement(timing);
-		}
-
 		if (!preload)
 		{
 			if (Init.trueSettings.get('Fixed Judgements'))
 			{
 				// bound to camera
 				rating.cameras = [camHUD];
-				if (timing != null)
-					timing.cameras = [camHUD];
 				rating.screenCenter();
-				if (timing != null)
-					timing.screenCenter();
 			}
 
 			var ratingName = ScoreUtils.judges[id].name;
@@ -1318,10 +1288,36 @@ class PlayState extends MusicBeatState
 				ScoreUtils.smallestRating = id;
 		}
 		else
-		{
 			rating.alpha = 0.00001;
-			if (timing != null)
+
+		if (Init.trueSettings.get("Display Timings"))
+		{
+			var timing:FNFSprite;
+
+			timing = ForeverAssets.generateTimings(ScoreUtils.judges[id].name, late, rating, judgementsGroup, assetModifier, changeableSkin, 'UI');
+			timing.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y + 50);
+
+			if (!Init.trueSettings.get('Judgement Recycling'))
+				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
+					insert(members.indexOf(strumLines), timing);
+
+			if (Init.trueSettings.get('Fixed Judgements'))
+			{
+				// bound to camera
+				timing.cameras = [camHUD];
+				timing.screenCenter();
+			}
+
+			if (preload)
 				timing.alpha = 0.00001;
+
+			if (Init.trueSettings.get("Simply Judgements"))
+			{
+				if (lastTiming != null)
+					lastTiming.kill();
+				lastTiming = timing;
+			}
+			ForeverTools.tweenJudgement(timing);
 		}
 
 		// COMBO
@@ -1368,6 +1364,11 @@ class PlayState extends MusicBeatState
 				lastCombo.push(numScore);
 			}
 		}
+
+		if (judgementsGroup != null)
+			judgementsGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
+		if (comboGroup != null)
+			comboGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 	}
 
 	function healthCall(?ratingMultiplier:Float = 0)

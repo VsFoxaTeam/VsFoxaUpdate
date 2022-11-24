@@ -40,25 +40,27 @@ class ForeverAssets
 	public static function generateCombo(asset:String, assetGroup:FlxTypedGroup<FNFSprite>, number:String, allSicks:Bool, assetModifier:String = 'base',
 			changeableSkin:String = 'default', baseLibrary:String, negative:Bool, createdColor:FlxColor, scoreInt:Int):FNFSprite
 	{
-		var width = 100;
-		var height = 140;
+		var width = assetModifier == "pixel" ? 10 : 100;
+		var height = assetModifier == "pixel" ? 12 : 140;
 
-		if (assetModifier == 'pixel')
-		{
-			width = 10;
-			height = 12;
-		}
-		var comboNumbers:FNFSprite;
+		if (!Init.trueSettings.get('Judgement Recycling'))
+			assetGroup == null;
 
-		if (assetGroup != null && Init.trueSettings.get('Judgement Recycling'))
-			comboNumbers = assetGroup.recycle(FNFSprite);
-		else
-			comboNumbers = new FNFSprite();
-		comboNumbers.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)), true, width, height);
+		var comboNumbers:FNFSprite = generateForeverSprite(asset, assetModifier, changeableSkin, baseLibrary, true, width, height, assetGroup);
+
 		comboNumbers.alpha = 1;
 		comboNumbers.screenCenter();
+		comboNumbers.antialiasing = (assetModifier != 'pixel');
 		comboNumbers.x += (43 * scoreInt) + 20;
 		comboNumbers.y += 60;
+
+		if (!Init.trueSettings.get('Simply Judgements'))
+		{
+			comboNumbers.acceleration.y = FlxG.random.int(200, 300);
+			comboNumbers.velocity.y = -FlxG.random.int(140, 160);
+			comboNumbers.velocity.x = FlxG.random.float(-5, 5);
+		}
+		comboNumbers.zDepth = -Conductor.songPosition;
 
 		comboNumbers.color = FlxColor.WHITE;
 		if (negative)
@@ -70,22 +72,10 @@ class ForeverAssets
 		comboNumbers.animation.play('base');
 
 		if (assetModifier == 'pixel')
-		{
-			comboNumbers.antialiasing = false;
 			comboNumbers.setGraphicSize(Std.int(comboNumbers.width * PlayState.daPixelZoom));
-		}
 		else
-		{
-			comboNumbers.antialiasing = true;
 			comboNumbers.setGraphicSize(Std.int(comboNumbers.width * 0.5));
-		}
 		comboNumbers.updateHitbox();
-		if (!Init.trueSettings.get('Simply Judgements'))
-		{
-			comboNumbers.acceleration.y = FlxG.random.int(200, 300);
-			comboNumbers.velocity.y = -FlxG.random.int(140, 160);
-			comboNumbers.velocity.x = FlxG.random.float(-5, 5);
-		}
 
 		// hardcoded lmao
 		if (!Init.trueSettings.get('Simply Judgements'))
@@ -101,37 +91,24 @@ class ForeverAssets
 		else
 			FlxTween.tween(comboNumbers, {y: comboNumbers.y + 20}, 0.1, {type: FlxTweenType.BACKWARD, ease: FlxEase.circOut});
 
-		comboNumbers.zDepth = -Conductor.songPosition;
-		if (assetGroup != null)
-			assetGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
-
 		return comboNumbers;
 	}
 
-	public static function generateRating(asset:String, assetGroup:FlxTypedGroup<FNFSprite>, id:Int, late:Bool, assetModifier:String = 'base',
+	public static function generateRating(id:Int, assetGroup:FlxTypedGroup<FNFSprite>, assetModifier:String = 'base',
 			changeableSkin:String = 'default', baseLibrary:String):FNFSprite
 	{
-		var width = 390;
-		var height = 163;
-		if (assetModifier == 'pixel')
-		{
-			width = 60;
-			height = 32;
-		}
-		var judgement:FNFSprite;
-		if (assetGroup != null && Init.trueSettings.get('Judgements Recycling'))
-			judgement = assetGroup.recycle(FNFSprite, function()
-			{
-				var rating:FNFSprite = new FNFSprite();
-				rating.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true, width, height);
-				return rating;
-			});
-		else
-			judgement = new FNFSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true,
-				width, height);
+		var width = assetModifier == 'pixel' ? 60 : 390;
+		var height = assetModifier == 'pixel' ? 32 : 163;
+
+		if (!Init.trueSettings.get('Judgement Recycling'))
+			assetGroup == null;
+
+		var judgement:FNFSprite = generateForeverSprite('judgements', assetModifier, changeableSkin, baseLibrary, true, width, height, assetGroup);
 
 		judgement.alpha = 1;
+		judgement.visible = true;
 		judgement.screenCenter();
+		judgement.antialiasing = (assetModifier != 'pixel');
 		judgement.x = (FlxG.width * 0.55) - 40;
 		judgement.y -= 60;
 		if (!Init.trueSettings.get('Simply Judgements'))
@@ -140,29 +117,19 @@ class ForeverAssets
 			judgement.velocity.y = -FlxG.random.int(140, 175);
 			judgement.velocity.x = -FlxG.random.int(0, 10);
 		}
+		judgement.zDepth = -Conductor.songPosition;
 
 		judgement.animation.add('sick-perfect', [0]);
 		for (i in 0...ScoreUtils.judges.length)
 			judgement.animation.add(ScoreUtils.judges[i].name, [i + 1]);
 
 		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-perfect' : '');
-
 		judgement.animation.play(ScoreUtils.judges[id].name + perfectString);
 
 		if (assetModifier == 'pixel')
-		{
-			judgement.antialiasing = false;
 			judgement.setGraphicSize(Std.int(judgement.width * PlayState.daPixelZoom * 0.7));
-		}
 		else
-		{
-			judgement.antialiasing = true;
 			judgement.setGraphicSize(Std.int(judgement.width * 0.7));
-		}
-
-		judgement.zDepth = -Conductor.songPosition;
-		if (assetGroup != null)
-			assetGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 
 		return judgement;
 	}
@@ -170,47 +137,47 @@ class ForeverAssets
 	public static function generateTimings(anim:String, isLate:Bool, parent:FNFSprite, assetGroup:FlxTypedGroup<FNFSprite>, assetModifier:String,
 			changeableSkin:String, baseLibrary:String):FNFSprite
 	{
-		var timing:FNFSprite;
-		if (assetGroup != null && Init.trueSettings.get('Judgement Recycling'))
-			timing = assetGroup.recycle(FNFSprite);
-		else
-			timing = new FNFSprite();
-		timing.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('timings', assetModifier, changeableSkin, baseLibrary)), true,
-			assetModifier == "pixel" ? 28 : 150, assetModifier == "pixel" ? 14 : 120);
+		var width = assetModifier == "pixel" ? 28 : 150;
+		var height = assetModifier == "pixel" ? 14 : 120;
 
-		for (i in 0...ScoreUtils.judges.length)
-		{
-			for (j in 0...2)
-				timing.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) - 2]);
-		}
+		if (!Init.trueSettings.get('Judgement Recycling'))
+			assetGroup == null;
 
-		var timingString = (isLate ? '-late' : '-early');
-
-		timing.animation.play(anim + timingString);
+		var timing:FNFSprite = generateForeverSprite('timings', assetModifier, changeableSkin, baseLibrary, true, width, height, assetGroup);
 
 		timing.alpha = 1;
 		timing.visible = (anim != 'sick-perfect' && anim != 'sick' && anim != 'miss');
 		timing.scrollFactor.set(parent.scrollFactor.x, parent.scrollFactor.y);
 		timing.velocity.set(parent.velocity.x, parent.velocity.y);
-		timing.acceleration.x = parent.acceleration.x;
-		timing.acceleration.y = parent.acceleration.y;
+		timing.acceleration.set(parent.acceleration.x, parent.acceleration.y);
+		timing.antialiasing = (assetModifier != 'pixel');
+		timing.zDepth = -Conductor.songPosition;
+
+		for (i in 0...ScoreUtils.judges.length)
+			for (j in 0...2)
+				timing.animation.add(ScoreUtils.judges[i].name + (j == 1 ? '-late' : '-early'), [(i * 2) + (j == 1 ? 1 : 0) - 2]);
+
+		var timingString = (isLate ? '-late' : '-early');
+		timing.animation.play(anim + timingString);
 
 		if (assetModifier == 'pixel')
-		{
-			timing.antialiasing = false;
 			timing.setGraphicSize(Std.int(timing.width * PlayState.daPixelZoom * 0.7));
-		}
 		else
-		{
-			timing.antialiasing = true;
 			timing.setGraphicSize(Std.int(timing.width * 0.7));
-		}
-
-		timing.zDepth = -Conductor.songPosition;
-		if (assetGroup != null)
-			assetGroup.sort(FNFSprite.depthSorting, FlxSort.DESCENDING);
 
 		return timing;
+	}
+	
+	public static function generateForeverSprite(asset:String, aMod:String, skin:String, lib:String, animated:Bool, width:Int, height:Int, ?group:FlxTypedGroup<FNFSprite>)
+	{
+		//
+		var newSprite:FNFSprite;
+		if (group != null)
+			newSprite = group.recycle(FNFSprite);
+		else
+			newSprite = new FNFSprite();
+		newSprite.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, aMod, skin, lib)), animated, width, height);
+		return newSprite;
 	}
 
 	public static function generateNoteSplashes(strumline:Strumline, assetModifier:String = 'base', changeableSkin:String = 'default',

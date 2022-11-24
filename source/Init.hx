@@ -63,12 +63,6 @@ class Init extends FlxState
 			'Whether to display approximately how much Memory is being used.',
 			NOT_FORCED
 		],
-		'Debug Info' => [
-			false,
-			Checkmark,
-			'Whether to display information like your game state.',
-			#if neko FORCED #else NOT_FORCED #end
-		],
 		'Reduced Movements' => [
 			false,
 			Checkmark,
@@ -293,7 +287,7 @@ class Init extends FlxState
 		FlxG.mouse.useSystemCursor = true; // Use system cursor because it's prettier
 		FlxG.mouse.visible = false; // Hide mouse on start
 
-		Main.switchState(this, cast Type.createInstance(Main.game.mainState, []));
+		Main.switchState(this, cast Type.createInstance(Main.game.initialState, []));
 	}
 
 	public static function loadSettings():Void
@@ -373,7 +367,7 @@ class Init extends FlxState
 	{
 		FlxG.autoPause = trueSettings.get('Auto Pause');
 
-		Overlay.updateDisplayInfo(trueSettings.get('FPS Counter'), trueSettings.get('Debug Info'), trueSettings.get('Memory Counter'));
+		Overlay.updateDisplayInfo(trueSettings.get('FPS Counter'), trueSettings.get('Memory Counter'));
 
 		Main.updateFramerate(trueSettings.get("Framerate Cap"));
 

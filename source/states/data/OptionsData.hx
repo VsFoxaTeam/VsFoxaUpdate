@@ -35,10 +35,9 @@ class OptionsData
 		//
 		{name: 'Auto Pause', type: "option"},
 		{name: 'Skip Text', type: "option"},
-		{name: 'Framerate Cap', type: "option"},
 		{name: 'FPS Counter', type: "option"},
 		{name: 'Memory Counter', type: "option"},
-		{name: 'Debug Info', type: "option"}
+		{name: 'Framerate Cap', type: "option"},
 	];
 
 	/* == Accessibility Group == */

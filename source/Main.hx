@@ -40,28 +40,18 @@ typedef WeekSong =
 	var colors:Array<Int>;
 }
 
-typedef GameStruct =
-{
-	var width:Int;
-	var height:Int;
-	var mainState:Class<FlxState>;
-	var framerate:Int;
-	var skipSplash:Bool;
-	var versionFE:String;
-	var versionFF:String;
-}
-
 // Here we actually import the states and metadata, and just the metadata.
 // It's nice to have modularity so that we don't have ALL elements loaded at the same time.
 // at least that's how I think it works. I could be stupid!
 class Main extends Sprite
 {
-	public static var game:GameStruct = {
+	public static var game = {
 		width: 1280, // game window width
 		height: 720, // game window height
-		mainState: states.TitleState, // the initial state the game should start at
+		initialState: states.TitleState, // state the game should start at
 		framerate: 60, // the game's default framerate
 		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
+		fullscreen: false, // whether the game starts at fullscreen mode
 		versionFE: "0.3.1", // version of Forever Engine Legacy
 		versionFF: "0.1", // version of Forever Engine Feather
 	};
@@ -168,7 +158,7 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		baseGame = new FNFGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash);
+		baseGame = new FNFGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash, game.fullscreen);
 		addChild(baseGame); // and create it afterwards
 
 		// initialize the game controls;
@@ -218,7 +208,6 @@ class Main extends Sprite
 	public static function switchState(curState:FlxState, target:FlxState)
 	{
 		// Custom made Trans in
-		Main.game.mainState = Type.getClass(target);
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
 			curState.openSubState(new FNFTransition(0.35, false));

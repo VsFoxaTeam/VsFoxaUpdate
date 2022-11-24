@@ -21,7 +21,7 @@ class Overlay extends TextField
 	// display info
 	static var displayFps = true;
 	static var displayMemory = true;
-	static var displayExtra = true;
+	static var displayExtra = #if debug true #else false #end;
 
 	public function new(x:Float, y:Float)
 	{
@@ -70,15 +70,14 @@ class Overlay extends TextField
 		{
 			text = '' // set up the text itself
 				+ (displayFps ? times.length + " FPS\n" : '') // Framerate
-			#if !neko + (displayExtra ? Main.game.mainState + "\n" : '') #end // Current Game State
-			+ (displayMemory ? '${getInterval(mem)} // ${getInterval(memPeak)}\n' : ''); // Current and Total Memory Usage
+				+ (displayExtra ? 'Class Object Count: ' + FlxG.state.members.length + "\n" : '') // Current Game State
+				+ (displayMemory ? '${getInterval(mem)} // ${getInterval(memPeak)}\n' : ''); // Current and Total Memory Usage
 		}
 	}
 
-	inline public static function updateDisplayInfo(shouldDisplayFps:Bool, shouldDisplayExtra:Bool, shouldDisplayMemory:Bool)
+	inline public static function updateDisplayInfo(shouldDisplayFps:Bool, shouldDisplayMemory:Bool)
 	{
 		displayFps = shouldDisplayFps;
-		displayExtra = shouldDisplayExtra;
 		displayMemory = shouldDisplayMemory;
 	}
 }
