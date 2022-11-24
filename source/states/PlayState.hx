@@ -1944,8 +1944,8 @@ class PlayState extends MusicBeatState
 
 	override function add(Object:FlxBasic):FlxBasic
 	{
-		if (Init.trueSettings.get('Disable Antialiasing') && Std.isOfType(Object, FlxSprite))
-			cast(Object, FlxSprite).antialiasing = false;
+		if (Std.isOfType(Object, FlxSprite))
+			cast(Object, FlxSprite).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		return super.add(Object);
 	}
 

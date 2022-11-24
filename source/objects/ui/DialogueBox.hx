@@ -655,11 +655,8 @@ class DialogueBox extends FlxSpriteGroup
 
 	override function add(Object:FlxSprite):FlxSprite
 	{
-		if (Init.trueSettings.get('Disable Antialiasing'))
-		{
-			if (Std.isOfType(Object, FlxSprite))
-				cast(Object, FlxSprite).antialiasing = false;
-		}
+		if (Std.isOfType(Object, FlxSprite))
+			cast(Object, FlxSprite).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		return super.add(Object);
 	}
 }
