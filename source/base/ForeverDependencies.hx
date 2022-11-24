@@ -94,8 +94,8 @@ class ForeverAssets
 		return comboNumbers;
 	}
 
-	public static function generateRating(id:Int, assetGroup:FlxTypedGroup<FNFSprite>, assetModifier:String = 'base',
-			changeableSkin:String = 'default', baseLibrary:String):FNFSprite
+	public static function generateRating(id:Int, assetGroup:FlxTypedGroup<FNFSprite>, assetModifier:String = 'base', changeableSkin:String = 'default',
+			baseLibrary:String):FNFSprite
 	{
 		var width = assetModifier == 'pixel' ? 60 : 390;
 		var height = assetModifier == 'pixel' ? 32 : 163;
@@ -167,8 +167,9 @@ class ForeverAssets
 
 		return timing;
 	}
-	
-	public static function generateForeverSprite(asset:String, aMod:String, skin:String, lib:String, animated:Bool, width:Int, height:Int, ?group:FlxTypedGroup<FNFSprite>)
+
+	public static function generateForeverSprite(asset:String, aMod:String, skin:String, lib:String, animated:Bool, width:Int, height:Int,
+			?group:FlxTypedGroup<FNFSprite>)
 	{
 		//
 		var newSprite:FNFSprite;

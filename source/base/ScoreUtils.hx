@@ -284,7 +284,7 @@ class ScoreUtils
 	inline public static function returnRankingStatus():String
 	{
 		var rankingFinal:String = '[$curRating]';
-		
+
 		if (curCombo != null && curCombo != '')
 			rankingFinal = '[$curRating - $curCombo]';
 

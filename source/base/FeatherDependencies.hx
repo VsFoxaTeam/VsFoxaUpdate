@@ -5,7 +5,7 @@ package base;
  * it handle Script-related variables and functions and can be modified as you wish;
  * 
  * this class is subjective of change;
- **/
+**/
 class ScriptHandler extends SScript
 {
 	// this just kinda sets up script variables and such;

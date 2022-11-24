@@ -5,17 +5,17 @@ function eventTrigger(params)
 
 function getChar(character:String = "boyfriend")
 {
-    var target:Character = null;
-    switch (character)
-    {
-        case 'dad', 'dadOpponent', 'opponent', '1':
-            target = PlayState.opponent;
-        case 'gf', 'girlfriend', 'spectator', '2':
-            target = PlayState.gf;
-        default:
-            target = PlayState.boyfriend;
-    }
-    return target;
+	var target:Character = null;
+	switch (character)
+	{
+		case 'dad', 'dadOpponent', 'opponent', '1':
+			target = PlayState.opponent;
+		case 'gf', 'girlfriend', 'spectator', '2':
+			target = PlayState.gf;
+		default:
+			target = PlayState.boyfriend;
+	}
+	return target;
 }
 
 function returnDescription()
