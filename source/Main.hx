@@ -284,7 +284,7 @@ class Main extends Sprite
 		Sys.println(errMsgPrint);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		var crashDialoguePath:String = "FF-CrashDialog";
+		var crashDialoguePath:String = "FEF-CrashDialog";
 
 		#if windows
 		crashDialoguePath += ".exe";
