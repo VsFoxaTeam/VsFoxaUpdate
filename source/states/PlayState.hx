@@ -417,19 +417,6 @@ class PlayState extends MusicBeatState
 		}
 		add(strumLines);
 
-		// cache shit
-		displayScore(0, false, true);
-		for (uniqueNote in notesGroup.members)
-		{
-			for (strumline in strumLines)
-			{
-				var splash:NoteSplash = createSplash(uniqueNote.noteType, 0, strumline);
-				if (splash != null)
-					splash.visible = false;
-			}
-		}
-		//
-
 		uiHUD = new ClassHUD();
 		uiHUD.alpha = 0;
 		add(uiHUD);
@@ -1853,12 +1840,25 @@ class PlayState extends MusicBeatState
 
 		Conductor.songPosition = -(Conductor.crochet * 5);
 
+		callFunc('startCountdown', []);
+
 		countdownPos = 0;
 
 		// in case you want the song to start later, increase this number;
 		songPosCount = 4;
 
-		callFunc('startCountdown', []);
+		// cache shit
+		displayScore(0, false, true);
+		for (uniqueNote in notesGroup.members)
+		{
+			for (strumline in strumLines)
+			{
+				var splash:NoteSplash = createSplash(uniqueNote.noteType, 0, strumline);
+				if (splash != null)
+					splash.visible = false;
+			}
+		}
+		//
 
 		camHUD.visible = true;
 
