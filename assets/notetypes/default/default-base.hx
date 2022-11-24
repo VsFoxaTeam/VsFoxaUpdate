@@ -128,8 +128,8 @@ function generateSplash(noteSplash, noteData)
 		noteSplash.animation.addByPrefix('anim2', 'note impact 2 ' + Receptor.colors[noteData], 24, false);
 		noteSplash.animation.addByPrefix('anim1', 'note impact 1  blue', 24, false); // HE DID IT AGAIN EVERYONE;
 
-		noteSplash.addOffset('anim1', 35, 50);
-		noteSplash.addOffset('anim2', 35, 50);
+		noteSplash.addOffset('anim1', 65, 60);
+		noteSplash.addOffset('anim2', 65, 60);
 		noteSplash.updateHitbox();
 	}
 
