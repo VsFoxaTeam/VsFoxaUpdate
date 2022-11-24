@@ -588,7 +588,7 @@ class ForeverTools
 		}
 	}
 
-	inline public static function tweenJudgeObj(obj:FNFSprite)
+	inline public static function tweenJudgement(obj:FNFSprite)
 	{
 		if (obj != null)
 		{

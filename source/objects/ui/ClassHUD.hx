@@ -173,19 +173,10 @@ class ClassHUD extends FlxSpriteGroup
 
 		scoreDisplay = 'Score: ' + ScoreUtils.score;
 
-		var isRated = (ScoreUtils.curCombo != null && ScoreUtils.curCombo != '' && ScoreUtils.notesHit > 0);
-		var rank:String = (ScoreUtils.curRating != null
-			&& ScoreUtils.curRating != ''
-			&& ScoreUtils.notesHit > 0 ? ' [${ScoreUtils.curRating}]' : '');
-
-		// testing purposes
-		var displayAccuracy:Bool = Init.trueSettings.get('Display Accuracy');
-		if (displayAccuracy)
+		if (Init.trueSettings.get('Display Accuracy'))
 		{
 			scoreDisplay += divider + markupDivider + 'Accuracy: ${ScoreUtils.returnAccuracy()}' + markupDivider;
-			scoreDisplay += isRated ? ' $markupDivider[' + ScoreUtils.curCombo + divider + ScoreUtils.curRating + ']$markupDivider' : '$markupDivider'
-				+ rank
-				+ '$markupDivider';
+			scoreDisplay += markupDivider + ScoreUtils.returnRankingStatus() + markupDivider;
 			scoreDisplay += divider + 'Combo Breaks: ${ScoreUtils.misses}';
 		}
 		scoreDisplay += '\n';
@@ -193,10 +184,8 @@ class ClassHUD extends FlxSpriteGroup
 		scoreBar.text = scoreDisplay;
 
 		if (Init.trueSettings.get('Accuracy Hightlight'))
-		{
 			if (ScoreUtils.notesHit > 0)
 				scoreBar.applyMarkup(scoreBar.text, [new FlxTextFormatMarkerPair(scoreFlashFormat, markupDivider)]);
-		}
 
 		scoreBar.screenCenter(X);
 
@@ -247,10 +236,10 @@ class ClassHUD extends FlxSpriteGroup
 
 	var scoreFlashFormat:FlxTextFormat;
 
-	public function colorHighlight(id:Int, perfectSick:Bool)
+	public function colorHighlight(curRating:String)
 	{
 		// highlights the accuracy mark on the score bar;
-		var ratingMap:Map<String, FlxColor> = [
+		var rankingsMap:Map<String, FlxColor> = [
 			"S+" => FlxColor.fromString('#F8D482'),
 			"S" => FlxColor.CYAN,
 			"A" => FlxColor.LIME,
@@ -261,14 +250,9 @@ class ClassHUD extends FlxSpriteGroup
 			"F" => FlxColor.RED,
 		];
 
-		var color:FlxColor = FlxColor.WHITE;
-		for (scoreRating => rankColor in ratingMap)
-		{
-			if (scoreRating == ScoreUtils.curRating)
-				color = rankColor;
-		}
-
-		scoreFlashFormat = new FlxTextFormat(color, true);
+		if (rankingsMap.exists(curRating))
+			if (ScoreUtils.curRating == curRating)
+				scoreFlashFormat = new FlxTextFormat(rankingsMap.get(curRating), true);
 	}
 
 	override function add(Object:FlxSprite):FlxSprite

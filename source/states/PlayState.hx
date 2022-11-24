@@ -1192,7 +1192,6 @@ class PlayState extends MusicBeatState
 			ScoreUtils.perfectCombo = false;
 
 		displayScore(gottenRating, late);
-		uiHUD.colorHighlight(gottenRating, ScoreUtils.perfectCombo);
 	}
 
 	public function createSplash(noteType:String, noteData:Int, strumline:Strumline):NoteSplash
@@ -1229,8 +1228,6 @@ class PlayState extends MusicBeatState
 		// display negative combo
 		if (popMiss)
 			displayScore(4, true);
-
-		uiHUD.colorHighlight(4, false);
 	}
 
 	function increaseCombo(?baseRating:Int, ?direction = 0, ?strumline:Strumline)
@@ -1281,7 +1278,7 @@ class PlayState extends MusicBeatState
 					lastRating.kill();
 				lastRating = rating;
 			}
-			ForeverTools.tweenJudgeObj(rating);
+			ForeverTools.tweenJudgement(rating);
 		}
 
 		if (timing != null)
@@ -1296,7 +1293,7 @@ class PlayState extends MusicBeatState
 					lastTiming.kill();
 				lastTiming = timing;
 			}
-			ForeverTools.tweenJudgeObj(timing);
+			ForeverTools.tweenJudgement(timing);
 		}
 
 		if (!preload)

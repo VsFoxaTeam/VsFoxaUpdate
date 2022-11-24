@@ -277,9 +277,18 @@ class ScoreUtils
 	inline public static function returnAccuracy()
 	{
 		var accuracyFinal:String = 'N/A';
-		if (notesHit > 0)
-			accuracyFinal = '${Math.floor(accuracy * 100) / 100}%';
+		accuracyFinal = '${Math.floor(accuracy * 100) / 100}%';
 		return accuracyFinal;
+	}
+
+	inline public static function returnRankingStatus():String
+	{
+		var rankingFinal:String = '[$curRating]';
+		
+		if (curCombo != null && curCombo != '')
+			rankingFinal = '[$curRating - $curCombo]';
+
+		return ' $rankingFinal';
 	}
 
 	public static function updateRanking()
@@ -304,6 +313,7 @@ class ScoreUtils
 
 		// this updates the most so uh
 		PlayState.uiHUD.updateScoreText();
+		PlayState.uiHUD.colorHighlight(curRating);
 	}
 
 	public static function setJudgeTiming(rating:Int, newTiming:Float)
