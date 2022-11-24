@@ -20,4 +20,4 @@ function getChar(character:String = "boyfriend")
 
 function returnDescription()
 	return
-		"Changes ths target character,\nValue 1: Character (bf, gf, dad, defaults to bf).\nValue 2: New Idle Suffix (example: -alt)";
+		"Changes the idle animation suffix for the specified character,\nValue 1: Character (bf, gf, dad, defaults to bf).\nValue 2: New Idle Suffix (example: -alt)";
