@@ -77,7 +77,7 @@ class Character extends FNFSprite
 		{
 			case 'placeholder':
 				// hardcoded placeholder so it can be used on errors;
-				frames = Paths.getSparrowAtlas('placeholder', 'characters/$character');
+				frames = Paths.getSparrowAtlas('placeholder', 'data/characters/$character');
 
 				animation.addByPrefix('idle', 'Idle', 24, false);
 				animation.addByPrefix('singLEFT', 'Left', 24, false);
@@ -395,11 +395,11 @@ class Character extends FNFSprite
 		{
 			case "PackerAtlas":
 				var sprPacker:String = (overrideFrames == null ? char : overrideFrames);
-				var sprPath:String = (framesPath == null ? 'characters/$char' : framesPath);
+				var sprPath:String = (framesPath == null ? 'data/characters/$char' : framesPath);
 				frames = Paths.getPackerAtlas(sprPacker, sprPath);
 			default:
 				var sprSparrow:String = (overrideFrames == null ? char : overrideFrames);
-				var sprPath:String = (framesPath == null ? 'characters/$char' : framesPath);
+				var sprPath:String = (framesPath == null ? 'data/characters/$char' : framesPath);
 				frames = Paths.getSparrowAtlas(sprSparrow, sprPath);
 		}
 
@@ -560,9 +560,9 @@ class Character extends FNFSprite
 		switch (spriteType)
 		{
 			case "PackerAtlas":
-				frames = Paths.getPackerAtlas(json.image.replace('characters/', ''), 'characters/$char');
+				frames = Paths.getPackerAtlas(json.image.replace('characters/', ''), 'data/characters/$char');
 			default:
-				frames = Paths.getSparrowAtlas(json.image.replace('characters/', ''), 'characters/$char');
+				frames = Paths.getSparrowAtlas(json.image.replace('characters/', ''), 'data/characters/$char');
 		}
 
 		psychAnimationsArray = json.animations;

@@ -51,29 +51,30 @@ class HealthIcon extends FlxSprite
 
 	public function updateIcon(char:String = 'bf', isPlayer:Bool = false)
 	{
-		var trimmedCharacter:String = char;
-		if (trimmedCharacter.contains('-'))
-			trimmedCharacter = trimmedCharacter.substring(0, trimmedCharacter.indexOf('-'));
+		var trimmedChar:String = char;
+		if (trimmedChar.contains('-'))
+			trimmedChar = trimmedChar.substring(0, trimmedChar.indexOf('-'));
 
 		var iconPath = char;
-		if (!FileSystem.exists(Paths.getPath('characters/$iconPath/icon$suffix.png', IMAGE)))
+		if (!FileSystem.exists(Paths.getPath('data/characters/$iconPath/icon$suffix.png', IMAGE)))
 		{
-			if (iconPath != trimmedCharacter)
-				iconPath = trimmedCharacter;
+			if (iconPath != trimmedChar)
+				iconPath = trimmedChar;
 			else
 				iconPath = 'placeholder';
 		}
 
 		antialiasing = true;
 
-		var iconGraphic:FlxGraphic = Paths.image('$iconPath/icon$suffix', 'characters');
+		var iconGraphic:FlxGraphic = Paths.image('$iconPath/icon$suffix', 'data/characters');
 		var iconWidth:Int = 1;
+
+		loadGraphic(iconGraphic); // get file size;
 
 		// icons with endless frames;
 		iconWidth = Std.int(iconGraphic.width / 150) - 1;
 		iconWidth = iconWidth + 1;
 
-		loadGraphic(iconGraphic); // get file size;
 		loadGraphic(iconGraphic, true, Std.int(iconGraphic.width / iconWidth), iconGraphic.height); // then load it;
 
 		initialWidth = width;

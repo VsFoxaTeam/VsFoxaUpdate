@@ -264,13 +264,8 @@ class PlayState extends MusicBeatState
 
 	public function repositionChars()
 	{
-		boyfriend.setPosition(stageBuild.stageJson.bfPos[0], stageBuild.stageJson.bfPos[1]);
-		opponent.setPosition(stageBuild.stageJson.dadPos[0], stageBuild.stageJson.dadPos[1]);
-		gf.setPosition(stageBuild.stageJson.gfPos[0], stageBuild.stageJson.gfPos[1]);
-
 		stageBuild.repositionPlayers(curStage, boyfriend, gf, opponent);
 		stageBuild.dadPosition(curStage, boyfriend, gf, opponent, new FlxPoint(gf.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100));
-		defaultCamZoom = stageBuild.stageJson.defaultZoom;
 	}
 
 	// at the beginning of the playstate
@@ -282,7 +277,7 @@ class PlayState extends MusicBeatState
 
 		main = this;
 
-		trace("Current Gameplay Mode: " + gameplayMode);
+		// trace("Current Gameplay Mode: " + gameplayMode);
 
 		// reset any values and variables that are static
 		resetStatics();
@@ -308,7 +303,7 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD, false);
 		allUIs.push(camHUD);
 
-		// always draw new objects pon the main camera
+		// always draw new objects on the main camera
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
 		// default song
@@ -328,7 +323,7 @@ class PlayState extends MusicBeatState
 		add(stageBuild);
 
 		if (SONG.gfVersion == null || SONG.gfVersion.length < 1)
-			SONG.gfVersion = stageBuild.returnGFtype(curStage);
+			SONG.gfVersion = 'gf';
 
 		// set up characters
 		generateCharacters();
@@ -342,13 +337,10 @@ class PlayState extends MusicBeatState
 
 		// EVERYTHING SHOULD GO UNDER THIS, IF YOU PLAN ON SPAWNING SOMETHING LATER ADD IT TO STAGEBUILD OR FOREGROUND
 		// darken everything but the arrows and ui via a flxsprite
-		if (Init.trueSettings.get('Stage Opacity') <= 1)
-		{
-			var darknessBG:FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
-			darknessBG.alpha = (100 - Init.trueSettings.get('Stage Opacity')) / 100;
-			darknessBG.scrollFactor.set(0, 0);
-			add(darknessBG);
-		}
+		var darknessBG:FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
+		darknessBG.alpha = (100 - Init.trueSettings.get('Stage Opacity')) / 100;
+		darknessBG.scrollFactor.set(0, 0);
+		add(darknessBG);
 
 		// strum setup
 		strumLines = new FlxTypedGroup<Strumline>();
@@ -972,7 +964,7 @@ class PlayState extends MusicBeatState
 		{
 			var stringDirection:String = Receptor.actions[direction];
 
-			FlxG.sound.play(Paths.soundRandom('$assetModifier/miss', 1, 3), FlxG.random.float(0.1, 0.2));
+			FlxG.sound.play(Paths.soundRandom('$assetModifier/miss', 'sounds', 1, 3), FlxG.random.float(0.1, 0.2));
 
 			for (character in strumline.characters)
 			{

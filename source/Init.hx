@@ -404,7 +404,7 @@ class Init extends FlxState
 		gameSettings.get("UI Skin")[4] = CoolUtil.returnAssetsLibrary('UI');
 		if (!gameSettings.get("UI Skin")[4].contains(trueSettings.get("UI Skin")))
 			trueSettings.set("UI Skin", 'default');
-		gameSettings.get("Note Skin")[4] = CoolUtil.returnAssetsLibrary('default/skins', 'assets/notetypes');
+		gameSettings.get("Note Skin")[4] = CoolUtil.returnAssetsLibrary('notetypes/default/skins', 'assets/data');
 		if (!gameSettings.get("Note Skin")[4].contains(trueSettings.get("Note Skin")))
 			trueSettings.set("Note Skin", 'default');
 	}

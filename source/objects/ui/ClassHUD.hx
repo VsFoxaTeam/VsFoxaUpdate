@@ -13,28 +13,30 @@ import states.PlayState;
 
 class ClassHUD extends FlxSpriteGroup
 {
-	// set up variables and stuff here
+	// bar variables
 	public var scoreBar:FlxText;
-
-	// fnf mods
-	public var scoreDisplay:String = 'beep bop bo skdkdkdbebedeoop brrapadop';
-
-	public var cornerMark:FlxText; // engine mark at the upper right corner
-	public var centerMark:FlxText; // song display name and difficulty at the center
-
-	public var autoplayMark:FlxText;
-	public var autoplaySine:Float = 0;
-
 	public var healthBarBG:FlxSprite;
 	public var healthBar:FlxBar;
 
+	// mark variables
+	public var cornerMark:FlxText; // engine mark at the upper right corner
+	public var centerMark:FlxText; // song display name and difficulty at the center
+	public var autoplayMark:FlxText; // botplay/autoplay indicator at the center
+
+	// icons
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
 
+	// other
+	public var scoreDisplay:String = 'beep bop bo skdkdkdbebedeoop brrapadop'; // fnf mods
+
+	public var autoplaySine:Float = 0;
+
 	public var timingsMap:Map<String, FlxText> = [];
 
+	// display texts
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
-	public var diffDisplay:String = CoolUtil.difficultyString;
+	public var diffDisplay:String = '[${CoolUtil.difficultyString}]';
 	public var engineDisplay:String = "FOREVER FEATHER v" + Main.game.versionFF;
 
 	// eep
@@ -80,11 +82,27 @@ class ClassHUD extends FlxSpriteGroup
 		cornerMark.setPosition(FlxG.width - (cornerMark.width + 5), 5);
 		add(cornerMark);
 
-		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 40 : 10), 0, '- ${infoDisplay} -');
+		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 40 : 10), 0, '- $infoDisplay $diffDisplay -');
 		centerMark.setFormat(Paths.font('vcr'), 24, FlxColor.WHITE);
 		centerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		centerMark.screenCenter(X);
 		add(centerMark);
+
+		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? centerMark.y - 60 : centerMark.y + 60), FlxG.width - 800, '[AUTOPLAY]\n', 32);
+		autoplayMark.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER);
+		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2.3);
+		autoplayMark.screenCenter(X);
+		autoplayMark.visible = PlayState.bfStrums.autoplay;
+
+		// repositioning for it to not be covered by the receptors
+		if (Init.trueSettings.get('Centered Notefield'))
+		{
+			if (Init.trueSettings.get('Downscroll'))
+				autoplayMark.y = autoplayMark.y - 125;
+			else
+				autoplayMark.y = autoplayMark.y + 125;
+		}
+		add(autoplayMark);
 
 		// counter
 		if (Init.trueSettings.get('Counter') != 'None')
@@ -108,22 +126,6 @@ class ClassHUD extends FlxSpriteGroup
 				add(textAsset);
 			}
 		}
-
-		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? centerMark.y - 60 : centerMark.y + 60), FlxG.width - 800, '[AUTOPLAY]\n', 32);
-		autoplayMark.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER);
-		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2.3);
-		autoplayMark.screenCenter(X);
-		autoplayMark.visible = PlayState.bfStrums.autoplay;
-
-		// repositioning for it to not be covered by the receptors
-		if (Init.trueSettings.get('Centered Notefield'))
-		{
-			if (Init.trueSettings.get('Downscroll'))
-				autoplayMark.y = autoplayMark.y - 125;
-			else
-				autoplayMark.y = autoplayMark.y + 125;
-		}
-		add(autoplayMark);
 
 		updateScoreText();
 	}

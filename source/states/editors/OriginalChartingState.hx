@@ -258,9 +258,9 @@ class OriginalChartingState extends MusicBeatState
 		stepperBPM.name = 'song_bpm';
 		blockPressNumStepper.push(stepperBPM);
 
-		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characters/characterList'));
 		var assetModifiers:Array<String> = CoolUtil.returnAssetsLibrary('UI/default');
-		var stages:Array<String> = CoolUtil.coolTextFile(Paths.txt('stages/stageList'));
+		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/characterList'));
+		var stages:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
 
 		var player1DropDown = new FlxUIDropDownMenu(10, stepperSpeed.y + 45, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true),
 			function(character:String)
@@ -488,7 +488,7 @@ class OriginalChartingState extends MusicBeatState
 		stepperSusLength.name = 'note_susLength';
 		blockPressNumStepper.push(stepperSusLength);
 
-		var noteTypes:Array<String> = CoolUtil.returnAssetsLibrary('notetypes', 'assets');
+		var noteTypes:Array<String> = CoolUtil.returnAssetsLibrary('data/notetypes', 'assets');
 
 		tempNoteDropDown = new FlxUIDropDownMenu(10, stepperSusLength.y + 30, FlxUIDropDownMenu.makeStrIdLabelArray(noteTypes, false), function(type:String)
 		{

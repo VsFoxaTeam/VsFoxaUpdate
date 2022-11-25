@@ -157,7 +157,7 @@ class ScriptHandler extends SScript
 							try
 							{
 								moduleArray.push(new ScriptHandler(script));
-								trace('new module loaded: ' + script);
+								// trace('new module loaded: ' + script);
 								pushedModules.push(script);
 							}
 							catch (e)
@@ -174,7 +174,7 @@ class ScriptHandler extends SScript
 		if (moduleArray != null)
 		{
 			for (i in moduleArray)
-				i.call('create', []);
+				i.call('onCreate', []);
 		}
 
 		return moduleArray;
@@ -197,14 +197,14 @@ class Events
 
 		var myEvents:Array<String> = [];
 
-		for (event in sys.FileSystem.readDirectory('assets/events'))
+		for (event in sys.FileSystem.readDirectory('assets/data/events'))
 		{
 			if (event.contains('.'))
 			{
 				event = event.substring(0, event.indexOf('.', 0));
 				try
 				{
-					loadedEvents.set(event, new ScriptHandler(Paths.module('$event', 'events')));
+					loadedEvents.set(event, new ScriptHandler(Paths.module('$event', 'data/events')));
 					// trace('new event module loaded: ' + event);
 					myEvents.push(event);
 				}

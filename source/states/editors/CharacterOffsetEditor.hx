@@ -183,7 +183,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "Characters";
 
-		var characters:Array<String> = CoolUtil.returnAssetsLibrary('characters', '');
+		var characters:Array<String> = CoolUtil.returnAssetsLibrary('characters', 'assets/data');
 
 		var resetBttn:FlxButton = new FlxButton(140, 30, "Reset Offsets", function()
 		{
@@ -605,7 +605,7 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 
-		for (i in CoolUtil.returnAssetsLibrary('characters', 'assets'))
+		for (i in CoolUtil.returnAssetsLibrary('characters', 'assets/data'))
 		{
 			if (!existingCharacters.contains(i.toLowerCase()) && !i.endsWith('-dead'))
 				characters.push(i);

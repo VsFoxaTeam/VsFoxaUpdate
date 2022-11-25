@@ -275,11 +275,6 @@ class Paths
 		return getPath('data/$key.xml', TEXT, library);
 	}
 
-	inline static public function offsetTxt(key:String, ?library:String)
-	{
-		return getPath('characters/$key/$key.txt', TEXT, library);
-	}
-
 	inline static public function json(key:String, ?library:String)
 	{
 		return getPath('songs/$key.json', TEXT, library);
@@ -288,15 +283,15 @@ class Paths
 	inline static public function songJson(song:String, secondSong:String, ?library:String)
 		return getPath('songs/${song.toLowerCase()}/${secondSong.toLowerCase()}.json', TEXT, library);
 
-	static public function sound(key:String, ?library:String):Dynamic
+	static public function sound(key:String, folder:String = 'sounds', ?library:String):Dynamic
 	{
-		var sound:Sound = returnSound('sounds', key, library);
+		var sound:Sound = returnSound(folder, key, library);
 		return sound;
 	}
 
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
+	inline static public function soundRandom(key:String, folder:String = 'sounds', min:Int, max:Int, ?library:String)
 	{
-		return sound(key + FlxG.random.int(min, max), library);
+		return sound(key + FlxG.random.int(min, max), folder, library);
 	}
 
 	inline static public function music(key:String, ?library:String):Dynamic
@@ -392,7 +387,7 @@ class Paths
 				// this is diabolic;
 				for (j in scriptExts)
 				{
-					if (FileSystem.exists(getPath('characters/$folder/$character.$j', TEXT, library)))
+					if (FileSystem.exists(getPath('data/characters/$folder/$character.$j', TEXT, library)))
 						extension = '.$j';
 					else
 						extension = '.hx';
@@ -403,6 +398,6 @@ class Paths
 			default:
 				extension = '';
 		}
-		return getPath('characters/$folder/$character' + extension, TEXT, library);
+		return getPath('data/characters/$folder/$character' + extension, TEXT, library);
 	}
 }

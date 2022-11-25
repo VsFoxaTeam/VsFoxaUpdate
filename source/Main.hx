@@ -96,14 +96,14 @@ class Main extends Sprite
 
 		// loadHardcodedWeeks();
 
-		var weekList:Array<String> = CoolUtil.coolTextFile(Paths.txt('weeks/weekList'));
+		var weekList:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/weekList'));
 		for (i in 0...weekList.length)
 		{
 			if (!weeksMap.exists(weekList[i]))
 			{
 				if (weekList[i].length > 1)
 				{
-					var week:GameWeek = parseGameWeeks(Paths.file('weeks/' + weekList[i] + '.json'));
+					var week:GameWeek = parseGameWeeks(Paths.file('data/weeks/' + weekList[i] + '.json'));
 					if (week != null)
 					{
 						if ((isStory && (!week.hideOnStory && !week.hideUntilUnlocked))

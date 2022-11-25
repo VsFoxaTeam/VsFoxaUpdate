@@ -195,36 +195,21 @@ class ForeverAssets
 		tempSplash.x = strumline.receptors.members[noteData].x;
 		tempSplash.y = strumline.receptors.members[noteData].y;
 
-		switch (assetModifier)
+		if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'data/notetypes')))
 		{
-			case 'pixel':
-				tempSplash.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('splash-pixel', assetModifier, changeableSkin, '$noteType/skins',
-					'notetypes'), 'notetypes'),
-					true, 34, 34);
-				tempSplash.animation.add('anim1', [noteData, 4 + noteData, 8 + noteData, 12 + noteData], 24, false);
-				tempSplash.animation.add('anim2', [16 + noteData, 20 + noteData, 24 + noteData, 28 + noteData], 24, false);
-				tempSplash.animation.play('anim1');
-				tempSplash.addOffset('anim1', -120, -90);
-				tempSplash.addOffset('anim2', -120, -90);
-				tempSplash.setGraphicSize(Std.int(tempSplash.width * PlayState.daPixelZoom));
-
-			default:
-				if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
+			var possibleModules:Array<String> = [
+				Paths.module('$noteType/$noteType-$assetModifier', 'data/notetypes'),
+				Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
+			];
+			for (module in possibleModules)
+			{
+				if (FileSystem.exists(module))
 				{
-					var possibleModules:Array<String> = [
-						Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
-						Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
-					];
-					for (module in possibleModules)
-					{
-						if (FileSystem.exists(module))
-						{
-							Note.noteMap.set(noteType, new ScriptHandler(module));
-							Note.noteMap.get(noteType).call('generateSplash', [tempSplash, noteData]);
-							// trace('Splash Module loaded: $noteType-$assetModifier');
-						}
-					}
+					Note.noteMap.set(noteType, new ScriptHandler(module));
+					Note.noteMap.get(noteType).call('generateSplash', [tempSplash, noteData]);
+					// trace('Splash Module loaded: $noteType-$assetModifier');
 				}
+			}
 		}
 
 		tempSplash.zDepth = -Conductor.songPosition;
@@ -240,26 +225,6 @@ class ForeverAssets
 
 		switch (assetModifier)
 		{
-			case 'pixel':
-				// look man you know me I fucking hate repeating code
-				// not even just a cleanliness thing it's just so annoying to tweak if something goes wrong like
-				// genuinely more programmers should make their code more modular
-				uiReceptor.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('arrows-pixels', assetModifier, Init.trueSettings.get("Note Skin"),
-					'$noteType/skins', 'notetypes'),
-					'notetypes'),
-					true, 17, 17);
-				uiReceptor.animation.add('static', [receptorData]);
-				uiReceptor.animation.add('pressed', [4 + receptorData, 8 + receptorData], 12, false);
-				uiReceptor.animation.add('confirm', [12 + receptorData, 16 + receptorData], 24, false);
-
-				uiReceptor.setGraphicSize(Std.int(uiReceptor.width * PlayState.daPixelZoom));
-				uiReceptor.updateHitbox();
-				uiReceptor.antialiasing = false;
-
-				uiReceptor.addOffset('static', -67, -50);
-				uiReceptor.addOffset('pressed', -67, -50);
-				uiReceptor.addOffset('confirm', -67, -50);
-
 			case 'chart editor':
 				uiReceptor.loadGraphic(Paths.image('UI/forever/base/chart editor/note_array'), true, 157, 156);
 				uiReceptor.animation.add('static', [receptorData]);
@@ -273,10 +238,10 @@ class ForeverAssets
 			default:
 				try
 				{
-					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
+					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'data/notetypes')))
 					{
 						var possibleModules:Array<String> = [
-							Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
+							Paths.module('$noteType/$noteType-$assetModifier', 'data/notetypes'),
 							Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
 						];
 						for (module in possibleModules)
@@ -300,8 +265,8 @@ class ForeverAssets
 					stringSect = Receptor.actions[receptorData];
 
 					uiReceptor.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('$framesArg', assetModifier, Init.trueSettings.get("Note Skin"),
-						'$noteType/skins', 'notetypes'),
-						'notetypes');
+						'$noteType/skins', 'data/notetypes'),
+						'data/notetypes');
 
 					uiReceptor.animation.addByPrefix('static', 'arrow' + stringSect.toUpperCase());
 					uiReceptor.animation.addByPrefix('pressed', stringSect + ' press', 24, false);
@@ -349,45 +314,33 @@ class ForeverAssets
 
 		newNote = new Note(strumTime, noteData, noteType, prevNote, isSustainNote);
 
-		switch (assetModifier)
+		try
 		{
-			case "pixel":
-				if (isSustainNote)
-					Note.resetNote('arrowEnds', changeableSkin, assetModifier, newNote);
-				else
-					Note.resetNote('arrows-pixels', changeableSkin, assetModifier, newNote);
-				newNote.antialiasing = false;
-				newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
-				newNote.updateHitbox();
-			default:
-				try
+			if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'data/notetypes')))
+			{
+				var possibleModules:Array<String> = [
+					Paths.module('$noteType/$noteType-$assetModifier', 'data/notetypes'),
+					Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
+				];
+				for (module in possibleModules)
 				{
-					if (FileSystem.exists(Paths.module('$noteType/$noteType-$assetModifier', 'notetypes')))
+					if (FileSystem.exists(module))
 					{
-						var possibleModules:Array<String> = [
-							Paths.module('$noteType/$noteType-$assetModifier', 'notetypes'),
-							Paths.module('$noteType/$noteType-$assetModifier', 'songs/${PlayState.SONG.song}/notetypes')
-						];
-						for (module in possibleModules)
-						{
-							if (FileSystem.exists(module))
-							{
-								Note.noteMap.set(noteType, new ScriptHandler(module));
-								Note.noteMap.get(noteType).call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
-								// trace('Note Module loaded: $noteType-$assetModifier');
-							}
-						}
+						Note.noteMap.set(noteType, new ScriptHandler(module));
+						Note.noteMap.get(noteType).call(newNote.isSustainNote ? 'generateSustain' : 'generateNote', [newNote]);
+						// trace('Note Module loaded: $noteType-$assetModifier');
 					}
 				}
-				catch (e)
-				{
-					// trace('[NOTE ERROR] $e');
+			}
+		}
+		catch (e)
+		{
+			// trace('[NOTE ERROR] $e');
 
-					// load default so the game won't explode in front of you;
-					Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
-					newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
-					newNote.updateHitbox();
-				}
+			// load default so the game won't explode in front of you;
+			Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
+			newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
+			newNote.updateHitbox();
 		}
 
 		if (newNote.frames != null)

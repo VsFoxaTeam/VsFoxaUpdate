@@ -25,7 +25,7 @@ function songCutscene()
 		else
 		{
 			senpaiEvil.animation.play('idle');
-			FlxG.sound.play(Paths.sound('events/week6/Senpai_Dies'), 1, false, null, true, function()
+			FlxG.sound.play(Paths.sound('Senpai_Dies', 'data/stages/school/sounds'), 1, false, null, true, function()
 			{
 				remove(senpaiEvil);
 				remove(red);
