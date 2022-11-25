@@ -25,6 +25,8 @@ Forever Engine Feather is currently in a Work in Progress stage, maintained by t
 
 ### If you want to push out improvements to Feather faster, take a look at the TODO list [here](/TODO).
 
+### Need help? want to give feedback? open a issue on our [Issues](/issues/new/choose) page or send me a message on Discord, at [BeastlyGhost#9035](https://discord.com/users/597124141530742805)
+
 ### For documentation like a guide for compiling, script variables and more, visit our repository's [Wiki](https://github.com/BeastlyGhost/Forever-Engine-Feather/wiki).
 
 ----------------------------------------------
