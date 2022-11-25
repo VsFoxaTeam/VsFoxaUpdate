@@ -144,7 +144,7 @@ class PlayState extends MusicBeatState
 
 	public static var stageBuild:Stage;
 
-	public static var stageGroup:FlxTypedGroup<Stage>;
+	public static var stageMap:Map<String, Stage> = new Map();
 
 	public static var ratingPlacement:FlxPoint;
 	public static var comboPlacement:FlxPoint;
@@ -232,7 +232,7 @@ class PlayState extends MusicBeatState
 		gf.dance();
 		boyfriend.dance();
 
-		characterPostGeneration();
+		repositionChars();
 	}
 
 	public function regenerateCharacters()
@@ -259,10 +259,10 @@ class PlayState extends MusicBeatState
 		gf.dance();
 		boyfriend.dance();
 
-		characterPostGeneration();
+		repositionChars();
 	}
 
-	public function characterPostGeneration()
+	public function repositionChars()
 	{
 		boyfriend.setPosition(stageBuild.stageJson.bfPos[0], stageBuild.stageJson.bfPos[1]);
 		opponent.setPosition(stageBuild.stageJson.dadPos[0], stageBuild.stageJson.dadPos[1]);
@@ -292,24 +292,28 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
-		// create the game camera
+		// create all the game cameras
 		camGame = new FlxCamera();
-
-		// create the hud camera (separate so the hud stays on screen)
 		camHUD = new FlxCamera();
+		dialogueHUD = new FlxCamera();
+		camAlt = new FlxCamera();
+
 		camHUD.bgColor.alpha = 0;
+		dialogueHUD.bgColor.alpha = 0;
+		camAlt.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
+
+		// HUD Camera so HUD objects stay on screen
 		FlxG.cameras.add(camHUD, false);
 		allUIs.push(camHUD);
+
+		// always draw new objects pon the main camera
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
 		// default song
 		if (SONG == null)
 			SONG = Song.loadFromJson('test', 'test');
-
-		Conductor.mapBPMChanges(SONG);
-		Conductor.changeBPM(SONG.bpm);
 
 		curStage = "";
 		if (SONG.stage != null)
@@ -317,17 +321,11 @@ class PlayState extends MusicBeatState
 
 		ScriptHandler.callScripts(moduleArray);
 
-		ratingPlacement = new FlxPoint();
-		comboPlacement = new FlxPoint();
-
-		ratingPlacement.set();
-		comboPlacement.set();
-
-		stageGroup = new FlxTypedGroup<Stage>();
-		add(stageGroup);
+		ratingPlacement = new FlxPoint().set();
+		comboPlacement = new FlxPoint().set();
 
 		stageBuild = new Stage(curStage);
-		stageGroup.add(stageBuild);
+		add(stageBuild);
 
 		if (SONG.gfVersion == null || SONG.gfVersion.length < 1)
 			SONG.gfVersion = stageBuild.returnGFtype(curStage);
@@ -344,10 +342,13 @@ class PlayState extends MusicBeatState
 
 		// EVERYTHING SHOULD GO UNDER THIS, IF YOU PLAN ON SPAWNING SOMETHING LATER ADD IT TO STAGEBUILD OR FOREGROUND
 		// darken everything but the arrows and ui via a flxsprite
-		var darknessBG:FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
-		darknessBG.alpha = (100 - Init.trueSettings.get('Stage Opacity')) / 100;
-		darknessBG.scrollFactor.set(0, 0);
-		add(darknessBG);
+		if (Init.trueSettings.get('Stage Opacity') <= 1)
+		{
+			var darknessBG:FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
+			darknessBG.alpha = (100 - Init.trueSettings.get('Stage Opacity')) / 100;
+			darknessBG.scrollFactor.set(0, 0);
+			add(darknessBG);
+		}
 
 		// strum setup
 		strumLines = new FlxTypedGroup<Strumline>();
@@ -417,6 +418,9 @@ class PlayState extends MusicBeatState
 		}
 		add(strumLines);
 
+		// add the dialogue UI
+		FlxG.cameras.add(dialogueHUD, false);
+
 		uiHUD = new ClassHUD();
 		uiHUD.alpha = 0;
 		add(uiHUD);
@@ -430,13 +434,7 @@ class PlayState extends MusicBeatState
 			add(comboGroup);
 		}
 
-		// create a hud over the hud camera for dialogue
-		dialogueHUD = new FlxCamera();
-		dialogueHUD.bgColor.alpha = 0;
-		FlxG.cameras.add(dialogueHUD, false);
-
-		camAlt = new FlxCamera();
-		camAlt.bgColor.alpha = 0;
+		// add the alternative camera (goes above every other)
 		FlxG.cameras.add(camAlt, false);
 
 		//
@@ -447,12 +445,12 @@ class PlayState extends MusicBeatState
 		}
 		Controls.keyEventTrigger.add(keyEventTrigger);
 
+		callFunc('postCreate', []);
+
 		Paths.clearUnusedMemory();
 
 		// call the funny intro cutscene depending on the song
 		songCutscene(false);
-
-		callFunc('postCreate', []);
 	}
 
 	var keysHeld:Array<Bool> = [];
@@ -1373,7 +1371,7 @@ class PlayState extends MusicBeatState
 			songMusic.play();
 			vocals.play();
 
-			songMusic.onComplete = finishSong;
+			songMusic.onComplete = finishSong.bind();
 
 			resyncVocals();
 
@@ -1395,6 +1393,7 @@ class PlayState extends MusicBeatState
 		songSpeed = SONG.speed;
 
 		Conductor.changeBPM(SONG.bpm);
+		Conductor.mapBPMChanges(SONG);
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		songDetails = CoolUtil.dashToSpace(SONG.song) + ' - ' + CoolUtil.difficultyString;
@@ -1423,7 +1422,9 @@ class PlayState extends MusicBeatState
 
 		// generate the chart
 		notesGroup.members = ChartParser.parseBaseChart(SONG);
-		timedEvents = ChartParser.parseEvents(SONG.events);
+
+		if (SONG.events != null && SONG.events.length > 0)
+			timedEvents = ChartParser.parseEvents(SONG.events);
 
 		for (i in timedEvents)
 		{
@@ -1444,7 +1445,7 @@ class PlayState extends MusicBeatState
 			var line:TimedEvent = timedEvents[0];
 			if (line != null)
 			{
-				if (Conductor.songPosition < line.step + delay)
+				if (Conductor.songPosition < line.step + delay + Init.trueSettings['Offset'])
 					break;
 
 				eventTrigger(line.name, line.values);
@@ -1673,7 +1674,7 @@ class PlayState extends MusicBeatState
 	 */
 	// song end function at the end of the playstate lmao ironic I guess
 
-	function finishSong():Void
+	function finishSong(ignoreOffset:Bool = false):Void
 	{
 		var onFinish:Void->Void = endSong;
 
@@ -1681,7 +1682,15 @@ class PlayState extends MusicBeatState
 		vocals.volume = 0;
 		vocals.pause();
 
-		onFinish();
+		if (ignoreOffset || Init.trueSettings['Offset'] <= 0)
+			onFinish();
+		else
+		{
+			new FlxTimer().start(Init.trueSettings['Offset'] / 1000, function(offset:FlxTimer)
+			{
+				onFinish();
+			});
+		}
 	}
 
 	function endSong():Void
@@ -1838,14 +1847,15 @@ class PlayState extends MusicBeatState
 		inCutscene = false;
 		canPause = true;
 
+		countdownPos = 0;
+		songPosCount = 4; // in case you want the song to start later, increase this number;
+
 		Conductor.songPosition = -(Conductor.crochet * 5);
 
+		camHUD.visible = true;
+		startedCountdown = true;
+
 		callFunc('startCountdown', []);
-
-		countdownPos = 0;
-
-		// in case you want the song to start later, increase this number;
-		songPosCount = 4;
 
 		// cache shit
 		displayScore(0, false, true);
@@ -1860,11 +1870,7 @@ class PlayState extends MusicBeatState
 		}
 		//
 
-		camHUD.visible = true;
-
 		FlxTween.tween(uiHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
-
-		startedCountdown = true;
 
 		if (skipCountdown)
 		{
@@ -1938,7 +1944,7 @@ class PlayState extends MusicBeatState
 				clearStored = true;
 			case CHARTING:
 				openSubState(new states.substates.PauseSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,
-					["Back to Charter", "Leave Charter Mode"]));
+					["Back to Charter", "Leave Charter Mode", "Exit to Options", "Exit to Menu"]));
 		}
 	}
 

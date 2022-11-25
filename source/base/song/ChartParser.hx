@@ -17,18 +17,32 @@ class ChartParser
 	// hopefully this makes it easier for people to load and save chart features and such, y'know the deal lol
 	public static function parseBaseChart(songData:SwagSong):Array<Note>
 	{
-		return try
+		var unspawnNotes:Array<Note> = [];
+
+		for (section in songData.notes)
 		{
-			var unspawnNotes:Array<Note> = [];
-
-			for (section in songData.notes)
+			for (songNotes in section.sectionNotes)
 			{
-				for (songNotes in section.sectionNotes)
-				{
-					var daStrumTime:Float = #if !neko songNotes[0] - Init.trueSettings['Offset'] /* - | late, + | early */ #else songNotes[0] #end;
-					var daNoteData:Int = Std.int(songNotes[1] % 4);
-					var daNoteType:String = 'default';
+				var daStrumTime:Float = #if !neko songNotes[0] - Init.trueSettings['Offset'] /* - | late, + | early */ #else songNotes[0] #end;
+				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				var daNoteType:String = 'default';
 
+				// check the base section
+				var gottaHitNote:Bool = section.mustHitSection;
+
+				// if the note is on the other side, flip the base section of the note
+				if (songNotes[1] > 3)
+					gottaHitNote = !section.mustHitSection;
+
+				// define the note that comes before (previous note)
+				var oldNote:Note;
+				if (unspawnNotes.length > 0)
+					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+				else
+					oldNote = null;
+
+				if (Std.isOfType(songNotes[3], String))
+				{
 					// psych conversion;
 					switch (songNotes[3])
 					{
@@ -43,83 +57,62 @@ class ChartParser
 						case "GF Sing":
 							songNotes[3] = 'default';
 					}
+					daNoteType = songNotes[3];
+				}
 
-					// define the note's type if it is a string;
-					if (songNotes[3] != null && Std.isOfType(songNotes[3], String))
-						daNoteType = songNotes[3];
+				// create the new note
+				var swagNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteType);
 
-					// check the base section
-					var gottaHitNote:Bool = section.mustHitSection;
+				// define default note parameters
+				swagNote.noteType = daNoteType;
+				swagNote.noteSpeed = songData.speed;
+				swagNote.mustPress = gottaHitNote;
 
-					// if the note is on the other side, flip the base section of the note
-					if (songNotes[1] > 3)
-						gottaHitNote = !section.mustHitSection;
+				// set animation parameters for notes!
+				swagNote.noteSuffix = songNotes[4];
+				swagNote.noteString = songNotes[5];
+				swagNote.noteTimer = songNotes[6];
 
-					// define the note that comes before (previous note)
-					var oldNote:Note;
-					if (unspawnNotes.length > 0)
-						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-					else
-						oldNote = null;
+				if (swagNote.noteData > -1) // don't push notes if they are an event??
+					unspawnNotes.push(swagNote);
 
-					// create the new note
-					var swagNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteType);
+				// set the note's length (sustain note)
+				swagNote.sustainLength = songNotes[2];
+				if (swagNote.sustainLength > 0)
+					swagNote.sustainLength = Math.round(swagNote.sustainLength / Conductor.stepCrochet) * Conductor.stepCrochet;
+				swagNote.scrollFactor.set(0, 0);
 
-					swagNote.noteType = daNoteType;
-					swagNote.noteSpeed = songData.speed;
-					swagNote.mustPress = gottaHitNote;
-
-					// set animation parameters for notes!
-					swagNote.noteSuffix = songNotes[4];
-					swagNote.noteString = songNotes[5];
-					swagNote.noteTimer = songNotes[6];
-
-					if (swagNote.noteData > -1) // don't push notes if they are an event??
-						unspawnNotes.push(swagNote);
-
-					// set the note's length (sustain note)
-					swagNote.sustainLength = songNotes[2];
-					if (swagNote.sustainLength > 0)
-						swagNote.sustainLength = Math.round(swagNote.sustainLength / Conductor.stepCrochet) * Conductor.stepCrochet;
-					swagNote.scrollFactor.set(0, 0);
-
-					if (swagNote.sustainLength > 0)
+				if (swagNote.sustainLength > 0)
+				{
+					var floorSus:Int = Math.round(swagNote.sustainLength / Conductor.stepCrochet);
+					if (floorSus > 0)
 					{
-						var floorSus:Int = Math.round(swagNote.sustainLength / Conductor.stepCrochet);
-						if (floorSus > 0)
+						if (floorSus == 1)
+							floorSus++;
+						for (susNote in 0...floorSus)
 						{
-							if (floorSus == 1)
-								floorSus++;
-							for (susNote in 0...floorSus)
-							{
-								oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+							oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-								var sustainNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier,
-									daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteType, true, oldNote);
-								sustainNote.mustPress = gottaHitNote;
-								sustainNote.scrollFactor.set();
+							var sustainNote:Note = ForeverAssets.generateArrow(null, PlayState.assetModifier,
+								daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteType, true, oldNote);
+							sustainNote.mustPress = gottaHitNote;
+							sustainNote.scrollFactor.set();
 
-								if (sustainNote != null)
-									unspawnNotes.push(sustainNote);
-							}
+							if (sustainNote != null)
+								unspawnNotes.push(sustainNote);
 						}
 					}
 				}
 			}
-
-			// sort notes before returning them;
-			unspawnNotes.sort(function(Obj1:Note, Obj2:Note):Int
-			{
-				return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
-			});
-
-			return unspawnNotes;
 		}
-		catch (e)
+
+		// sort notes before returning them;
+		unspawnNotes.sort(function(Obj1:Note, Obj2:Note):Int
 		{
-			trace("Chart Parsing Error: " + e);
-			return [];
-		}
+			return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+		});
+
+		return unspawnNotes;
 	}
 
 	public static function parseEvents(data:Array<Dynamic>):Array<TimedEvent>

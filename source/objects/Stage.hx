@@ -59,18 +59,22 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	public var sendMessage:Bool = false;
 	public var messageText:String = '';
 
-	public function new(curStage:String = 'unknown', stageDebug:Bool = false)
+	public function new(curStage:String)
 	{
 		super();
+
 		this.curStage = curStage;
 
 		// to apply to foreground use foreground.add(); instead of add();
 		foreground = new FlxTypedGroup<FlxBasic>();
 		layers = new FlxTypedGroup<FlxBasic>();
 
-		reloadJson();
+		setStage(curStage);
+	}
 
-		if (!stageDebug)
+	public function setStage(curStage:String)
+	{
+		if (curStage == null || curStage.length < 1)
 		{
 			if (PlayState.SONG.stage == null || PlayState.SONG.stage.length < 1)
 				curStage = 'unknown';
@@ -86,6 +90,10 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				PlayState.defaultCamZoom = 0.9;
 		}
 
+		reloadGroups();
+
+		reloadJson();
+
 		try
 		{
 			//
@@ -96,6 +104,21 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			sendMessage = true;
 			messageText = '[GAME STAGE]: Uncaught Error: $e';
 		}
+	}
+
+	public function reloadGroups()
+	{
+		foreground.forEach(function(a:Dynamic)
+		{
+			if (a != null && !Std.isOfType(a, flixel.system.FlxSound))
+				remove(a);
+		});
+
+		layers.forEach(function(a:Dynamic)
+		{
+			if (a != null && !Std.isOfType(a, flixel.system.FlxSound))
+				remove(a);
+		});
 	}
 
 	public function reloadJson()
