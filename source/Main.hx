@@ -48,7 +48,7 @@ class Main extends Sprite
 	public static var game = {
 		width: 1280, // game window width
 		height: 720, // game window height
-		zoom: -1, // the zoom
+		zoom: -1, // defines the game's state bounds, -1 usually means automatic setup
 		initialState: states.TitleState, // state the game should start at
 		framerate: 60, // the game's default framerate
 		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
