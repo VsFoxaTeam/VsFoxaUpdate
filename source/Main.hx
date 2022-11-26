@@ -158,11 +158,11 @@ class Main extends Sprite
 
 		if (zoom == -1)
 		{
-			var ratioX:Float = stageWidth / gameWidth;
-			var ratioY:Float = stageHeight / gameHeight;
+			var ratioX:Float = stageWidth / game.width;
+			var ratioY:Float = stageHeight / game.height;
 			zoom = Math.min(ratioX, ratioY);
-			gameWidth = Math.ceil(stageWidth / zoom);
-			gameHeight = Math.ceil(stageHeight / zoom);
+			game.width = Math.ceil(stageWidth / zoom);
+			game.height = Math.ceil(stageHeight / zoom);
 		}
 
 		FlxTransitionableState.skipNextTransIn = true;
