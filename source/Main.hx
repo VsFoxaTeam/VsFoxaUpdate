@@ -48,7 +48,7 @@ class Main extends Sprite
 	public static var game = {
 		width: 1280, // game window width
 		height: 720, // game window height
-		zoom: -1, // defines the game's state bounds, -1 usually means automatic setup
+		zoom: -1.0, // defines the game's state bounds, -1.0 usually means automatic setup
 		initialState: states.TitleState, // state the game should start at
 		framerate: 60, // the game's default framerate
 		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
@@ -156,7 +156,7 @@ class Main extends Sprite
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
-		if (game.zoom == -1)
+		if (game.zoom == -1.0)
 		{
 			var ratioX:Float = stageWidth / game.width;
 			var ratioY:Float = stageHeight / game.height;
