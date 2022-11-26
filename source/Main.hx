@@ -48,6 +48,7 @@ class Main extends Sprite
 	public static var game = {
 		width: 1280, // game window width
 		height: 720, // game window height
+		zoom: -1, //the zoom
 		initialState: states.TitleState, // state the game should start at
 		framerate: 60, // the game's default framerate
 		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
@@ -158,7 +159,7 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		baseGame = new FNFGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash, game.fullscreen);
+		baseGame = new FNFGame(game.width, game.height, Init, #if flixel < "5.0.0" game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.fullscreen);
 		addChild(baseGame); // and create it afterwards
 
 		// initialize the game controls;
