@@ -159,7 +159,7 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		baseGame = new FNFGame(game.width, game.height, Init, #if flixel < "5.0.0" game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.fullscreen);
+		baseGame = new FNFGame(game.width, game.height, Init, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.fullscreen);
 		addChild(baseGame); // and create it afterwards
 
 		// initialize the game controls;
