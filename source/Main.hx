@@ -48,7 +48,7 @@ class Main extends Sprite
 	public static var game = {
 		width: 1280, // game window width
 		height: 720, // game window height
-		zoom: -1, //the zoom
+		zoom: -1, // the zoom
 		initialState: states.TitleState, // state the game should start at
 		framerate: 60, // the game's default framerate
 		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
@@ -152,14 +152,24 @@ class Main extends Sprite
 		framerate = 60;
 		#end
 
-		// simply said, a state is like the 'surface' area of the window where everything is drawn.
-		// if you've used gamemaker you'll probably understand the term surface better
-		// this defines the surface bounds
+		// define the state bounds
+		var stageWidth:Int = Lib.current.stage.stageWidth;
+		var stageHeight:Int = Lib.current.stage.stageHeight;
+
+		if (zoom == -1)
+		{
+			var ratioX:Float = stageWidth / gameWidth;
+			var ratioY:Float = stageHeight / gameHeight;
+			zoom = Math.min(ratioX, ratioY);
+			gameWidth = Math.ceil(stageWidth / zoom);
+			gameHeight = Math.ceil(stageHeight / zoom);
+		}
 
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		baseGame = new FNFGame(game.width, game.height, Init, #if flixel < "5.0.0" game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.fullscreen);
+		baseGame = new FNFGame(game.width, game.height, Init, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash,
+			game.fullscreen);
 		addChild(baseGame); // and create it afterwards
 
 		// initialize the game controls;
