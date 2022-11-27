@@ -135,6 +135,11 @@ class Character extends FNFSprite
 				hasMissAnims = true;
 		}
 
+		// "Preloads" animations so they dont lag in the song
+		var allAnims:Array<String> = animation.getNameList();
+		for (anim in allAnims)
+			playAnim(anim);
+
 		recalcDance();
 		dance();
 
