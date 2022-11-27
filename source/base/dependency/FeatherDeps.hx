@@ -85,6 +85,7 @@ class ScriptHandler extends SScript
 		set('Type', Type);
 		set('Math', Math);
 		set('Std', Std);
+		set('Date', Date);
 
 		// CLASSES (FLIXEL);
 		set('FlxG', flixel.FlxG);
@@ -92,6 +93,10 @@ class ScriptHandler extends SScript
 		set('FlxObject', flixel.FlxObject);
 		set('FlxSprite', flixel.FlxSprite);
 		set('FlxSound', flixel.system.FlxSound);
+		set('FlxSort', flixel.util.FlxSort);
+		set('FlxStringUtil', flixel.util.FlxStringUtil);
+		set('FlxState', flixel.FlxState);
+		set('FlxSubState', flixel.FlxSubState);
 		set('FlxText', flixel.text.FlxText);
 		set('FlxTimer', flixel.util.FlxTimer);
 		set('FlxTween', flixel.tweens.FlxTween);
