@@ -138,6 +138,22 @@ class ScriptHandler extends SScript
 		set('isStoryMode', states.PlayState.gameplayMode == STORY);
 		set('isChartingMode', states.PlayState.gameplayMode == CHARTING);
 		set('isFreeplayMode', states.PlayState.gameplayMode == FREEPLAY);
+
+		#if windows
+		set('platform', 'windows');
+		#elseif linux
+		set('platform', 'linux');
+		#elseif mac
+		set('platform', 'mac');
+		#elseif android
+		set('platform', 'android');
+		#elseif html5
+		set('platform', 'html5');
+		#elseif flash
+		set('platform', 'flash');
+		#else
+		set('platform', 'unknown');
+		#end
 	}
 
 	public static function callScripts(moduleArray:Array<ScriptHandler>):Array<ScriptHandler>
