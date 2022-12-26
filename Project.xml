@@ -4,7 +4,7 @@
 	<!-- _________________________ Application Settings _________________________ -->
 
 	<!-- Application Window Title and Executable File Name -->
-	<app title="Forever Engine Feather" file="FE-Feather" />
+	<app title="FNF: Vs. Foxa" file="VsFoxa" />
 
 	<!-- Package Name (Android, Mac) -->
 	<app packageName="com.beastlyghost.foreverenginefeather" package="com.beastlyghost.foreverenginefeather" />
